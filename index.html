@@ -50,11 +50,11 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Username</label>
-                    <input type="text" id="username-guru" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan username">
+                    <input type="text" id="username-guru" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan username">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Password</label>
-                    <input type="password" id="password-guru" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan password">
+                    <input type="password" id="password-guru" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan password">
                 </div>
                 <button onclick="handleLoginGuru()" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded-xl shadow-lg transition">Masuk Ruang Kelas</button>
             </div>
@@ -73,11 +73,11 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Username Guru</label>
-                    <input type="text" id="username-mapel" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan username">
+                    <input type="text" id="username-mapel" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan username">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Password</label>
-                    <input type="password" id="password-mapel" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan password">
+                    <input type="password" id="password-mapel" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan password">
                 </div>
                 <button onclick="handleLoginMapel()" class="w-full bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl shadow-lg transition">Masuk Dashboard Guru Mapel</button>
             </div>
@@ -85,7 +85,7 @@
         </div>
     </section>
 
-    <!-- 4. LOGIN SISWA (DILENGKAPI AUTOCORRECT/AUTOCAPITALIZE OFF) -->
+    <!-- 4. LOGIN SISWA -->
     <section id="view-login-siswa" class="view-section items-center justify-center p-6 bg-slate-900 text-white">
         <div class="bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-md">
             <div class="text-center mb-6">
@@ -1061,7 +1061,6 @@
             }
         }
 
-        // PERBAIKAN LOGIN SISWA: Case-insensitive & Trim otomatis agar lancar di keyboard HP
         function handleLoginSiswa() {
             const user = document.getElementById('username-siswa').value.trim().toLowerCase();
             const pass = document.getElementById('password-siswa').value.trim().toLowerCase();
@@ -2158,7 +2157,7 @@
 
             allMapelGlobal.forEach(mapel => {
                 let score = 0;
-                if (historyNilai[namaSiswa] && historyNilai[namaSiswa][mapel] && historyNilai[namaSiswa][mapel].length > 0) {
+                if (historyNilai[namaSiswa] && historyNilai[nama][mapel] && historyNilai[nama][mapel].length > 0) {
                     let sumM = 0;
                     historyNilai[namaSiswa][mapel].forEach(rec => sumM += rec.score);
                     score = sumM / historyNilai[namaSiswa][mapel].length;
@@ -2187,7 +2186,7 @@
             const container = document.getElementById('container-history-card');
             container.innerHTML = '';
 
-            let records = (historyNilai[namaSiswa] && historyNilai[nama][mapel]) ? historyNilai[nama][mapel] : [];
+            let records = (historyNilai[namaSiswa] && historyNilai[namaSiswa][mapel]) ? historyNilai[namaSiswa][mapel] : [];
 
             if (records.length === 0) {
                 container.innerHTML = `<div class="bg-white p-6 rounded-2xl border text-center text-slate-500">Belum ada riwayat penilaian untuk mata pelajaran ini.</div>`;
