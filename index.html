@@ -658,7 +658,7 @@
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI (STATIS NON-KLIK KHUSUS HARI INI: 70% PENGETAHUAN & 30% KETERAMPILAN) -->
+    <!-- 10. REKAP NILAI (STATIS NON-KLIK HARI INI: 70% PENGETAHUAN & 30% KETERAMPILAN) -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4">
             <div>
@@ -760,7 +760,7 @@
         </div>
     </section>
 
-    <!-- 12. PORTAL SISWA (INTERAKTIF & MOTIVATIF) -->
+    <!-- 12. PORTAL SISWA -->
     <section id="view-portal-siswa" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 mb-6 gap-4">
             <div>
@@ -771,7 +771,6 @@
             <button onclick="logoutSesi()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 font-semibold px-4 py-2 rounded-xl text-sm transition">Keluar</button>
         </div>
 
-        <!-- Kartu Jadwal Pelajaran Hari Ini -->
         <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-5 rounded-2xl mb-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm">
             <div>
                 <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest">Jadwal Pelajaran Hari Ini</span>
@@ -781,7 +780,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Tabel Nilai & Riwayat (Seluruh Baris Interaktif Dapat Diklik) -->
             <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden p-6">
                 <div class="flex justify-between items-center mb-4">
                     <div>
@@ -805,7 +803,6 @@
                 </div>
             </div>
             
-            <!-- Kolom Samping: Peringkat Kelas & Motivasi -->
             <div class="space-y-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 text-center">
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Peringkat Kelas</span>
@@ -829,7 +826,7 @@
         </div>
     </section>
 
-    <!-- 13. HISTORY SISWA (DILENGKAPI KARTU RINGKASAN & PESAN APRESIASI) -->
+    <!-- 13. HISTORY SISWA -->
     <section id="view-history-siswa" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -839,10 +836,7 @@
             <button onclick="kembaliDariHistory()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
-        <!-- Kartu Ringkasan Prestasi & Rata-rata Mapel Terpilih -->
         <div id="container-history-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
-
-        <!-- Daftar Kartu Penilaian per Tanggal (Kronologis Terurut) -->
         <div id="container-history-card" class="space-y-4"></div>
     </section>
 
@@ -927,18 +921,20 @@
             return Math.round((total / arr.length) * 10) / 10;
         }
 
-        // RUMUS PENILAIAN YANG TELAH DISEMPURNAKAN
-        // PG: skor maks 1 (0 atau 1) | Non-PG: skor maks 3 (0-3) | Rubrik Keterampilan: skor maks 4 (1-4)
+        // RUMUS KALKULASI PROPORTIONAL & SMART (Mengabaikan kategori yang tidak diisi/tidak diujikan)
         function hitungKalkulasiNilaiSiswa(studentData) {
             let totalPen = 0, maxPen = 0;
             const penKeys = Object.keys(studentData.penScores || {});
             penKeys.forEach(jenis => {
                 const arr = studentData.penScores[jenis] || [];
-                const bobotMaksPerButir = (jenis === 'Pilihan Ganda') ? 1 : 3;
-                arr.forEach(skor => {
-                    totalPen += (parseFloat(skor) || 0);
-                    maxPen += bobotMaksPerButir;
-                });
+                const adaIsi = arr.some(v => (parseFloat(v) || 0) > 0);
+                if (adaIsi) {
+                    const bobotMaksPerButir = (jenis === 'Pilihan Ganda') ? 1 : 3;
+                    arr.forEach(skor => {
+                        totalPen += (parseFloat(skor) || 0);
+                        maxPen += bobotMaksPerButir;
+                    });
+                }
             });
             const nilaiPenPersen = maxPen > 0 ? (totalPen / maxPen) * 100 : 0;
 
@@ -946,15 +942,25 @@
             const ketKeys = Object.keys(studentData.ketScores || {});
             ketKeys.forEach(jenis => {
                 const arr = studentData.ketScores[jenis] || [];
-                arr.forEach(skor => {
-                    totalKet += (parseFloat(skor) || 0);
-                    maxKet += 4; // Skala rubrik 1-4
-                });
+                const adaIsiKet = arr.some(v => (parseFloat(v) || 0) > 0);
+                if (adaIsiKet) {
+                    arr.forEach(skor => {
+                        totalKet += (parseFloat(skor) || 0);
+                        maxKet += 4; 
+                    });
+                }
             });
             const nilaiKetPersen = maxKet > 0 ? (totalKet / maxKet) * 100 : 0;
 
-            // Rumus: 70% Pengetahuan + 30% Keterampilan dengan pembulatan 1 desimal
-            const finalScore = (0.7 * nilaiPenPersen) + (0.3 * nilaiKetPersen);
+            let finalScore = 0;
+            if (maxPen > 0 && maxKet > 0) {
+                finalScore = (0.7 * nilaiPenPersen) + (0.3 * nilaiKetPersen);
+            } else if (maxPen > 0) {
+                finalScore = nilaiPenPersen;
+            } else if (maxKet > 0) {
+                finalScore = nilaiKetPersen;
+            }
+
             const finalRounded = Math.round(finalScore * 10) / 10;
 
             return {
@@ -1778,7 +1784,7 @@
 
                 let htmlPen = jenisPen.map(j => {
                     let jmlSoal = 5;
-                    const jmlInp = document.querySelector(`.jml-soal-pen-input[data-jenis="${j}"]`);
+                    const jmlInp = document.querySelector(`.jml-mapel-pen-input[data-jenis="${j}"]`);
                     if (jmlInp) jmlSoal = parseInt(jmlInp.value) || 5;
 
                     if (!studentData.penScores[j]) studentData.penScores[j] = new Array(jmlSoal).fill(0);
@@ -2055,7 +2061,6 @@
             });
         }
 
-        // RATA-RATA RAPOR ADIL: Hanya membagi mapel yang sudah diujikan (bukan dipukul rata bagi 9)
         function initAnalisis() {
             const tbody = document.getElementById('tabel-analisis-body');
             if (!tbody) return;
@@ -2086,7 +2091,6 @@
                     tds += `<td class="p-4 text-center text-blue-600 font-bold cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')">${mapelAvg > 0 ? mapelAvg.toFixed(1) : '-'}</td>`;
                 });
 
-                // Pembagi adil: Jika baru ada 2 mapel yang dinilai, dibagi 2 bukan dibagi 9
                 let rataRata = countMapelWithScore > 0 ? Math.round((totalScore / countMapelWithScore) * 10) / 10 : 0;
                 tds += `<td class="p-4 text-center font-extrabold text-blue-600">${rataRata > 0 ? rataRata.toFixed(1) : '-'}</td>`;
                 tr.innerHTML = tds;
