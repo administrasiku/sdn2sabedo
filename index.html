@@ -7,20 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-            overflow-x: hidden;
-        }
-        .view-section {
-            display: none;
-            min-height: 100vh;
-        }
-        .view-section.active {
-            display: flex;
-            flex-direction: column;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
+        .view-section { display: none; min-height: 100vh; }
+        .view-section.active { display: flex; flex-direction: column; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -148,12 +137,12 @@
             <div onclick="switchView('view-rekap-nilai')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Penilaian</h3>
-                <p class="text-slate-500 text-sm mt-1">Rekap otomatis jadwal harian & masa lampau.</p>
+                <p class="text-slate-500 text-sm mt-1">Hasil kalkulasi 70% pengetahuan & 30% keterampilan hari ini.</p>
             </div>
             <div onclick="switchView('view-analisis')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">🔍</div>
                 <h3 class="text-lg font-bold text-slate-900">Analisis Nilai Siswa</h3>
-                <p class="text-slate-500 text-sm mt-1">Rata-rata kumulatif rapor & drill-down history.</p>
+                <p class="text-slate-500 text-sm mt-1">Rata-rata kumulatif rapor & klik nilai untuk history.</p>
             </div>
         </div>
     </section>
@@ -669,11 +658,11 @@
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI -->
+    <!-- 10. REKAP NILAI (STATIS NON-KLIK KHUSUS HARI INI: 70% PENGETAHUAN & 30% KETERAMPILAN) -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4">
             <div>
-                <h2 class="text-xl font-bold text-slate-900">Rekapitulasi Nilai Siswa</h2>
+                <h2 class="text-xl font-bold text-slate-900">Rekapitulasi Nilai Siswa Hari Ini</h2>
                 <p id="rekap-realtime-clock" class="text-sm text-slate-500">Memuat waktu real-time...</p>
             </div>
             <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
@@ -705,7 +694,7 @@
     <!-- 10.1 MODAL DETAIL NILAI REKAP & HISTORY -->
     <div id="modal-detail-nilai" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full space-y-4">
-            <h3 id="modal-detail-title" class="text-xl font-bold text-slate-900">Detail Penilaian</h3>
+            <h3 id="modal-detail-title" class="text-xl font-bold text-slate-900">Detail Riwayat Penilaian</h3>
             <div id="modal-detail-content" class="bg-slate-50 p-4 rounded-xl border space-y-2 text-sm max-h-60 overflow-y-auto"></div>
             <div class="flex justify-end pt-2">
                 <button onclick="document.getElementById('modal-detail-nilai').classList.add('hidden')" class="bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Tutup</button>
@@ -713,12 +702,12 @@
         </div>
     </div>
 
-    <!-- 11. ANALISIS NILAI -->
+    <!-- 11. ANALISIS NILAI (RATA-RATA KESELURUHAN DENGAN DRILL-DOWN HISTORY) -->
     <section id="view-analisis" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
                 <h2 class="text-xl font-bold text-slate-900">Analisis Nilai Siswa</h2>
-                <p class="text-sm text-slate-500">Nilai rata-rata akumulatif rapor (Klik angka nilai untuk melihat history lengkap)</p>
+                <p class="text-sm text-slate-500">Nilai rata-rata kumulatif rapor (Klik angka nilai untuk melihat history lengkap per tanggal)</p>
             </div>
             <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
@@ -1342,7 +1331,7 @@
                 let div = document.createElement('div');
                 div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
                 div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Soal Keterampilan (${cb.value})</span>
+                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal Keterampilan (${cb.value})</span>
                     <input type="number" min="1" max="20" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-mapel-ket-input" data-jenis="${cb.value}">
                 `;
                 container.appendChild(div);
@@ -1369,6 +1358,13 @@
             jenisInfoMapel[activeMapelAndri].penList = penArr;
             jenisInfoMapel[activeMapelAndri].ketList = ketArr;
             jenisInfoMapel[activeMapelAndri].tpKetText = tpKet;
+
+            // Kunci jumlah aspek dinamis tanpa batasan default
+            jenisInfoMapel[activeMapelAndri].ketCounts = {};
+            ketArr.forEach(j => {
+                const inp = document.querySelector(`.jml-mapel-ket-input[data-jenis="${j}"]`);
+                jenisInfoMapel[activeMapelAndri].ketCounts[j] = inp ? (parseInt(inp.value) || 3) : 3;
+            });
 
             const today = getTodayKey();
             document.getElementById('input-tanggal-mapel-aktif').value = today;
@@ -1413,16 +1409,14 @@
                 }).join('');
 
                 let htmlKet = jenisKet.map(j => {
-                    let jmlSoal = 3;
-                    const jmlInp = document.querySelector(`.jml-mapel-ket-input[data-jenis="${j}"]`);
-                    if (jmlInp) jmlSoal = parseInt(jmlInp.value) || 3;
+                    let jmlSoal = (jenisInfoMapel[activeMapelAndri].ketCounts && jenisInfoMapel[activeMapelAndri].ketCounts[j]) ? jenisInfoMapel[activeMapelAndri].ketCounts[j] : 3;
 
                     if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(jmlSoal).fill(0);
 
                     let selects = studentData.ketScores[j].map((skor, sIdx) => {
                         return `
                             <div class="m-0.5 inline-block bg-white p-1.5 rounded border">
-                                <span class="block text-[9px] font-bold text-indigo-600">S${sIdx+1}</span>
+                                <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}</span>
                                 <select onchange="updateKetSkorMapel(${idx}, '${j}', ${sIdx}, this.value)" class="bg-slate-50 border rounded p-1 text-[10px] font-bold">
                                     <option value="0" ${skor===0?'selected':''}>Skor</option>
                                     <option value="4" ${skor===4?'selected':''}>4</option>
@@ -1571,7 +1565,7 @@
                 tr.innerHTML = `
                     <td class="p-4 font-semibold text-slate-500">${idx + 1}</td>
                     <td class="p-4 font-medium text-slate-900">${nama}</td>
-                    <td class="p-4 text-center font-bold text-indigo-600 cursor-pointer underline hover:text-blue-600" onclick='bukaDetailNilai("${nama}", "${mapel}", ${targetScore}, "${targetDate}", "Arsip Rekap Mapel")'>${targetScore > 0 ? targetScore.toFixed(1) : '-'}</td>
+                    <td class="p-4 text-center font-bold text-indigo-600">${targetScore > 0 ? targetScore.toFixed(1) : '-'}</td>
                     <td class="p-4 text-center text-xs text-slate-500">${targetDate}</td>
                 `;
                 tbody.appendChild(tr);
@@ -1651,7 +1645,7 @@
                 let div = document.createElement('div');
                 div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
                 div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Soal Keterampilan (${cb.value})</span>
+                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal Keterampilan (${cb.value})</span>
                     <input type="number" min="1" max="20" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-soal-ket-input" data-jenis="${cb.value}">
                 `;
                 container.appendChild(div);
@@ -1693,6 +1687,13 @@
             let ketArr = Array.from(checkedKet).map(cb => cb.value);
             jenisInfoMapel[activeMapelAndri].ketList = ketArr;
             jenisInfoMapel[activeMapelAndri].tpKetText = tpKet;
+
+            // Kunci jumlah aspek dinamis tanpa batasan default 3
+            jenisInfoMapel[activeMapelAndri].ketCounts = {};
+            ketArr.forEach(j => {
+                const inp = document.querySelector(`.jml-soal-ket-input[data-jenis="${j}"]`);
+                jenisInfoMapel[activeMapelAndri].ketCounts[j] = inp ? (parseInt(inp.value) || 3) : 3;
+            });
 
             document.getElementById('label-mapel-eksekusi-pen').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
             const today = getTodayKey();
@@ -1775,16 +1776,16 @@
                 let studentData = nilaiDataAndri[activeMapelAndri][today][idx];
 
                 let htmlKet = jenisKet.map(j => {
-                    let jmlSoal = 3;
-                    const jmlInp = document.querySelector(`.jml-soal-ket-input[data-jenis="${j}"]`);
-                    if (jmlInp) jmlSoal = parseInt(jmlInp.value) || 3;
+                    let jmlSoal = (jenisInfoMapel[activeMapelAndri].ketCounts && jenisInfoMapel[activeMapelAndri].ketCounts[j]) ? jenisInfoMapel[activeMapelAndri].ketCounts[j] : 3;
 
-                    if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(jmlSoal).fill(0);
+                    if (!studentData.ketScores[j] || studentData.ketScores[j].length !== jmlSoal) {
+                        studentData.ketScores[j] = new Array(jmlSoal).fill(0);
+                    }
 
                     let selects = studentData.ketScores[j].map((skor, sIdx) => {
                         return `
                             <div class="m-0.5 inline-block bg-white p-1.5 rounded border">
-                                <span class="block text-[9px] font-bold text-indigo-600">S${sIdx+1}</span>
+                                <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}</span>
                                 <select onchange="updateKetSkorAndri(${idx}, '${j}', ${sIdx}, this.value)" class="bg-slate-50 border rounded p-1 text-[10px] font-bold">
                                     <option value="0" ${skor===0?'selected':''}>Skor</option>
                                     <option value="4" ${skor===4?'selected':''}>4</option>
@@ -1852,7 +1853,7 @@
                         if (!historyNilai[daftarSiswa[idx]]) historyNilai[daftarSiswa[idx]] = {};
                         if (!historyNilai[daftarSiswa[idx]][mapel]) historyNilai[daftarSiswa[idx]][mapel] = [];
                         let existing = historyNilai[daftarSiswa[idx]][mapel].find(h => h.date === today);
-                        let detailText = `Pengetahuan: ${nilaiPenPersen.toFixed(1)}% | Keterampilan: ${nilaiKetPersen.toFixed(1)}%`;
+                        let detailText = `Pengetahuan: ${nilaiPenPersen.toFixed(1)}% (70%) | Keterampilan: ${nilaiKetPersen.toFixed(1)}% (30%)`;
                         if (existing) {
                             existing.score = d.final;
                             existing.detail = detailText;
@@ -1999,18 +2000,16 @@
                 
                 jadwalHariIni.forEach(mapel => {
                     let score = 0;
-                    let targetRecord = null;
 
                     if (historyNilai[nama] && historyNilai[nama][mapel]) {
                         let found = historyNilai[nama][mapel].find(h => h.date === chosenDate);
                         if (found) {
                             score = found.score;
-                            targetRecord = found;
                         }
                     }
 
                     if (score > 0) {
-                        tds += `<td class="p-4 text-center font-bold text-slate-700 cursor-pointer underline hover:text-blue-600" onclick='bukaDetailNilai("${nama}", "${mapel}", ${score}, "${targetRecord ? targetRecord.date : chosenDate}", "${targetRecord ? targetRecord.detail : '-'}")'>${score.toFixed(1)}</td>`;
+                        tds += `<td class="p-4 text-center font-bold text-slate-800">${score.toFixed(1)}</td>`;
                     } else {
                         tds += `<td class="p-4 text-center text-slate-400">-</td>`;
                     }
@@ -2019,28 +2018,6 @@
                 tr.innerHTML = tds;
                 tbody.appendChild(tr);
             });
-        }
-
-        function bukaDetailNilai(nama, mapel, score, date, detail) {
-            document.getElementById('modal-detail-title').innerText = `Detail Penilaian: ${mapel} (${nama})`;
-            
-            let records = (historyNilai[nama] && historyNilai[nama][mapel]) ? historyNilai[nama][mapel] : [];
-            let historyHtml = '';
-            if (records.length > 0) {
-                historyHtml = `<div class="space-y-2 mb-3"><strong class="text-xs text-slate-500 uppercase">Semua History Penilaian:</strong>`;
-                records.forEach(r => {
-                    historyHtml += `<div class="bg-white p-2.5 rounded-lg border text-xs flex justify-between items-center"><span>📅 ${r.date}</span><strong class="text-blue-600">${r.score.toFixed(1)}</strong></div>`;
-                });
-                historyHtml += `</div>`;
-            }
-
-            document.getElementById('modal-detail-content').innerHTML = `
-                ${historyHtml}
-                <p><strong>Tanggal Terpilih:</strong> ${date}</p>
-                <p><strong>Nilai Akhir:</strong> ${score.toFixed(1)}</p>
-                <p><strong>Rincian:</strong> ${detail}</p>
-            `;
-            document.getElementById('modal-detail-nilai').classList.remove('hidden');
         }
 
         function initAnalisis() {
@@ -2073,7 +2050,7 @@
                         totalScore += mapelAvg;
                         countMapelWithScore++;
                     }
-                    tds += `<td class="p-4 text-center text-blue-600 font-bold cursor-pointer underline hover:text-indigo-800" onclick="bukaHistorySiswaDariAnalisis('${nama}', '${mapel}')">${mapelAvg > 0 ? mapelAvg.toFixed(1) : '-'}</td>`;
+                    tds += `<td class="p-4 text-center text-blue-600 font-bold cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')">${mapelAvg > 0 ? mapelAvg.toFixed(1) : '-'}</td>`;
                 });
 
                 let rataRata = countMapelWithScore > 0 ? (totalScore / allMapelGlobal.length) : 0;
@@ -2083,9 +2060,31 @@
             });
         }
 
-        function bukaHistorySiswaDariAnalisis(namaSiswa, mapel) {
-            historyAsalView = "analisis";
-            bukaHistorySiswa(namaSiswa, mapel);
+        function bukaModalHistoryMapel(nama, mapel) {
+            document.getElementById('modal-detail-title').innerText = `Riwayat Penilaian: ${mapel} (${nama})`;
+            
+            let records = (historyNilai[nama] && historyNilai[nama][mapel]) ? historyNilai[nama][mapel] : [];
+            let historyHtml = '';
+            if (records.length > 0) {
+                historyHtml = `<div class="space-y-2 mb-2"><strong class="text-xs text-slate-500 uppercase tracking-wider">Daftar Tanggal & Perolehan Nilai:</strong>`;
+                records.forEach(r => {
+                    historyHtml += `
+                        <div class="bg-white p-3 rounded-xl border flex justify-between items-center text-xs">
+                            <div>
+                                <span class="font-bold text-slate-800">📅 ${r.date}</span>
+                                <p class="text-slate-500 mt-0.5">${r.detail || 'Penilaian'}</p>
+                            </div>
+                            <span class="text-sm font-extrabold text-blue-600">${r.score.toFixed(1)}</span>
+                        </div>
+                    `;
+                });
+                historyHtml += `</div>`;
+            } else {
+                historyHtml = `<p class="text-slate-500 italic text-center py-4">Belum ada catatan riwayat penilaian untuk mata pelajaran ini.</p>`;
+            }
+
+            document.getElementById('modal-detail-content').innerHTML = historyHtml;
+            document.getElementById('modal-detail-nilai').classList.remove('hidden');
         }
 
         function kembaliDariHistory() {
@@ -2160,7 +2159,7 @@
 
             allMapelGlobal.forEach(mapel => {
                 let score = 0;
-                if (historyNilai[namaSiswa] && historyNilai[namaSiswa][mapel] && historyNilai[namaSiswa][mapel].length > 0) {
+                if (historyNilai[namaSiswa] && historyNilai[nama][mapel] && historyNilai[nama][mapel].length > 0) {
                     let sumM = 0;
                     historyNilai[namaSiswa][mapel].forEach(rec => sumM += rec.score);
                     score = sumM / historyNilai[namaSiswa][mapel].length;
@@ -2189,7 +2188,7 @@
             const container = document.getElementById('container-history-card');
             container.innerHTML = '';
 
-            let records = (historyNilai[namaSiswa] && historyNilai[nama][mapel]) ? historyNilai[nama][mapel] : [];
+            let records = (historyNilai[namaSiswa] && historyNilai[namaSiswa][mapel]) ? historyNilai[namaSiswa][mapel] : [];
 
             if (records.length === 0) {
                 container.innerHTML = `<div class="bg-white p-6 rounded-2xl border text-center text-slate-500">Belum ada riwayat penilaian untuk mata pelajaran ini.</div>`;
