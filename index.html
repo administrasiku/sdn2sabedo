@@ -760,33 +760,44 @@
         </div>
     </section>
 
-    <!-- 12. PORTAL SISWA -->
+    <!-- 12. PORTAL SISWA (INTERAKTIF & MOTIVATIF) -->
     <section id="view-portal-siswa" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 mb-6 gap-4">
             <div>
-                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Portal Siswa</span>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Portal Pembelajaran Siswa</span>
                 <h2 id="nama-siswa-login" class="text-2xl font-extrabold text-slate-900">Nama Siswa</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Pantau jadwal harian, pencapaian belajar, dan riwayat tugas Anda di sini.</p>
             </div>
             <button onclick="logoutSesi()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 font-semibold px-4 py-2 rounded-xl text-sm transition">Keluar</button>
         </div>
 
-        <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <!-- Kartu Jadwal Pelajaran Hari Ini -->
+        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-5 rounded-2xl mb-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm">
             <div>
-                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Jadwal Hari Ini</span>
-                <h3 id="label-hari-ini" class="text-lg font-extrabold text-emerald-900 mt-0.5">Hari Ini: -</h3>
+                <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest">Jadwal Pelajaran Hari Ini</span>
+                <h3 id="label-hari-ini" class="text-lg font-extrabold text-emerald-950 mt-0.5">Hari Ini: -</h3>
             </div>
-            <div id="badge-jadwal-mapel" class="flex gap-2 flex-wrap"></div>
+            <div id="badge-jadwal-mapel" class="flex gap-2 flex-wrap justify-center"></div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Tabel Nilai & Riwayat (Seluruh Baris Interaktif Dapat Diklik) -->
             <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden p-6">
-                <h3 class="text-lg font-bold text-slate-900 mb-4">Nilai Mata Pelajaran (Klik untuk History)</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Daftar Nilai Mata Pelajaran</h3>
+                        <p class="text-xs text-slate-500">Ketuk mata pelajaran untuk melihat riwayat penilaian lengkap.</p>
+                    </div>
+                    <span class="text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full border border-blue-100">Bisa Diklik 👆</span>
+                </div>
+
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
-                                <th class="p-3">Mata Pelajaran</th>
-                                <th class="p-3 text-center">Nilai Akhir & Jenis Penilaian</th>
+                                <th class="p-3.5">Mata Pelajaran</th>
+                                <th class="p-3.5 text-center">Rata-rata & Status</th>
+                                <th class="p-3.5 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="tabel-nilai-siswa-body" class="divide-y divide-slate-100 text-sm"></tbody>
@@ -794,32 +805,44 @@
                 </div>
             </div>
             
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Peringkat Kelas</h3>
-                    <p class="text-xs text-slate-500 mb-6">Posisi ranking Anda berdasarkan analisis guru.</p>
-                    <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 text-center">
-                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Ranking Anda</span>
-                        <div id="badge-ranking" class="text-4xl font-extrabold text-emerald-700 mt-2">-</div>
-                    </div>
+            <!-- Kolom Samping: Peringkat Kelas & Motivasi -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 text-center">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Peringkat Kelas</span>
+                    <div id="badge-ranking" class="text-4xl font-extrabold text-emerald-600 mt-2">-</div>
+                    <p class="text-xs text-slate-500 mt-2">Berdasarkan kalkulasi nilai kumulatif seluruh mata pelajaran.</p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400 text-center">
-                    SDN 2 Sabedo Academic System
+
+                <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl p-6 text-slate-800">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl">💡</span>
+                        <h4 class="text-sm font-bold text-indigo-900">Pesan Semangat</h4>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed" id="catatan-motivasi-siswa">
+                        "Rajinlah belajar dan aktif di kelas. Setiap usaha yang kamu berikan hari ini akan membuahkan hasil membanggakan di masa depan!"
+                    </p>
+                    <div class="mt-4 pt-3 border-t border-indigo-100 text-[11px] text-slate-400">
+                        SDN 2 Sabedo • Berikan warna pada masa depan
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 13. HISTORY SISWA -->
+    <!-- 13. HISTORY SISWA (DILENGKAPI KARTU RINGKASAN & PESAN APRESIASI) -->
     <section id="view-history-siswa" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
                 <span id="history-mapel-title" class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Mata Pelajaran</span>
-                <h2 class="text-xl font-bold text-slate-900">Riwayat & Tanggal Penilaian</h2>
+                <h2 class="text-xl font-bold text-slate-900">Riwayat Penilaian Siswa</h2>
             </div>
             <button onclick="kembaliDariHistory()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
+        <!-- Kartu Ringkasan Prestasi & Rata-rata Mapel Terpilih -->
+        <div id="container-history-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
+
+        <!-- Daftar Kartu Penilaian per Tanggal (Kronologis Terurut) -->
         <div id="container-history-card" class="space-y-4"></div>
     </section>
 
@@ -888,6 +911,21 @@
             localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
             localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
             localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
+        }
+
+        // FUNGSI PEMBANTU (HELPER FUNCTION): Ambil rekaman dan rata-rata mapel siswa tanpa bug typo variabel
+        function dapatkanRekamanMapelSiswa(namaSiswa, mapel) {
+            if (historyNilai && historyNilai[namaSiswa] && Array.isArray(historyNilai[namaSiswa][mapel])) {
+                return historyNilai[namaSiswa][mapel];
+            }
+            return [];
+        }
+
+        function hitungRataRataMapel(namaSiswa, mapel) {
+            const arr = dapatkanRekamanMapelSiswa(namaSiswa, mapel);
+            if (arr.length === 0) return 0;
+            const total = arr.reduce((acc, curr) => acc + (parseFloat(curr.score) || 0), 0);
+            return total / arr.length;
         }
 
         window.onload = function() {
@@ -1543,7 +1581,7 @@
             document.getElementById('label-rekap-khusus-mapel-title').innerText = `Rekap Nilai: ${mapel}`;
 
             daftarSiswa.forEach((nama, idx) => {
-                let records = (historyNilai[nama] && historyNilai[nama][mapel]) ? historyNilai[nama][mapel] : [];
+                let records = dapatkanRekamanMapelSiswa(nama, mapel);
                 
                 let filteredRecs = records.filter(r => r.date === chosenArsipTgl);
                 let targetScore = 0;
@@ -2040,11 +2078,8 @@
                 let countMapelWithScore = 0;
 
                 allMapelGlobal.forEach(mapel => {
-                    let mapelAvg = 0;
-                    if (historyNilai[nama] && historyNilai[nama][mapel] && historyNilai[nama][mapel].length > 0) {
-                        let sumM = 0;
-                        historyNilai[nama][mapel].forEach(rec => sumM += rec.score);
-                        mapelAvg = sumM / historyNilai[nama][mapel].length; 
+                    let mapelAvg = hitungRataRataMapel(nama, mapel);
+                    if (mapelAvg > 0) {
                         totalScore += mapelAvg;
                         countMapelWithScore++;
                     }
@@ -2061,7 +2096,7 @@
         function bukaModalHistoryMapel(nama, mapel) {
             document.getElementById('modal-detail-title').innerText = `Riwayat Penilaian: ${mapel} (${nama})`;
             
-            let records = (historyNilai[nama] && historyNilai[nama][mapel]) ? historyNilai[nama][mapel] : [];
+            let records = dapatkanRekamanMapelSiswa(nama, mapel);
             let historyHtml = '';
             if (records.length > 0) {
                 historyHtml = `<div class="space-y-2 mb-2"><strong class="text-xs text-slate-500 uppercase tracking-wider">Daftar Tanggal & Perolehan Nilai:</strong>`;
@@ -2097,11 +2132,7 @@
             let calculated = daftarSiswa.map(name => {
                 let sum = 0;
                 allMapelGlobal.forEach(m => {
-                    if (historyNilai[name] && historyNilai[name][m] && historyNilai[name][m].length > 0) {
-                        let sumM = 0;
-                        historyNilai[name][m].forEach(rec => sumM += rec.score);
-                        sum += (sumM / historyNilai[name][m].length);
-                    }
+                    sum += hitungRataRataMapel(name, m);
                 });
                 return { name: name, avg: sum / allMapelGlobal.length };
             });
@@ -2141,8 +2172,9 @@
             alert("Analisis ranking berhasil dihapus!");
         }
 
+        // PEMBARUAN PENUH PORTAL SISWA: Interaktif, Badge Status Warna, Row Clickable
         function loadPortalSiswa(namaSiswa) {
-            document.getElementById('nama-siswa-login').innerText = `Selamat Datang, ${namaSiswa}`;
+            document.getElementById('nama-siswa-login').innerText = `Halo, ${namaSiswa}! 👋`;
             
             const dayOfWeek = new Date().getDay(); 
             const hariNamaArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -2150,28 +2182,66 @@
             
             const jadwalHariIni = jadwalPelajaran[dayOfWeek] || ["Belajar Mandiri"];
             const badgeJadwal = document.getElementById('badge-jadwal-mapel');
-            badgeJadwal.innerHTML = jadwalHariIni.map(m => `<span class="bg-white text-emerald-800 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200 shadow-sm">${m}</span>`).join('');
+            badgeJadwal.innerHTML = jadwalHariIni.map(m => `
+                <span class="bg-white text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-200 shadow-sm flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>${m}
+                </span>
+            `).join('');
 
             const tbody = document.getElementById('tabel-nilai-siswa-body');
             tbody.innerHTML = '';
 
+            let totalNilaiSemuaMapel = 0;
+            let mapelDinilaiCount = 0;
+
             allMapelGlobal.forEach(mapel => {
-                let score = 0;
-                if (historyNilai[namaSiswa] && historyNilai[nama][mapel] && historyNilai[nama][mapel].length > 0) {
-                    let sumM = 0;
-                    historyNilai[namaSiswa][mapel].forEach(rec => sumM += rec.score);
-                    score = sumM / historyNilai[namaSiswa][mapel].length;
+                const records = dapatkanRekamanMapelSiswa(namaSiswa, mapel);
+                const score = hitungRataRataMapel(namaSiswa, mapel);
+                const countSesi = records.length;
+
+                if (score > 0) {
+                    totalNilaiSemuaMapel += score;
+                    mapelDinilaiCount++;
+                }
+
+                // Badge visual status nilai
+                let badgeStatus = '';
+                if (countSesi === 0) {
+                    badgeStatus = `<span class="bg-slate-100 text-slate-500 text-xs font-semibold px-2.5 py-1 rounded-lg border">Belum ada tugas</span>`;
+                } else if (score >= 75) {
+                    badgeStatus = `<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-lg border border-emerald-200">${score.toFixed(1)} • Tuntas ⭐</span>`;
+                } else {
+                    badgeStatus = `<span class="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-200">${score.toFixed(1)} • Bimbingan ✏️</span>`;
                 }
 
                 let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition";
+                tr.className = "hover:bg-blue-50/60 cursor-pointer transition group";
+                // Seluruh baris bisa diklik untuk membuka riwayat
+                tr.onclick = function() {
+                    historyAsalView = 'portal';
+                    bukaHistorySiswa(namaSiswa, mapel);
+                };
+
                 tr.innerHTML = `
-                    <td class="p-3 font-medium text-blue-600 underline cursor-pointer" onclick="historyAsalView='portal'; bukaHistorySiswa('${namaSiswa}', '${mapel}')">${mapel}</td>
-                    <td class="p-3 text-center font-bold text-slate-800 cursor-pointer" onclick="historyAsalView='portal'; bukaHistorySiswa('${namaSiswa}', '${mapel}')">${score > 0 ? score.toFixed(1) : 'Belum Ada Nilai'}</td>
+                    <td class="p-3.5">
+                        <div class="font-bold text-slate-800 group-hover:text-blue-600 transition flex items-center gap-1.5">
+                            <span>📘</span> ${mapel}
+                        </div>
+                        <span class="text-[11px] text-slate-400 font-medium">${countSesi > 0 ? `${countSesi} kali penilaian tercatat` : 'Menunggu asesmen'}</span>
+                    </td>
+                    <td class="p-3.5 text-center font-bold">
+                        ${badgeStatus}
+                    </td>
+                    <td class="p-3.5 text-right">
+                        <span class="inline-flex items-center text-xs font-bold text-blue-600 group-hover:translate-x-1 transition duration-150">
+                            Riwayat →
+                        </span>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
 
+            // Ranking Display
             let rankDisplay = "-";
             if (isRankingDisplayed && rankingGlobal[namaSiswa]) {
                 let r = rankingGlobal[namaSiswa];
@@ -2179,30 +2249,79 @@
                 rankDisplay = `# ${r} ${star}`;
             }
             document.getElementById('badge-ranking').innerText = rankDisplay;
+
+            // Catatan Motivasi Personal Siswa
+            const rataRataSiswa = mapelDinilaiCount > 0 ? (totalNilaiSemuaMapel / allMapelGlobal.length) : 0;
+            const elMotivasi = document.getElementById('catatan-motivasi-siswa');
+            if (rataRataSiswa >= 85) {
+                elMotivasi.innerText = `"Prestasi yang luar biasa, ${namaSiswa}! Pertahankan semangat belajarmu dan teruslah menjadi inspirasi bagi teman-teman."`;
+            } else if (rataRataSiswa >= 75) {
+                elMotivasi.innerText = `"Bagus sekali, ${namaSiswa}! Hasil belajarmu sudah mencapai target tuntas. Terus asah kemampuanmu di setiap tugas!"`;
+            } else {
+                elMotivasi.innerText = `"Tetap semangat dan pantang menyerah, ${namaSiswa}! Setiap latihan dan bimbingan guru akan membantumu meraih nilai yang semakin baik."`;
+            }
         }
 
+        // PEMBARUAN HALAMAN RIWAYAT SISWA: Kartu Ringkasan, Nilai Tertinggi, & Daftar Kronologis
         function bukaHistorySiswa(namaSiswa, mapel) {
             document.getElementById('history-mapel-title').innerText = `Riwayat Penilaian: ${mapel} (${namaSiswa})`;
+            
+            const containerSummary = document.getElementById('container-history-summary');
             const container = document.getElementById('container-history-card');
+            containerSummary.innerHTML = '';
             container.innerHTML = '';
 
-            let records = (historyNilai[namaSiswa] && historyNilai[namaSiswa][mapel]) ? historyNilai[namaSiswa][mapel] : [];
+            let records = dapatkanRekamanMapelSiswa(namaSiswa, mapel);
 
             if (records.length === 0) {
-                container.innerHTML = `<div class="bg-white p-6 rounded-2xl border text-center text-slate-500">Belum ada riwayat penilaian untuk mata pelajaran ini.</div>`;
+                containerSummary.innerHTML = '';
+                container.innerHTML = `
+                    <div class="bg-white p-10 rounded-2xl border border-dashed border-slate-300 text-center space-y-2">
+                        <span class="text-3xl">📝</span>
+                        <h4 class="font-bold text-slate-700">Belum Ada Riwayat Penilaian</h4>
+                        <p class="text-xs text-slate-400">Guru belum mencatat penilaian pada mata pelajaran ${mapel}. Nilai akan otomatis tampil setelah ada asesmen baru.</p>
+                    </div>
+                `;
             } else {
-                records.forEach(rec => {
+                // Hitung data ringkasan
+                const rataRata = hitungRataRataMapel(namaSiswa, mapel);
+                const nilaiTertinggi = Math.max(...records.map(r => parseFloat(r.score) || 0));
+                const totalTugas = records.length;
+
+                // Tampilkan 3 Kartu Ringkasan
+                containerSummary.innerHTML = `
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Penilaian</span>
+                        <div class="text-2xl font-extrabold text-indigo-600 mt-2">${totalTugas} Sesi</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Rata-rata Berjalan</span>
+                        <div class="text-2xl font-extrabold text-blue-600 mt-2">${rataRata.toFixed(1)}</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nilai Tertinggi ⭐</span>
+                        <div class="text-2xl font-extrabold text-emerald-600 mt-2">${nilaiTertinggi.toFixed(1)}</div>
+                    </div>
+                `;
+
+                // Urutkan rekaman dari yang paling baru ke lama
+                let sortedRecords = [...records].reverse();
+
+                sortedRecords.forEach((rec, idx) => {
                     let card = document.createElement('div');
-                    card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center";
+                    card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-blue-400 transition";
+                    
                     card.innerHTML = `
                         <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tanggal Penilaian</span>
-                            <p class="text-base font-bold text-slate-800 mt-1">${rec.date}</p>
-                            <p class="text-xs text-slate-500 mt-0.5">${rec.detail || ''}</p>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-lg">Sesi #${sortedRecords.length - idx}</span>
+                                <span class="text-xs font-bold text-slate-500">📅 ${rec.date}</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-2 font-medium">${rec.detail || 'Penilaian Mata Pelajaran'}</p>
                         </div>
-                        <div class="text-right">
-                            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Nilai Diperoleh</span>
-                            <p class="text-2xl font-extrabold text-blue-700 mt-1">${rec.score.toFixed(1)}</p>
+                        <div class="sm:text-right w-full sm:w-auto flex sm:flex-col justify-between items-center sm:items-end border-t sm:border-t-0 pt-3 sm:pt-0">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Nilai Akhir</span>
+                            <span class="text-2xl font-extrabold text-blue-600">${parseFloat(rec.score).toFixed(1)}</span>
                         </div>
                     `;
                     container.appendChild(card);
