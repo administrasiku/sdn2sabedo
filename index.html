@@ -577,7 +577,7 @@
         </div>
     </section>
 
-    <!-- 9.2 SETUP KETERAMPILAN (DENGAN CUSTOM MANUAL) -->
+    <!-- 9.2 SETUP KETERAMPILAN -->
     <section id="view-setup-keterampilan" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -686,7 +686,7 @@
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI (DILENGKAPI PENGUNCI OTOMATIS KE HARI INI) -->
+    <!-- 10. REKAP NILAI (DILENGKAPI PENGUNCI MUTLAK & TOMBOL HARI INI YANG RESPONSIF) -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4">
             <div>
@@ -696,7 +696,7 @@
             <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
-        <!-- Banner Pemberitahuan Status Tanggal Aktif Rekap -->
+        <!-- Banner Peringatan Status Tanggal Aktif Rekap -->
         <div id="banner-rekap-date-notice" class="hidden bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl text-xs font-medium mb-4 flex justify-between items-center">
             <span id="banner-notice-text">⚠️ Anda sedang melihat rekap untuk tanggal masa lampau.</span>
             <button onclick="setRekapHariIni()" class="bg-amber-600 text-white px-3 py-1 rounded-lg font-bold hover:bg-amber-500">Kembali ke Hari Ini</button>
@@ -955,7 +955,7 @@
             return Math.round((total / arr.length) * 10) / 10;
         }
 
-        // RUMUS PROPORTIONAL & SMART (Mendukung Custom Manual pada Pengetahuan & Keterampilan, Target 100 Tercapai)
+        // RUMUS SMART & PROPORTIONAL (Mendukung Custom Manual pada Pengetahuan & Keterampilan, Target 100 Tercapai)
         function hitungKalkulasiNilaiSiswa(studentData) {
             let totalPen = 0, maxPen = 0;
             const penKeys = Object.keys(studentData.penScores || {});
@@ -1018,7 +1018,7 @@
             if (elInpArsip) elInpArsip.value = todayStr;
             if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
             
-            // Mengunci otomatis tanggal rekap ke hari ini agar tidak ada isu rekap mendeteksi tanggal kemarin
+            // PENGUNCI MUTLAK TANGGAL REKAP KE HARI INI SAAT APLIKASI DIMUAT
             const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
             if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
 
@@ -1077,7 +1077,7 @@
             }
 
             if(viewId === 'view-rekap-nilai') {
-                // Selalu pastikan saat masuk rekap nilai tanggal terkunci ke hari ini
+                // PAKSA KUNCI KE HARI INI SETIAP KALI MASUK MENU REKAP NILAI
                 const todayStr = getTodayKey();
                 const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
                 if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
@@ -1911,6 +1911,14 @@
             }
             studentData.penScores[jenis][sIdx] = current;
             renderTabelFormPenilaianPengetahuan();
+        }
+
+        // FUNGSI UTAMA TOMBOL "HARI INI" & RENDER REKAP YANG RESPONSIF
+        function setRekapHariIni() {
+            const today = getTodayKey();
+            const elInp = document.getElementById('input-rekap-nilai-tanggal');
+            if (elInp) elInp.value = today;
+            initRekapNilai();
         }
 
         function initRekapNilai() {
