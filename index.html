@@ -708,7 +708,7 @@
                 <input type="date" id="input-rekap-nilai-tanggal" onchange="initRekapNilai()" class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm text-slate-700 focus:outline-none focus:border-blue-500">
             </div>
             <div class="self-end flex gap-2">
-                <button onclick="bukaRekapMapelSingle()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Rekap Sekarang / Input Massal Lampau</button>
+                <button onclick="bukaRekapMapelSingle()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Rekap Sekarang</button>
                 <button onclick="setRekapHariIni()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Hari Ini</button>
             </div>
         </div>
@@ -1985,7 +1985,104 @@
             renderTabelFormPenilaianPengetahuan();
         }
 
-        // FUNGSI UTAMA TOMBOL "REKAP SEKARANG" & "HARI INI" YANG DISEMPURNAKAN
+        // FUNGSI UTAMA TOMBOL "REKAP SEKARANG" UNTUK MEMBUKA FORM INPUT MASSAL LAMPAU SESUAI JADWAL HARI TERSEBUT
+        function bukaRekapMapelSingle() {
+            selectedLampauDate = document.getElementById('input-rekap-nilai-tanggal').value;
+            const today = getTodayKey();
+
+            if (!selectedLampauDate) {
+                alert("Pilih tanggal terlebih dahulu.");
+                return;
+            }
+
+            if (selectedLampauDate === today) {
+                alert("Tanggal yang dipilih adalah hari ini. Tabel rekapitulasi harian sudah otomatis ditampilkan di bawah.");
+                initRekapNilai();
+                return;
+            }
+
+            const dateObj = new Date(selectedLampauDate);
+            if (!isNaN(dateObj.getDay()) && dateObj.getDay() === 0) {
+                if (!confirm("⚠️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap nilai pada tanggal ini?")) {
+                    return;
+                }
+            }
+
+            const dayOfWeek = dateObj.getDay();
+            const jadwalHari = jadwalPelajaran[dayOfWeek] || [];
+            selectedMultiMapelList = jadwalHari.filter(m => daftarMapelAndri.includes(m));
+
+            if (selectedMultiMapelList.length === 0) {
+                alert("Tidak ada jadwal mata pelajaran Guru Kelas pada tanggal/hari tersebut.");
+                return;
+            }
+
+            document.getElementById('label-multimapel-date').innerText = `Rekapitulasi Masa Lampau — Tanggal: ${selectedLampauDate}`;
+            renderTabelFormMultiMapel();
+            switchView('view-form-rekap-multimapel');
+        }
+
+        // RENDER FORM MULTI-MAPEL UNTUK REKAP MANUAL LAMPAU
+        function renderTabelFormMultiMapel() {
+            const headerTr = document.getElementById('header-multimapel-table');
+            let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
+            selectedMultiMapelList.forEach(m => {
+                hHtml += `<th class="p-4 text-center">${m} (0-100)</th>`;
+            });
+            headerTr.innerHTML = hHtml;
+
+            const tbody = document.getElementById('tabel-multimapel-body');
+            tbody.innerHTML = '';
+
+            daftarSiswa.forEach((nama, idx) => {
+                let tr = document.createElement('tr');
+                let tdHtml = `<td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td><td class="p-4 font-medium text-slate-900 border-r">${nama}</td>`;
+                
+                selectedMultiMapelList.forEach(m => {
+                    let existingVal = "";
+                    if (historyNilai[nama] && historyNilai[nama][m]) {
+                        let f = historyNilai[nama][m].find(h => h.date === selectedLampauDate);
+                        if (f) existingVal = f.score;
+                    }
+                    tdHtml += `
+                        <td class="p-4 text-center">
+                            <input type="number" min="0" max="100" value="${existingVal > 0 ? existingVal : ''}" id="multim_${m}_${idx}" class="w-28 bg-slate-50 border rounded-lg p-2 text-center text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500" placeholder="0-100">
+                        </td>
+                    `;
+                });
+                tr.innerHTML = tdHtml;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function simpanMultiMapelLampau() {
+            selectedMultiMapelList.forEach(mapel => {
+                daftarSiswa.forEach((nama, idx) => {
+                    let inp = document.getElementById(`multim_${mapel}_${idx}`);
+                    if (inp && inp.value.trim() !== '') {
+                        let score = parseFloat(inp.value) || 0;
+                        score = Math.round(score * 10) / 10;
+                        if (!historyNilai[nama]) historyNilai[nama] = {};
+                        if (!historyNilai[nama][mapel]) historyNilai[nama][mapel] = [];
+                        let existing = historyNilai[nama][mapel].find(h => h.date === selectedLampauDate);
+                        let detailText = `Rekapitulasi Masa Lampau (${selectedLampauDate}) [Input Manual]`;
+                        if (existing) {
+                            existing.score = score;
+                            existing.detail = detailText;
+                        } else {
+                            historyNilai[nama][mapel].push({ date: selectedLampauDate, score: score, detail: detailText });
+                        }
+                    }
+                });
+            });
+
+            simpanKeLocalStorage();
+            alert("Data rekapitulasi massal masa lampau berhasil disimpan secara permanen dan disinkronkan ke rekap serta analisis nilai!");
+            initRekapNilai();
+            initAnalisis();
+            switchView('view-rekap-nilai');
+        }
+
         function setRekapHariIni() {
             const today = getTodayKey();
             const elInp = document.getElementById('input-rekap-nilai-tanggal');
@@ -2005,7 +2102,7 @@
 
             if (chosenDate !== today) {
                 if (bannerNotice) bannerNotice.classList.remove('hidden');
-                if (bannerText) bannerText.innerText = `⚠️ Anda sedang melihat rekap untuk tanggal ${chosenDate}.`;
+                if (bannerText) bannerText.innerText = `⚠️ Anda sedang melihat rekap untuk tanggal lampau (${chosenDate}). Klik 'Rekap Sekarang' untuk mengisi/mengedit nilai massal tanggal ini.`;
             } else {
                 if (bannerNotice) bannerNotice.classList.add('hidden');
             }
