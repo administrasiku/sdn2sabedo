@@ -686,7 +686,7 @@
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI (DILENGKAPI TOMBOL "REKAP SEKARANG" YANG RESPONSIF) -->
+    <!-- 10. REKAP NILAI -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4">
             <div>
@@ -704,11 +704,11 @@
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center gap-4">
             <div>
-                <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Tanggal Masa Lampau</label>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Tanggal</label>
                 <input type="date" id="input-rekap-nilai-tanggal" onchange="initRekapNilai()" class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm text-slate-700 focus:outline-none focus:border-blue-500">
             </div>
             <div class="self-end flex gap-2">
-                <button onclick="bukaRekapMapelSingle()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Rekap Sekarang</button>
+                <button onclick="bukaRekapMapelSingle()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Rekap Sekarang (Atau Input Massal Lampau)</button>
                 <button onclick="setRekapHariIni()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Hari Ini</button>
             </div>
         </div>
@@ -1985,7 +1985,7 @@
             renderTabelFormPenilaianPengetahuan();
         }
 
-        // FUNGSI UTAMA TOMBOL "REKAP SEKARANG" & "HARI INI" YANG DISEMPURNAKAN
+        // FUNGSI GANDA: TOMBOL "REKAP SEKARANG" (BISA MELIHAT REKAP TABEL ATAU MEMBUKA INPUT MASSAL LAMPAU)
         function bukaRekapMapelSingle() {
             selectedLampauDate = document.getElementById('input-rekap-nilai-tanggal').value;
             const today = getTodayKey();
@@ -1995,8 +1995,90 @@
                 return;
             }
 
-            // Langsung muat dan segarkan tabel rekap sesuai tanggal yang dipilih pada kotak input
+            // Jika tanggal sama dengan hari ini, langsung tampilkan/muat tabel rekap
+            if (selectedLampauDate === today) {
+                initRekapNilai();
+                return;
+            }
+
+            // Jika tanggal adalah masa lampau, beri opsi apakah ingin melihat tabel rekap atau melakukan input rekap massal
+            const dateObj = new Date(selectedLampauDate);
+            if (!isNaN(dateObj.getDay()) && dateObj.getDay() === 0) {
+                alert("⚠️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur).");
+            }
+
+            const dayOfWeek = dateObj.getDay();
+            const jadwalHari = jadwalPelajaran[dayOfWeek] || [];
+            selectedMultiMapelList = jadwalHari.filter(m => daftarMapelAndri.includes(m));
+
+            if (selectedMultiMapelList.length > 0 && confirm(`Tanggal ${selectedLampauDate} adalah hari ${["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][dayOfWeek]}. Apakah Anda ingin mengisi/rekap manual nilai massal untuk jadwal tanggal tersebut? \n\n(Klik 'Cancel' jika hanya ingin melihat tabel rekap tanggal tersebut).`)) {
+                document.getElementById('label-multimapel-date').innerText = `Rekapitulasi Masa Lampau — Tanggal: ${selectedLampauDate}`;
+                renderTabelFormMultiMapel();
+                switchView('view-form-rekap-multimapel');
+            } else {
+                initRekapNilai();
+            }
+        }
+
+        // RENDER FORM MULTI-MAPEL UNTUK REKAP MANUAL LAMPAU
+        function renderTabelFormMultiMapel() {
+            const headerTr = document.getElementById('header-multimapel-table');
+            let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
+            selectedMultiMapelList.forEach(m => {
+                hHtml += `<th class="p-4 text-center">${m} (0-100)</th>`;
+            });
+            headerTr.innerHTML = hHtml;
+
+            const tbody = document.getElementById('tabel-multimapel-body');
+            tbody.innerHTML = '';
+
+            daftarSiswa.forEach((nama, idx) => {
+                let tr = document.createElement('tr');
+                let tdHtml = `<td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td><td class="p-4 font-medium text-slate-900 border-r">${nama}</td>`;
+                
+                selectedMultiMapelList.forEach(m => {
+                    let existingVal = "";
+                    if (historyNilai[nama] && historyNilai[nama][m]) {
+                        let f = historyNilai[nama][m].find(h => h.date === selectedLampauDate);
+                        if (f) existingVal = f.score;
+                    }
+                    tdHtml += `
+                        <td class="p-4 text-center">
+                            <input type="number" min="0" max="100" value="${existingVal > 0 ? existingVal : ''}" id="multim_${m}_${idx}" class="w-28 bg-slate-50 border rounded-lg p-2 text-center text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500" placeholder="0-100">
+                        </td>
+                    `;
+                });
+                tr.innerHTML = tdHtml;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function simpanMultiMapelLampau() {
+            selectedMultiMapelList.forEach(mapel => {
+                daftarSiswa.forEach((nama, idx) => {
+                    let inp = document.getElementById(`multim_${mapel}_${idx}`);
+                    if (inp && inp.value.trim() !== '') {
+                        let score = parseFloat(inp.value) || 0;
+                        score = Math.round(score * 10) / 10;
+                        if (!historyNilai[nama]) historyNilai[nama] = {};
+                        if (!historyNilai[nama][mapel]) historyNilai[nama][mapel] = [];
+                        let existing = historyNilai[nama][mapel].find(h => h.date === selectedLampauDate);
+                        let detailText = `Rekapitulasi Masa Lampau (${selectedLampauDate})`;
+                        if (existing) {
+                            existing.score = score;
+                            existing.detail = detailText;
+                        } else {
+                            historyNilai[nama][mapel].push({ date: selectedLampauDate, score: score, detail: detailText });
+                        }
+                    }
+                });
+            });
+
+            simpanKeLocalStorage();
+            alert("Data rekapitulasi manual berhasil disimpan secara permanen!");
             initRekapNilai();
+            initAnalisis();
+            switchView('view-rekap-nilai');
         }
 
         function setRekapHariIni() {
