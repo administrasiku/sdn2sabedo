@@ -137,7 +137,7 @@
             <div onclick="switchView('view-rekap-nilai')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Penilaian</h3>
-                <p class="text-slate-500 text-sm mt-1">Hasil kalkulasi 70% pengetahuan & 30% keterampilan hari ini (Auto locked ke hari ini).</p>
+                <p class="text-slate-500 text-sm mt-1">Hasil kalkulasi 70% pengetahuan & 30% keterampilan hari ini.</p>
             </div>
             <div onclick="switchView('view-analisis')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">🔍</div>
@@ -686,7 +686,7 @@
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI (DILENGKAPI PENGUNCI MUTLAK & TOMBOL HARI INI YANG RESPONSIF) -->
+    <!-- 10. REKAP NILAI -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4">
             <div>
@@ -955,6 +955,15 @@
             return Math.round((total / arr.length) * 10) / 10;
         }
 
+        // FUNGSI WAKTU LOKAL WITA (Menghindari offset zona waktu UTC yang membuat tanggal mundur)
+        function getTodayKey() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         // RUMUS SMART & PROPORTIONAL (Mendukung Custom Manual pada Pengetahuan & Keterampilan, Target 100 Tercapai)
         function hitungKalkulasiNilaiSiswa(studentData) {
             let totalPen = 0, maxPen = 0;
@@ -980,7 +989,7 @@
                 if (adaIsiKet) {
                     arr.forEach(skor => {
                         totalKet += (parseFloat(skor) || 0);
-                        maxKet += 3; // Standar maksimal skala 3 untuk keterampilan
+                        maxKet += 3; 
                     });
                 }
             });
@@ -1005,7 +1014,7 @@
         }
 
         window.onload = function() {
-            const todayStr = new Date().toISOString().split('T')[0];
+            const todayStr = getTodayKey();
             const elDisp = document.getElementById('display-tanggal-hari-ini');
             const elInpRekap = document.getElementById('input-rekap-tanggal');
             const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
@@ -1018,7 +1027,6 @@
             if (elInpArsip) elInpArsip.value = todayStr;
             if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
             
-            // PENGUNCI MUTLAK TANGGAL REKAP KE HARI INI SAAT APLIKASI DIMUAT
             const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
             if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
 
@@ -1077,7 +1085,6 @@
             }
 
             if(viewId === 'view-rekap-nilai') {
-                // PAKSA KUNCI KE HARI INI SETIAP KALI MASUK MENU REKAP NILAI
                 const todayStr = getTodayKey();
                 const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
                 if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
@@ -1208,10 +1215,6 @@
                 alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 alertBox.innerText = "Username atau Password Siswa Salah!";
             }
-        }
-
-        function getTodayKey() {
-            return new Date().toISOString().split('T')[0];
         }
 
         function initPresensiHariIni() {
@@ -1790,6 +1793,75 @@
             switchView('view-setup-pengetahuan');
         }
 
+        // Fungsionalitas Toggle Setup Pengetahuan (Guru Kelas) yang Diperbaiki
+        function toggleSetupSoalInputs() {
+            const chkLain = document.getElementById('check-pen-lainnya');
+            const inpLain = document.getElementById('input-pen-lainnya-nama');
+            if (chkLain && inpLain) {
+                inpLain.disabled = !chkLain.checked;
+                if (!chkLain.checked) inpLain.value = '';
+            }
+
+            const container = document.getElementById('container-input-soal-pengetahuan');
+            container.innerHTML = '';
+            const checked = document.querySelectorAll('input[name="jenis-pengetahuan"]:checked');
+            
+            checked.forEach(cb => {
+                let div = document.createElement('div');
+                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-700">Jumlah Soal (${cb.value})</span>
+                    <input type="number" min="1" max="20" value="5" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-blue-600 jml-soal-pen-input" data-jenis="${cb.value}">
+                `;
+                container.appendChild(div);
+            });
+
+            if (chkLain && chkLain.checked) {
+                let customNama = inpLain.value.trim() || "Pengetahuan Custom";
+                let div = document.createElement('div');
+                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-700">Jumlah Soal (${customNama})</span>
+                    <input type="number" min="1" max="20" value="5" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-blue-600 jml-soal-pen-input" data-jenis="${customNama}">
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function toggleSetupSoalKetInputs() {
+            const chkLain = document.getElementById('check-ket-lainnya');
+            const inpLain = document.getElementById('input-ket-lainnya-nama');
+            if (chkLain && inpLain) {
+                inpLain.disabled = !chkLain.checked;
+                if (!chkLain.checked) inpLain.value = '';
+            }
+
+            const container = document.getElementById('container-input-soal-keterampilan');
+            container.innerHTML = '';
+            const checked = document.querySelectorAll('input[name="jenis-keterampilan"]:checked');
+            
+            checked.forEach(cb => {
+                let div = document.createElement('div');
+                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal Keterampilan (${cb.value})</span>
+                    <input type="number" min="1" max="20" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-soal-ket-input" data-jenis="${cb.value}">
+                `;
+                container.appendChild(div);
+            });
+
+            if (chkLain && chkLain.checked) {
+                let customNama = inpLain.value.trim() || "Keterampilan Custom";
+                let div = document.createElement('div');
+                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal (${customNama})</span>
+                    <input type="number" min="1" max="20" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-soal-ket-input" data-jenis="${customNama}">
+                `;
+                container.appendChild(div);
+            }
+        }
+
         function lanjutKeSetupKeterampilan() {
             const tp = document.getElementById('tujuan-pembelajaran-pengetahuan').value.trim();
             const checkedJenis = document.querySelectorAll('input[name="jenis-pengetahuan"]:checked');
@@ -1913,7 +1985,7 @@
             renderTabelFormPenilaianPengetahuan();
         }
 
-        // FUNGSI UTAMA TOMBOL "HARI INI" & RENDER REKAP YANG RESPONSIF
+        // FUNGSI RESPONSIF TOMBOL "HARI INI" & RENDER REKAP
         function setRekapHariIni() {
             const today = getTodayKey();
             const elInp = document.getElementById('input-rekap-nilai-tanggal');
@@ -1931,7 +2003,6 @@
             const today = getTodayKey();
             const chosenDate = document.getElementById('input-rekap-nilai-tanggal').value || today;
 
-            // Peringatan banner jika tanggal rekap bukan hari ini
             if (chosenDate !== today) {
                 if (bannerNotice) bannerNotice.classList.remove('hidden');
                 if (bannerText) bannerText.innerText = `⚠️ Anda sedang melihat rekap untuk tanggal lampau (${chosenDate}).`;
