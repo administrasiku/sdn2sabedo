@@ -955,7 +955,7 @@
             return Math.round((total / arr.length) * 10) / 10;
         }
 
-        // FUNGSI WAKTU LOKAL WITA (Menghindari offset zona waktu UTC yang membuat tanggal mundur)
+        // FUNGSI WAKTU LOKAL INDONESIA (WIT/WITA/WIB) SESUAI PERANGKAT LOKAL TANPA UTC OFFSET
         function getTodayKey() {
             const now = new Date();
             const year = now.getFullYear();
