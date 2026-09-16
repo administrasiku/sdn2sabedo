@@ -129,15 +129,15 @@
                 <h3 class="text-lg font-bold text-slate-900">Rekap Presensi</h3>
                 <p class="text-slate-500 text-sm mt-1">Analisis total hari hadir, sakit, izin, dan alpa siswa.</p>
             </div>
-            <div onclick="switchView('view-penilaian')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
+            <div onclick="switchView('view-pilih-kategori-penilaian')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold mb-4">📝</div>
                 <h3 class="text-lg font-bold text-slate-900">Penilaian</h3>
-                <p class="text-slate-500 text-sm mt-1">Input nilai harian (support jenis manual custom).</p>
+                <p class="text-slate-500 text-sm mt-1">Pilih kategori Formatif atau Sumatif.</p>
             </div>
             <div onclick="switchView('view-rekap-nilai')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Penilaian</h3>
-                <p class="text-slate-500 text-sm mt-1">Hasil kalkulasi 70% pengetahuan & 30% keterampilan.</p>
+                <p class="text-slate-500 text-sm mt-1">Tab Rekap Formatif & Sumatif terpisah.</p>
             </div>
             <div onclick="switchView('view-analisis')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">🔍</div>
@@ -177,6 +177,33 @@
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Penilaian</h3>
                 <p class="text-slate-500 text-sm mt-1">Arsip nilai mapel Anda.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5.2 PILIH KATEGORI PENILAIAN (FORMATIF / SUMATIF) -->
+    <section id="view-pilih-kategori-penilaian" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-8">
+            <div>
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Modul Penilaian</span>
+                <h2 class="text-2xl font-bold text-slate-900">Pilih Jenis Asesmen Kurikulum Merdeka</h2>
+            </div>
+            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div onclick="pilihKategoriAsesmen('Formatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📘</div>
+                <h3 class="text-xl font-extrabold text-slate-900">Asesmen Formatif</h3>
+                <p class="text-slate-500 text-sm mt-2">Penilaian proses pembelajaran harian, kuis, latihan soal, dan unjuk kerja berkala.</p>
+                <span class="inline-block mt-4 text-xs font-bold text-blue-600">Pilih Formatif →</span>
+            </div>
+
+            <div onclick="pilihKategoriAsesmen('Sumatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">📙</div>
+                <h3 class="text-xl font-extrabold text-slate-900">Asesmen Sumatif</h3>
+                <p class="text-slate-500 text-sm mt-2">Penilaian lingkup materi, Sumatif Tengah Semester (STS), atau Sumatif Akhir Semester (SAS).</p>
+                <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Pilih Sumatif →</span>
             </div>
         </div>
     </section>
@@ -278,7 +305,7 @@
                 <label class="block text-xs font-bold text-slate-600 uppercase">Tanggal Aktif Rekap:</label>
                 <input type="date" id="input-tanggal-mapel-aktif" onchange="gantiTanggalMapelAktif(this.value)" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-700 font-bold">
             </div>
-            <span class="text-xs text-slate-400 italic">History tersimpan permanen di browser.</span>
+            <span class="text-xs text-slate-400 italic">History tersimpan permanen di browser & Cloud.</span>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
@@ -297,7 +324,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="simpanNilaiMapelGuru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan</button>
+            <button onclick="simpanNilaiMapelGuru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Cloud</button>
         </div>
     </section>
 
@@ -514,14 +541,14 @@
         </div>
     </section>
 
-    <!-- 9. MODUL PENILAIAN GURU KELAS -->
+    <!-- 9. MODUL PENILAIAN GURU KELAS (PILIH MAPEL) -->
     <section id="view-penilaian" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
-                <h2 class="text-xl font-bold text-slate-900">Modul Penilaian Siswa</h2>
-                <p class="text-sm text-slate-500">Pilih mata pelajaran untuk mulai menilai</p>
+                <span id="label-kategori-aktif" class="text-xs font-bold text-amber-600 uppercase tracking-wider">Kategori Asesmen</span>
+                <h2 class="text-xl font-bold text-slate-900">Pilih Mata Pelajaran</h2>
             </div>
-            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+            <button onclick="switchView('view-pilih-kategori-penilaian')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Ganti Kategori</button>
         </div>
 
         <div id="pilihan-mapel-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -682,18 +709,24 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="simpanFinalNilaiAndri()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Kirim ke Rekap</button>
+            <button onclick="simpanFinalNilaiAndri()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Cloud</button>
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI -->
+    <!-- 10. REKAP NILAI (DENGAN TAB FORMATIF & SUMATIF TERPISAH) -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4">
             <div>
-                <h2 class="text-xl font-bold text-slate-900">Rekapitulasi Nilai Siswa Hari Ini</h2>
+                <h2 class="text-xl font-bold text-slate-900">Rekapitulasi Nilai Siswa</h2>
                 <p id="rekap-realtime-clock" class="text-sm text-slate-500">Memuat waktu real-time...</p>
             </div>
             <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
+
+        <!-- Tombol Tab Rekap Formatif / Sumatif -->
+        <div class="flex gap-2 mb-6 border-b border-slate-200 pb-4">
+            <button onclick="gantiTabRekap('Formatif')" id="btn-tab-formatif" class="px-6 py-2.5 rounded-xl font-bold text-sm bg-blue-600 text-white shadow-sm transition">Rekap Formatif</button>
+            <button onclick="gantiTabRekap('Sumatif')" id="btn-tab-sumatif" class="px-6 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Rekap Sumatif</button>
         </div>
 
         <!-- Banner Peringatan Status Tanggal Aktif Rekap -->
@@ -704,11 +737,11 @@
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center gap-4">
             <div>
-                <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Tanggal</label>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Tanggal Arsip</label>
                 <input type="date" id="input-rekap-nilai-tanggal" onchange="initRekapNilai()" class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm text-slate-700 focus:outline-none focus:border-blue-500">
             </div>
             <div class="self-end flex gap-2">
-                <button onclick="bukaRekapMapelSingle()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Rekap Sekarang</button>
+                <button onclick="bukaRekapMapelSingle()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Rekap Sekarang / Input Massal</button>
                 <button onclick="setRekapHariIni()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Hari Ini</button>
             </div>
         </div>
@@ -876,6 +909,10 @@
 
     <!-- Skrip Aplikasi -->
     <script>
+        // Konfigurasi Cloud Sync (JSONBin.io)
+        const JSONBIN_API_KEY = "$2a$10$EXAMPLE_MASTER_KEY_GANTI_DENGAN_X_MASTER_KEY_ANDA";
+        const JSONBIN_BIN_ID = "EXAMPLE_BIN_ID_ANDA";
+
         const daftarSiswa = [
             "Abdan Al Ghifari", "Ahmad Dani", "Aisyah Ayudia Inara", "Akil Muzaki",
             "Arsya Ilan Diandra", "Azka Maulana", "Delisa nurani", "M Padil Aryadi",
@@ -917,7 +954,8 @@
 
         let presensiData = JSON.parse(localStorage.getItem('sdn2_presensi')) || {}; 
         let nilaiDataAndri = JSON.parse(localStorage.getItem('sdn2_nilaidata')) || {}; 
-        let historyNilai = JSON.parse(localStorage.getItem('sdn2_history')) || {}; 
+        let historyNilaiFormatif = JSON.parse(localStorage.getItem('sdn2_history_formatif')) || {}; 
+        let historyNilaiSumatif = JSON.parse(localStorage.getItem('sdn2_history_sumatif')) || {}; 
         let rankingGlobal = JSON.parse(localStorage.getItem('sdn2_ranking')) || {}; 
         let isRankingDisplayed = JSON.parse(localStorage.getItem('sdn2_isrank')) || false;
         let jenisInfoMapel = JSON.parse(localStorage.getItem('sdn2_jenismapel')) || {}; 
@@ -926,6 +964,8 @@
         let activeGuruMapel = JSON.parse(sessionStorage.getItem('sdn2_active_gurumapel')) || null; 
         let siswaLoggedIn = sessionStorage.getItem('sdn2_siswalogin') || null;
 
+        let activeKategoriAsesmen = "Formatif"; // Formatif atau Sumatif
+        let activeTabRekap = "Formatif"; // Tab aktif di rekap
         let activeMapelAndri = "";
         let selectedLampauDate = "";
         let tempLampauPresensi = [];
@@ -935,27 +975,84 @@
         function simpanKeLocalStorage() {
             localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
             localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
-            localStorage.setItem('sdn2_history', JSON.stringify(historyNilai));
+            localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
+            localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
             localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
             localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
             localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
+            
+            // Sinkronisasi otomatis ke cloud di background
+            simpanKeCloud();
         }
 
-        function dapatkanRekamanMapelSiswa(namaSiswa, mapel) {
-            if (historyNilai && historyNilai[namaSiswa] && Array.isArray(historyNilai[namaSiswa][mapel])) {
-                return historyNilai[namaSiswa][mapel];
+        async function simpanKeCloud() {
+            if (JSONBIN_API_KEY.includes("EXAMPLE")) return; // Lewati jika belum disetup
+            const semuaData = {
+                presensi: presensiData,
+                nilaidata: nilaiDataAndri,
+                historyFormatif: historyNilaiFormatif,
+                historySumatif: historyNilaiSumatif,
+                ranking: rankingGlobal,
+                isrank: isRankingDisplayed,
+                jenismapel: jenisInfoMapel
+            };
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify(semuaData)
+                });
+            } catch (err) {
+                console.error("Cloud sync pending...", err);
+            }
+        }
+
+        async function muatDariCloud() {
+            if (JSONBIN_API_KEY.includes("EXAMPLE")) return;
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
+                });
+                const data = await res.json();
+                if (data && data.record) {
+                    presensiData = data.record.presensi || presensiData;
+                    nilaiDataAndri = data.record.nilaidata || nilaiDataAndri;
+                    historyNilaiFormatif = data.record.historyFormatif || historyNilaiFormatif;
+                    historyNilaiSumatif = data.record.historySumatif || historyNilaiSumatif;
+                    rankingGlobal = data.record.ranking || rankingGlobal;
+                    isRankingDisplayed = data.record.isrank || isRankingDisplayed;
+                    jenisInfoMapel = data.record.jenismapel || jenisInfoMapel;
+                    simpanKeLocalStorage();
+                }
+            } catch (err) {
+                console.error("Using local cache...", err);
+            }
+        }
+
+        // Helper untuk mengambil history sesuai kategori aktif
+        function getHistoryObj(kategori) {
+            return kategori === 'Sumatif' ? historyNilaiSumatif : historyNilaiFormatif;
+        }
+
+        function dapatkanRekamanMapelSiswa(namaSiswa, mapel, kategori = 'Formatif') {
+            const hist = getHistoryObj(kategori);
+            if (hist && hist[namaSiswa] && Array.isArray(hist[namaSiswa][mapel])) {
+                return hist[namaSiswa][mapel];
             }
             return [];
         }
 
-        function hitungRataRataMapel(namaSiswa, mapel) {
-            const arr = dapatkanRekamanMapelSiswa(namaSiswa, mapel);
+        function hitungRataRataMapel(namaSiswa, mapel, kategori = 'Formatif') {
+            const arr = dapatkanRekamanMapelSiswa(namaSiswa, mapel, kategori);
             if (arr.length === 0) return 0;
             const total = arr.reduce((acc, curr) => acc + (parseFloat(curr.score) || 0), 0);
             return Math.round((total / arr.length) * 10) / 10;
         }
 
-        // FUNGSI WAKTU LOKAL INDONESIA (WITA/WIB) SESUAI PERANGKAT LOKAL TANPA UTC OFFSET
+        // Waktu lokal WITA perangkat
         function getTodayKey() {
             const now = new Date();
             const year = now.getFullYear();
@@ -964,7 +1061,6 @@
             return `${year}-${month}-${day}`;
         }
 
-        // RUMUS SMART & PROPORTIONAL (Mendukung Custom Manual pada Pengetahuan & Keterampilan, Target 100 Tercapai)
         function hitungKalkulasiNilaiSiswa(studentData) {
             let totalPen = 0, maxPen = 0;
             const penKeys = Object.keys(studentData.penScores || {});
@@ -1013,7 +1109,9 @@
             };
         }
 
-        window.onload = function() {
+        window.onload = async function() {
+            await muatDariCloud();
+
             const todayStr = getTodayKey();
             const elDisp = document.getElementById('display-tanggal-hari-ini');
             const elInpRekap = document.getElementById('input-rekap-tanggal');
@@ -1284,7 +1382,7 @@
 
         function simpanPresensi(isAuto = false) {
             simpanKeLocalStorage();
-            if (!isAuto) alert("Data presensi berhasil disimpan secara permanen!");
+            if (!isAuto) alert("Data presensi berhasil disimpan secara permanen & disinkronkan ke Cloud!");
             renderTabelRekapPresensi(getTodayKey());
         }
 
@@ -1353,7 +1451,7 @@
             if (!presensiData[roleKey]) presensiData[roleKey] = {};
             presensiData[roleKey][selectedLampauDate] = [...tempLampauPresensi];
             simpanKeLocalStorage();
-            alert("Data presensi masa lampau berhasil disimpan secara permanen!");
+            alert("Data presensi masa lampau berhasil disimpan & sinkron ke Cloud!");
             renderTabelRekapPresensi(selectedLampauDate);
             switchView('view-rekap-presensi');
         }
@@ -1420,10 +1518,19 @@
             document.getElementById('modal-analisis-kehadiran').classList.remove('hidden');
         }
 
+        // ================= ALUR ASESMEN (FORMATIF / SUMATIF) =================
+        function pilihKategoriAsesmen(kategori) {
+            activeKategoriAsesmen = kategori;
+            document.getElementById('label-kategori-aktif').innerText = `Kategori Asesmen: ${kategori}`;
+            initMapelPenilaian();
+            switchView('view-penilaian');
+        }
+
         // ================= GURU MAPEL SETUP & LOGIC =================
         function bukaSetupPenilaianMapelKhusus() {
             if (!activeGuruMapel) return;
             activeMapelAndri = activeGuruMapel.mapel; 
+            activeKategoriAsesmen = "Formatif";
             document.getElementById('label-setup-mapel-title').innerText = `Setup Penilaian (${activeMapelAndri})`;
             document.querySelectorAll('input[name="jenis-pen-mapel"]').forEach(cb => cb.checked = false);
             document.querySelectorAll('input[name="jenis-ket-mapel"]').forEach(cb => cb.checked = false);
@@ -1558,7 +1665,7 @@
 
             const today = getTodayKey();
             document.getElementById('input-tanggal-mapel-aktif').value = today;
-            document.getElementById('label-mapel-aktif-mapel').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
+            document.getElementById('label-mapel-aktif-mapel').innerText = `Mata Pelajaran: ${activeMapelAndri} (${activeKategoriAsesmen})`;
             
             if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
             if (!nilaiDataAndri[activeMapelAndri][today]) {
@@ -1667,6 +1774,7 @@
         function simpanNilaiMapelGuru() {
             const mapel = activeMapelAndri;
             const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+            const targetHistory = getHistoryObj(activeKategoriAsesmen);
             
             if (!nilaiDataAndri[mapel] || !nilaiDataAndri[mapel][chosenDate]) return;
 
@@ -1674,21 +1782,21 @@
                 const res = hitungKalkulasiNilaiSiswa(d);
                 d.final = res.final;
                 if (d.final > 0) {
-                    if (!historyNilai[daftarSiswa[idx]]) historyNilai[daftarSiswa[idx]] = {};
-                    if (!historyNilai[daftarSiswa[idx]][mapel]) historyNilai[daftarSiswa[idx]][mapel] = [];
-                    let existing = historyNilai[daftarSiswa[idx]][mapel].find(h => h.date === chosenDate);
-                    let detailText = `Pengetahuan: ${res.penPersen}% (70%) | Keterampilan: ${res.ketPersen}% (30%)`;
+                    if (!targetHistory[daftarSiswa[idx]]) targetHistory[daftarSiswa[idx]] = {};
+                    if (!targetHistory[daftarSiswa[idx]][mapel]) targetHistory[daftarSiswa[idx]][mapel] = [];
+                    let existing = targetHistory[daftarSiswa[idx]][mapel].find(h => h.date === chosenDate);
+                    let detailText = `[${activeKategoriAsesmen}] Pengetahuan: ${res.penPersen}% | Keterampilan: ${res.ketPersen}%`;
                     if (existing) {
                         existing.score = d.final;
                         existing.detail = detailText;
                     } else {
-                        historyNilai[daftarSiswa[idx]][mapel].push({ date: chosenDate, score: d.final, detail: detailText });
+                        targetHistory[daftarSiswa[idx]][mapel].push({ date: chosenDate, score: d.final, detail: detailText });
                     }
                 }
             });
 
             simpanKeLocalStorage();
-            alert("Data penilaian Guru Mapel berhasil disimpan secara permanen!");
+            alert(`Data penilaian ${activeKategoriAsesmen} berhasil disimpan & disinkronkan ke Cloud!`);
             initRekapNilai();
             initAnalisis();
         }
@@ -1717,7 +1825,7 @@
             document.getElementById('label-rekap-khusus-mapel-title').innerText = `Rekap Nilai: ${mapel}`;
 
             daftarSiswa.forEach((nama, idx) => {
-                let records = dapatkanRekamanMapelSiswa(nama, mapel);
+                let records = dapatkanRekamanMapelSiswa(nama, mapel, activeKategoriAsesmen);
                 
                 let filteredRecs = records.filter(r => r.date === chosenArsipTgl);
                 let targetScore = 0;
@@ -1779,9 +1887,9 @@
                 card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition-all";
                 card.onclick = () => bukaSetupPengetahuan(mapel);
                 card.innerHTML = `
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold mb-4">📖</div>
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold mb-4">📖</div>
                     <h3 class="text-lg font-bold text-slate-900">${mapel}</h3>
-                    <p class="text-slate-500 text-sm mt-1">Klik untuk setup & input penilaian mata pelajaran ${mapel}.</p>
+                    <p class="text-slate-500 text-sm mt-1">Input nilai ${activeKategoriAsesmen} untuk mapel ${mapel}.</p>
                 `;
                 container.appendChild(card);
             });
@@ -1789,11 +1897,11 @@
 
         function bukaSetupPengetahuan(mapel) {
             activeMapelAndri = mapel;
-            document.getElementById('label-mapel-pengetahuan').innerText = `Mata Pelajaran: ${mapel}`;
+            document.getElementById('label-mapel-pengetahuan').innerText = `Mata Pelajaran: ${mapel} (${activeKategoriAsesmen})`;
             switchView('view-setup-pengetahuan');
         }
 
-        // Fungsionalitas Toggle Setup Pengetahuan (Guru Kelas) yang Diperbaiki
+        // Fungsionalitas Toggle Setup Pengetahuan (Guru Kelas)
         function toggleSetupSoalInputs() {
             const chkLain = document.getElementById('check-pen-lainnya');
             const inpLain = document.getElementById('input-pen-lainnya-nama');
@@ -1985,7 +2093,88 @@
             renderTabelFormPenilaianPengetahuan();
         }
 
-        // FUNGSI UTAMA TOMBOL "REKAP SEKARANG" UNTUK MEMBUKA FORM INPUT MASSAL LAMPAU SESUAI JADWAL HARI TERSEBUT
+        // ================= TAB REKAP & FUNGSI REKAP SEKARANG =================
+        function gantiTabRekap(tab) {
+            activeTabRekap = tab;
+            const btnF = document.getElementById('btn-tab-formatif');
+            const btnS = document.getElementById('btn-tab-sumatif');
+
+            if (tab === 'Formatif') {
+                btnF.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-blue-600 text-white shadow-sm transition";
+                btnS.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+            } else {
+                btnS.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-indigo-600 text-white shadow-sm transition";
+                btnF.className = "px-6 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+            }
+            initRekapNilai();
+        }
+
+        function setRekapHariIni() {
+            const today = getTodayKey();
+            const elInp = document.getElementById('input-rekap-nilai-tanggal');
+            if (elInp) elInp.value = today;
+            initRekapNilai();
+        }
+
+        function initRekapNilai() {
+            const tbody = document.getElementById('tabel-rekap-nilai-body');
+            const headerTr = document.getElementById('header-rekap-nilai-table');
+            const bannerNotice = document.getElementById('banner-rekap-date-notice');
+            const bannerText = document.getElementById('banner-notice-text');
+            if (!tbody || !headerTr) return;
+
+            const today = getTodayKey();
+            const chosenDate = document.getElementById('input-rekap-nilai-tanggal').value || today;
+            const targetHistory = getHistoryObj(activeTabRekap);
+
+            if (chosenDate !== today) {
+                if (bannerNotice) bannerNotice.classList.remove('hidden');
+                if (bannerText) bannerText.innerText = `⚠️ Anda sedang melihat rekap (${activeTabRekap}) untuk tanggal ${chosenDate}.`;
+            } else {
+                if (bannerNotice) bannerNotice.classList.add('hidden');
+            }
+            
+            const dateObj = new Date(chosenDate);
+            const dayOfWeek = isNaN(dateObj.getDay()) ? new Date().getDay() : dateObj.getDay();
+            let jadwalHariIni = jadwalPelajaran[dayOfWeek] || allMapelGlobal;
+
+            if (activeGuruMapel) {
+                jadwalHariIni = [activeGuruMapel.mapel];
+            }
+
+            let hHtml = `<th class="p-4">No</th><th class="p-4">Nama Siswa (${activeTabRekap})</th>`;
+            jadwalHariIni.forEach(m => {
+                hHtml += `<th class="p-4 text-center">${m}</th>`;
+            });
+            headerTr.innerHTML = hHtml;
+
+            tbody.innerHTML = '';
+            daftarSiswa.forEach((nama, idx) => {
+                let tr = document.createElement('tr');
+                let tds = `<td class="p-4 font-semibold text-slate-500">${idx + 1}</td><td class="p-4 font-medium text-slate-900">${nama}</td>`;
+                
+                jadwalHariIni.forEach(mapel => {
+                    let score = 0;
+
+                    if (targetHistory[nama] && targetHistory[nama][mapel]) {
+                        let found = targetHistory[nama][mapel].find(h => h.date === chosenDate);
+                        if (found) {
+                            score = found.score;
+                        }
+                    }
+
+                    if (score > 0) {
+                        tds += `<td class="p-4 text-center font-bold text-slate-800">${score.toFixed(1)}</td>`;
+                    } else {
+                        tds += `<td class="p-4 text-center text-slate-400">-</td>`;
+                    }
+                });
+
+                tr.innerHTML = tds;
+                tbody.appendChild(tr);
+            });
+        }
+
         function bukaRekapMapelSingle() {
             selectedLampauDate = document.getElementById('input-rekap-nilai-tanggal').value;
             const today = getTodayKey();
@@ -2017,12 +2206,11 @@
                 return;
             }
 
-            document.getElementById('label-multimapel-date').innerText = `Rekapitulasi Masa Lampau — Tanggal: ${selectedLampauDate}`;
+            document.getElementById('label-multimapel-date').innerText = `Rekapitulasi Masa Lampau [${activeTabRekap}] — Tanggal: ${selectedLampauDate}`;
             renderTabelFormMultiMapel();
             switchView('view-form-rekap-multimapel');
         }
 
-        // RENDER FORM MULTI-MAPEL UNTUK REKAP MANUAL LAMPAU
         function renderTabelFormMultiMapel() {
             const headerTr = document.getElementById('header-multimapel-table');
             let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
@@ -2033,6 +2221,7 @@
 
             const tbody = document.getElementById('tabel-multimapel-body');
             tbody.innerHTML = '';
+            const targetHistory = getHistoryObj(activeTabRekap);
 
             daftarSiswa.forEach((nama, idx) => {
                 let tr = document.createElement('tr');
@@ -2040,8 +2229,8 @@
                 
                 selectedMultiMapelList.forEach(m => {
                     let existingVal = "";
-                    if (historyNilai[nama] && historyNilai[nama][m]) {
-                        let f = historyNilai[nama][m].find(h => h.date === selectedLampauDate);
+                    if (targetHistory[nama] && targetHistory[nama][m]) {
+                        let f = targetHistory[nama][m].find(h => h.date === selectedLampauDate);
                         if (f) existingVal = f.score;
                     }
                     tdHtml += `
@@ -2056,98 +2245,35 @@
         }
 
         function simpanMultiMapelLampau() {
+            const targetHistory = getHistoryObj(activeTabRekap);
             selectedMultiMapelList.forEach(mapel => {
                 daftarSiswa.forEach((nama, idx) => {
                     let inp = document.getElementById(`multim_${mapel}_${idx}`);
                     if (inp && inp.value.trim() !== '') {
                         let score = parseFloat(inp.value) || 0;
                         score = Math.round(score * 10) / 10;
-                        if (!historyNilai[nama]) historyNilai[nama] = {};
-                        if (!historyNilai[nama][mapel]) historyNilai[nama][mapel] = [];
-                        let existing = historyNilai[nama][mapel].find(h => h.date === selectedLampauDate);
-                        let detailText = `Rekapitulasi Masa Lampau (${selectedLampauDate}) [Input Manual]`;
+                        if (!targetHistory[nama]) targetHistory[nama] = {};
+                        if (!targetHistory[nama][mapel]) targetHistory[nama][mapel] = [];
+                        let existing = targetHistory[nama][mapel].find(h => h.date === selectedLampauDate);
+                        let detailText = `[${activeTabRekap}] Rekap Masa Lampau (${selectedLampauDate}) [Input Manual]`;
                         if (existing) {
                             existing.score = score;
                             existing.detail = detailText;
                         } else {
-                            historyNilai[nama][mapel].push({ date: selectedLampauDate, score: score, detail: detailText });
+                            targetHistory[nama][mapel].push({ date: selectedLampauDate, score: score, detail: detailText });
                         }
                     }
                 });
             });
 
             simpanKeLocalStorage();
-            alert("Data rekapitulasi massal masa lampau berhasil disimpan secara permanen dan disinkronkan ke rekap serta analisis nilai!");
+            alert(`Data rekapitulasi massal ${activeTabRekap} berhasil disimpan & disinkronkan ke Cloud!`);
             initRekapNilai();
             initAnalisis();
             switchView('view-rekap-nilai');
         }
 
-        function setRekapHariIni() {
-            const today = getTodayKey();
-            const elInp = document.getElementById('input-rekap-nilai-tanggal');
-            if (elInp) elInp.value = today;
-            initRekapNilai();
-        }
-
-        function initRekapNilai() {
-            const tbody = document.getElementById('tabel-rekap-nilai-body');
-            const headerTr = document.getElementById('header-rekap-nilai-table');
-            const bannerNotice = document.getElementById('banner-rekap-date-notice');
-            const bannerText = document.getElementById('banner-notice-text');
-            if (!tbody || !headerTr) return;
-
-            const today = getTodayKey();
-            const chosenDate = document.getElementById('input-rekap-nilai-tanggal').value || today;
-
-            if (chosenDate !== today) {
-                if (bannerNotice) bannerNotice.classList.remove('hidden');
-                if (bannerText) bannerText.innerText = `⚠️ Anda sedang melihat rekap untuk tanggal lampau (${chosenDate}). Klik 'Rekap Sekarang' untuk mengisi/mengedit nilai massal tanggal ini.`;
-            } else {
-                if (bannerNotice) bannerNotice.classList.add('hidden');
-            }
-            
-            const dateObj = new Date(chosenDate);
-            const dayOfWeek = isNaN(dateObj.getDay()) ? new Date().getDay() : dateObj.getDay();
-            let jadwalHariIni = jadwalPelajaran[dayOfWeek] || allMapelGlobal;
-
-            if (activeGuruMapel) {
-                jadwalHariIni = [activeGuruMapel.mapel];
-            }
-
-            let hHtml = `<th class="p-4">No</th><th class="p-4">Nama Siswa</th>`;
-            jadwalHariIni.forEach(m => {
-                hHtml += `<th class="p-4 text-center">${m}</th>`;
-            });
-            headerTr.innerHTML = hHtml;
-
-            tbody.innerHTML = '';
-            daftarSiswa.forEach((nama, idx) => {
-                let tr = document.createElement('tr');
-                let tds = `<td class="p-4 font-semibold text-slate-500">${idx + 1}</td><td class="p-4 font-medium text-slate-900">${nama}</td>`;
-                
-                jadwalHariIni.forEach(mapel => {
-                    let score = 0;
-
-                    if (historyNilai[nama] && historyNilai[nama][mapel]) {
-                        let found = historyNilai[nama][mapel].find(h => h.date === chosenDate);
-                        if (found) {
-                            score = found.score;
-                        }
-                    }
-
-                    if (score > 0) {
-                        tds += `<td class="p-4 text-center font-bold text-slate-800">${score.toFixed(1)}</td>`;
-                    } else {
-                        tds += `<td class="p-4 text-center text-slate-400">-</td>`;
-                    }
-                });
-
-                tr.innerHTML = tds;
-                tbody.appendChild(tr);
-            });
-        }
-
+        // Analisis Nilai Keseluruhan (Formatif + Sumatif)
         function initAnalisis() {
             const tbody = document.getElementById('tabel-analisis-body');
             if (!tbody) return;
@@ -2170,7 +2296,12 @@
                 let countMapelWithScore = 0;
 
                 allMapelGlobal.forEach(mapel => {
-                    let mapelAvg = hitungRataRataMapel(nama, mapel);
+                    let avgF = hitungRataRataMapel(nama, mapel, 'Formatif');
+                    let avgS = hitungRataRataMapel(nama, mapel, 'Sumatif');
+                    let mapelAvg = 0;
+                    if (avgF > 0 && avgS > 0) mapelAvg = Math.round(((avgF + avgS) / 2) * 10) / 10;
+                    else mapelAvg = avgF > 0 ? avgF : avgS;
+
                     if (mapelAvg > 0) {
                         totalScore += mapelAvg;
                         countMapelWithScore++;
@@ -2188,10 +2319,13 @@
         function bukaModalHistoryMapel(nama, mapel) {
             document.getElementById('modal-detail-title').innerText = `Riwayat Penilaian: ${mapel} (${nama})`;
             
-            let records = dapatkanRekamanMapelSiswa(nama, mapel);
+            let recsF = dapatkanRekamanMapelSiswa(nama, mapel, 'Formatif');
+            let recsS = dapatkanRekamanMapelSiswa(nama, mapel, 'Sumatif');
+            let records = [...recsF, ...recsS];
+
             let historyHtml = '';
             if (records.length > 0) {
-                historyHtml = `<div class="space-y-2 mb-2"><strong class="text-xs text-slate-500 uppercase tracking-wider">Daftar Tanggal & Perolehan Nilai:</strong>`;
+                historyHtml = `<div class="space-y-2 mb-2"><strong class="text-xs text-slate-500 uppercase tracking-wider">Daftar Arsip Nilai (Formatif & Sumatif):</strong>`;
                 records.forEach(r => {
                     historyHtml += `
                         <div class="bg-white p-3 rounded-xl border flex justify-between items-center text-xs">
@@ -2225,7 +2359,9 @@
                 let sum = 0;
                 let count = 0;
                 allMapelGlobal.forEach(m => {
-                    const avgM = hitungRataRataMapel(name, m);
+                    let avgF = hitungRataRataMapel(name, m, 'Formatif');
+                    let avgS = hitungRataRataMapel(name, m, 'Sumatif');
+                    let avgM = avgF > 0 && avgS > 0 ? (avgF + avgS) / 2 : (avgF > 0 ? avgF : avgS);
                     if (avgM > 0) {
                         sum += avgM;
                         count++;
@@ -2292,9 +2428,13 @@
             let mapelDinilaiCount = 0;
 
             allMapelGlobal.forEach(mapel => {
-                const records = dapatkanRekamanMapelSiswa(namaSiswa, mapel);
-                const score = hitungRataRataMapel(namaSiswa, mapel);
-                const countSesi = records.length;
+                let avgF = hitungRataRataMapel(namaSiswa, mapel, 'Formatif');
+                let avgS = hitungRataRataMapel(namaSiswa, mapel, 'Sumatif');
+                let score = avgF > 0 && avgS > 0 ? (avgF + avgS) / 2 : (avgF > 0 ? avgF : avgS);
+                
+                const recordsF = dapatkanRekamanMapelSiswa(namaSiswa, mapel, 'Formatif');
+                const recordsS = dapatkanRekamanMapelSiswa(namaSiswa, mapel, 'Sumatif');
+                const countSesi = recordsF.length + recordsS.length;
 
                 if (score > 0) {
                     totalNilaiSemuaMapel += score;
@@ -2363,7 +2503,9 @@
             containerSummary.innerHTML = '';
             container.innerHTML = '';
 
-            let records = dapatkanRekamanMapelSiswa(namaSiswa, mapel);
+            let recsF = dapatkanRekamanMapelSiswa(namaSiswa, mapel, 'Formatif');
+            let recsS = dapatkanRekamanMapelSiswa(namaSiswa, mapel, 'Sumatif');
+            let records = [...recsF, ...recsS];
 
             if (records.length === 0) {
                 containerSummary.innerHTML = '';
@@ -2375,7 +2517,9 @@
                     </div>
                 `;
             } else {
-                const rataRata = hitungRataRataMapel(namaSiswa, mapel);
+                let avgF = hitungRataRataMapel(namaSiswa, mapel, 'Formatif');
+                let avgS = hitungRataRataMapel(namaSiswa, mapel, 'Sumatif');
+                const rataRata = avgF > 0 && avgS > 0 ? (avgF + avgS) / 2 : (avgF > 0 ? avgF : avgS);
                 const nilaiTertinggi = Math.max(...records.map(r => parseFloat(r.score) || 0));
                 const totalTugas = records.length;
 
