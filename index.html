@@ -582,7 +582,7 @@
         <div id="pilihan-mapel-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- 9.1 SETUP PENGETAHUAN (DENGAN BOBOT FLEKSIBEL) -->
+    <!-- 9.1 SETUP PENGETAHUAN (DENGAN BOBOT FLEKSIBEL & SERAGAM MASSAL) -->
     <section id="view-setup-pengetahuan" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -600,6 +600,17 @@
                 <select id="solo-pengetahuan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
                     <option>Unistruktural</option><option>Multistruktural</option><option>Relasional</option><option>Abstrak Diperluas</option>
                 </select>
+            </div>
+
+            <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div>
+                    <h4 class="text-xs font-bold text-indigo-900 uppercase">⚡ Fitur Pengaturan Seragam Massal</h4>
+                    <p class="text-xs text-indigo-700">Atur bobot seragam seluruh soal dalam sekejap (bisa diedit satuan di bawah).</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="number" id="global-seragam-pen" min="1" max="100" value="5" class="w-20 bg-white border border-indigo-300 rounded-lg p-2 text-center text-sm font-bold text-indigo-700">
+                    <button onclick="terapkanBobotSeragamPen()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition">Terapkan Semua</button>
+                </div>
             </div>
             
             <div>
@@ -625,7 +636,7 @@
         </div>
     </section>
 
-    <!-- 9.2 SETUP KETERAMPILAN (DENGAN OPSI SKIP) -->
+    <!-- 9.2 SETUP KETERAMPILAN (DENGAN OPSI SKIP & SERAGAM) -->
     <section id="view-setup-keterampilan" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -655,6 +666,17 @@
                     <select id="solo-keterampilan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
                         <option>Unistruktural</option><option>Multistruktural</option><option>Relasional</option><option>Abstrak Diperluas</option>
                     </select>
+                </div>
+
+                <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div>
+                        <h4 class="text-xs font-bold text-indigo-900 uppercase">⚡ Fitur Pengaturan Seragam Keterampilan</h4>
+                        <p class="text-xs text-indigo-700">Atur bobot seragam seluruh aspek dalam sekejap.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="global-seragam-ket" min="1" max="100" value="10" class="w-20 bg-white border border-indigo-300 rounded-lg p-2 text-center text-sm font-bold text-indigo-700">
+                        <button onclick="terapkanBobotSeragamKet()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition">Terapkan Semua</button>
+                    </div>
                 </div>
 
                 <div>
@@ -1614,7 +1636,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Soal:</span>
-                            <input type="number" min="1" max="20" value="5" onchange="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="20" value="5" oninput="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_pen_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -1628,7 +1650,7 @@
             const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${jenis}"]`);
             const detailContainer = document.getElementById(`detail_soal_pen_mapel_${jenis}`);
             if (!jmlInp || !detailContainer) return;
-            const jml = parseInt(jmlInp.value) || 5;
+            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
             detailContainer.innerHTML = '';
             
             for(let i=0; i<jml; i++) {
@@ -1656,7 +1678,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Aspek:</span>
-                            <input type="number" min="1" max="20" value="3" onchange="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="20" value="3" oninput="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_ket_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -1670,7 +1692,7 @@
             const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${jenis}"]`);
             const detailContainer = document.getElementById(`detail_soal_ket_mapel_${jenis}`);
             if (!jmlInp || !detailContainer) return;
-            const jml = parseInt(jmlInp.value) || 3;
+            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
             detailContainer.innerHTML = '';
             
             for(let i=0; i<jml; i++) {
@@ -1969,7 +1991,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Soal:</span>
-                            <input type="number" min="1" max="20" value="5" onchange="rebuildDetailSoalAndriPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-pen" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="20" value="5" oninput="rebuildDetailSoalAndriPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-pen" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_pen_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -1983,7 +2005,7 @@
             const jmlInp = document.querySelector(`.jml-soal-andri-pen[data-jenis="${jenis}"]`);
             const detailContainer = document.getElementById(`detail_soal_pen_andri_${jenis}`);
             if (!jmlInp || !detailContainer) return;
-            const jml = parseInt(jmlInp.value) || 5;
+            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
             detailContainer.innerHTML = '';
             
             for(let i=0; i<jml; i++) {
@@ -1996,6 +2018,20 @@
                 `;
                 detailContainer.appendChild(box);
             }
+        }
+
+        function terapkanBobotSeragamPen() {
+            const val = parseFloat(document.getElementById('global-seragam-pen').value) || 5;
+            document.querySelectorAll('input[class*="max-skor-pen-andri-"]').forEach(inp => {
+                inp.value = val;
+            });
+        }
+
+        function terapkanBobotSeragamKet() {
+            const val = parseFloat(document.getElementById('global-seragam-ket').value) || 10;
+            document.querySelectorAll('input[class*="max-skor-ket-andri-"]').forEach(inp => {
+                inp.value = val;
+            });
         }
 
         function toggleSkipKeterampilanAndri() {
@@ -2016,7 +2052,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Aspek:</span>
-                            <input type="number" min="1" max="20" value="3" onchange="rebuildDetailSoalAndriKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-ket" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="20" value="3" oninput="rebuildDetailSoalAndriKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-ket" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_ket_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -2030,7 +2066,7 @@
             const jmlInp = document.querySelector(`.jml-soal-andri-ket[data-jenis="${jenis}"]`);
             const detailContainer = document.getElementById(`detail_soal_ket_andri_${jenis}`);
             if (!jmlInp || !detailContainer) return;
-            const jml = parseInt(jmlInp.value) || 3;
+            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
             detailContainer.innerHTML = '';
             
             for(let i=0; i<jml; i++) {
@@ -2074,30 +2110,34 @@
 
         function lanjutKeLembarPenilaianAndri() {
             const skipKet = document.getElementById('skip-ket-andri').checked;
-            const tpKet = document.getElementById('tujuan-pembelajaran-keterampilan').value.trim();
-            const checkedKet = document.querySelectorAll('input[name="jenis-keterampilan"]:checked');
             const alertBox = document.getElementById('alert-setup-keterampilan');
 
-            if (!skipKet && (!tpKet || checkedKet.length === 0)) {
-                alertBox.classList.remove('hidden');
-                alertBox.innerText = "Peringatan: Pilih jenis keterampilan dan isi Tujuan Pembelajaran Keterampilan, atau centang Lewati Keterampilan!";
-                return;
-            }
-            alertBox.classList.add('hidden');
-
-            let ketArr = skipKet ? [] : Array.from(checkedKet).map(cb => cb.value);
-            jenisInfoMapel[activeMapelAndri].ketList = ketArr;
-            jenisInfoMapel[activeMapelAndri].skipKet = skipKet;
-
-            let maxScoresKet = {};
             if (!skipKet) {
+                const checkedKet = document.querySelectorAll('input[name="jenis-keterampilan"]:checked');
+                const tpKet = document.getElementById('tujuan-pembelajaran-keterampilan').value.trim();
+                if (!tpKet || checkedKet.length === 0) {
+                    alertBox.classList.remove('hidden');
+                    alertBox.innerText = "Peringatan: Pilih jenis keterampilan dan isi Tujuan Pembelajaran Keterampilan, atau centang Lewati Keterampilan!";
+                    return;
+                }
+                alertBox.classList.add('hidden');
+
+                let ketArr = Array.from(checkedKet).map(cb => cb.value);
+                jenisInfoMapel[activeMapelAndri].ketList = ketArr;
+                jenisInfoMapel[activeMapelAndri].skipKet = false;
+
+                let maxScoresKet = {};
                 ketArr.forEach(j => {
                     maxScoresKet[j] = [];
                     const inputs = document.querySelectorAll(`.max-skor-ket-andri-${j}`);
                     inputs.forEach(inp => maxScoresKet[j].push(parseFloat(inp.value) || 10));
                 });
+                jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
+            } else {
+                jenisInfoMapel[activeMapelAndri].skipKet = true;
+                jenisInfoMapel[activeMapelAndri].ketList = [];
+                jenisInfoMapel[activeMapelAndri].maxScoresKet = {};
             }
-            jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
 
             document.getElementById('label-mapel-eksekusi-pen').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
             const today = getTodayKey();
@@ -2436,14 +2476,13 @@
                 let tds = `<td class="p-4 font-semibold text-slate-500">${daftarSiswa.indexOf(nama) + 1}</td><td class="p-4 font-medium text-slate-900">${nama} ${rankSign}</td>`;
                 
                 let totalScore = 0;
-                const totalMapelWajib = allMapelGlobal.length; // Pembagi mutlak seluruh mapel (misal 9 mapel)
+                const totalMapelWajib = allMapelGlobal.length;
 
                 allMapelGlobal.forEach(mapel => {
                     let nilaiRapor = hitungNilaiRaporMapel(nama, mapel);
                     if (nilaiRapor > 0) {
                         totalScore += nilaiRapor;
                     }
-                    // Jika kosong/tidak ada nilai, ditampilkan 0.0 secara adil
                     let displayVal = nilaiRapor > 0 ? nilaiRapor.toFixed(1) : '0.0';
                     let smartBadge = nilaiRapor >= 75 ? 'text-emerald-700 bg-emerald-50 px-2 py-1 rounded font-bold' : (nilaiRapor > 0 ? 'text-amber-700 bg-amber-50 px-2 py-1 rounded font-bold' : 'text-slate-400 font-bold');
                     tds += `<td class="p-4 text-center cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')"><span class="${smartBadge}">${displayVal}</span></td>`;
