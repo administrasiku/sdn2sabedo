@@ -10,6 +10,12 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
         .view-section { display: none; min-height: 100vh; }
         .view-section.active { display: flex; flex-direction: column; }
+        @media print {
+            body { background: white; }
+            no-print, button, .no-print { display: none !important; }
+            .view-section { display: none !important; }
+            .view-section.active { display: block !important; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -50,11 +56,11 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Username</label>
-                    <input type="text" id="username-guru" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan username">
+                    <input type="text" id="username-guru" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan username">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Password</label>
-                    <input type="password" id="password-guru" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan password">
+                    <input type="password" id="password-guru" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500" placeholder="Masukkan password">
                 </div>
                 <button onclick="handleLoginGuru()" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded-xl shadow-lg transition">Masuk Ruang Kelas</button>
             </div>
@@ -73,11 +79,11 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Username Guru</label>
-                    <input type="text" id="username-mapel" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan username">
+                    <input type="text" id="username-mapel" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan username">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Password</label>
-                    <input type="password" id="password-mapel" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan password">
+                    <input type="password" id="password-mapel" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500" placeholder="Masukkan password">
                 </div>
                 <button onclick="handleLoginMapel()" class="w-full bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl shadow-lg transition">Masuk Dashboard Guru Mapel</button>
             </div>
@@ -96,11 +102,11 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Username Siswa</label>
-                    <input type="text" id="username-siswa" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500" placeholder="Masukkan username">
+                    <input type="text" id="username-siswa" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500" placeholder="Masukkan username">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Password</label>
-                    <input type="password" id="password-siswa" autocomplete="off" autocapitalize="none" spellcheck="false" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500" placeholder="Masukkan password">
+                    <input type="password" id="password-siswa" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500" placeholder="Masukkan password">
                 </div>
                 <button onclick="handleLoginSiswa()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl shadow-lg transition">Masuk ke Portal Siswa</button>
             </div>
@@ -195,14 +201,14 @@
             <div onclick="bukaHalamanRekap('Formatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
                 <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📈</div>
                 <h3 class="text-xl font-extrabold text-slate-900">Rekap Nilai Formatif</h3>
-                <p class="text-slate-500 text-sm mt-2">Kelola, lihat, dan input massal arsip nilai harian atau proses pembelajaran siswa.</p>
+                <p class="text-slate-500 text-sm mt-2">Kelola, lihat, cetak PDF, dan input massal arsip nilai harian.</p>
                 <span class="inline-block mt-4 text-xs font-bold text-blue-600">Buka Rekap Formatif →</span>
             </div>
 
             <div onclick="bukaHalamanRekap('Sumatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
                 <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">📊</div>
                 <h3 class="text-xl font-extrabold text-slate-900">Rekap Nilai Sumatif</h3>
-                <p class="text-slate-500 text-sm mt-2">Kelola, lihat, dan input massal arsip ujian lingkup materi atau sumatif akhir.</p>
+                <p class="text-slate-500 text-sm mt-2">Kelola, lihat, cetak PDF, dan input massal arsip ujian lingkup materi.</p>
                 <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Buka Rekap Sumatif →</span>
             </div>
         </div>
@@ -255,19 +261,12 @@
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Penilaian Pengetahuan</label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Penilaian Pengetahuan & Tentukan Bobot Maksimal Per Soal</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pen-mapel" value="Pilihan Ganda" onchange="toggleMapelSetupSoal()" class="w-4 h-4 text-indigo-600"> Pilihan Ganda</label>
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pen-mapel" value="Isian Singkat" onchange="toggleMapelSetupSoal()" class="w-4 h-4 text-indigo-600"> Isian Singkat</label>
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pen-mapel" value="Uraian" onchange="toggleMapelSetupSoal()" class="w-4 h-4 text-indigo-600"> Uraian</label>
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pen-mapel" value="Tes Lisan" onchange="toggleMapelSetupSoal()" class="w-4 h-4 text-indigo-600"> Tes Lisan</label>
-                </div>
-                <!-- Opsi Pengetahuan Custom Guru Mapel -->
-                <div class="mt-3 flex items-center gap-3 bg-slate-50 p-3 rounded-xl border">
-                    <label class="flex items-center gap-2 cursor-pointer text-sm font-medium shrink-0">
-                        <input type="checkbox" id="check-pen-lainnya-mapel" onchange="toggleMapelSetupSoal()" class="w-4 h-4 text-indigo-600"> Lainnya (Tulis Manual)
-                    </label>
-                    <input type="text" id="input-pen-lainnya-nama-mapel" oninput="toggleMapelSetupSoal()" placeholder="Ketik nama bentuk tes manual..." class="w-full bg-white border rounded-lg px-3 py-1.5 text-sm font-medium text-slate-800 disabled:opacity-50" disabled>
                 </div>
             </div>
             <div id="container-mapel-soal-pen" class="space-y-3"></div>
@@ -278,32 +277,34 @@
 
             <hr class="my-4">
 
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Taksonomi SOLO (Keterampilan)</label>
-                <select id="mapel-solo-ket" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
-                    <option>Unistruktural</option><option>Multistruktural</option><option>Relasional</option><option>Abstrak Diperluas</option>
-                </select>
+            <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-bold text-slate-600 uppercase">Modul Keterampilan</label>
+                <label class="flex items-center gap-2 text-xs font-bold text-rose-600 cursor-pointer">
+                    <input type="checkbox" id="skip-ket-mapel" onchange="toggleSkipKeterampilanMapel()" class="w-4 h-4 text-rose-600"> Lewati / Skip Keterampilan (Murni 100% Pengetahuan)
+                </label>
             </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Penilaian Keterampilan</label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Praktik Langsung" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Praktik Langsung</label>
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Produk / Hasil Karya" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Produk / Karya</label>
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Proyek" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Proyek</label>
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Presentasi" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Presentasi</label>
+            
+            <div id="wrapper-section-ket-mapel" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Taksonomi SOLO (Keterampilan)</label>
+                    <select id="mapel-solo-ket" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
+                        <option>Unistruktural</option><option>Multistruktural</option><option>Relasional</option><option>Abstrak Diperluas</option>
+                    </select>
                 </div>
-                <!-- Opsi Keterampilan Custom Guru Mapel -->
-                <div class="mt-3 flex items-center gap-3 bg-slate-50 p-3 rounded-xl border">
-                    <label class="flex items-center gap-2 cursor-pointer text-sm font-medium shrink-0">
-                        <input type="checkbox" id="check-ket-lainnya-mapel" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Lainnya (Tulis Manual)
-                    </label>
-                    <input type="text" id="input-ket-lainnya-nama-mapel" oninput="toggleMapelSetupSoalKet()" placeholder="Ketik nama penilaian keterampilan manual..." class="w-full bg-white border rounded-lg px-3 py-1.5 text-sm font-medium text-slate-800 disabled:opacity-50" disabled>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Keterampilan & Bobot Maksimal Per Aspek</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Praktik Langsung" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Praktik Langsung</label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Produk / Hasil Karya" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Produk / Karya</label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Proyek" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Proyek</label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-ket-mapel" value="Presentasi" onchange="toggleMapelSetupSoalKet()" class="w-4 h-4 text-indigo-600"> Presentasi</label>
+                    </div>
                 </div>
-            </div>
-            <div id="container-mapel-soal-ket" class="space-y-3"></div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tujuan Pembelajaran Keterampilan</label>
-                <input type="text" id="tp-ket-mapel" placeholder="Masukkan tujuan pembelajaran keterampilan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
+                <div id="container-mapel-soal-ket" class="space-y-3"></div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tujuan Pembelajaran Keterampilan</label>
+                    <input type="text" id="tp-ket-mapel" placeholder="Masukkan tujuan pembelajaran keterampilan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
+                </div>
             </div>
 
             <div class="flex justify-end pt-4">
@@ -317,7 +318,7 @@
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
                 <span id="label-mapel-aktif-mapel" class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Mata Pelajaran</span>
-                <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Siswa (Input Skor Angka 1-10)</h2>
+                <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Siswa (Input Skor Fleksibel)</h2>
                 <div class="flex items-center gap-3 mt-1 flex-wrap">
                     <p id="live-datetime-mapel" class="text-xs text-slate-500 font-semibold">Waktu</p>
                     <button onclick="bukaModalRekapUlangMapel()" class="text-xs bg-amber-50 text-amber-600 px-3 py-1 rounded-lg font-bold border border-amber-200 hover:bg-amber-100">Rekap Ulang</button>
@@ -332,7 +333,7 @@
                 <label class="block text-xs font-bold text-slate-600 uppercase">Tanggal Aktif Rekap:</label>
                 <input type="date" id="input-tanggal-mapel-aktif" onchange="gantiTanggalMapelAktif(this.value)" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-700 font-bold">
             </div>
-            <span class="text-xs text-slate-400 italic">Ketik nilai 1-10 (PG bernilai 1 jika benar). Bobot akhir 70% Pengetahuan & 30% Keterampilan.</span>
+            <span class="text-xs text-slate-400 italic">Sistem menghitung otomatis berdasarkan bobot maksimal soal. Dijamin nilai 100 jika benar semua!</span>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
@@ -341,8 +342,8 @@
                     <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
                         <th class="p-4 border-r">No</th>
                         <th class="p-4 border-r">Nama Siswa</th>
-                        <th class="p-4 text-center">Pengetahuan (Skor)</th>
-                        <th class="p-4 text-center">Keterampilan (Skor)</th>
+                        <th class="p-4 text-center">Pengetahuan</th>
+                        <th class="p-4 text-center" id="th-ket-header-mapel">Keterampilan</th>
                         <th class="p-4 text-center">Nilai Akhir</th>
                     </tr>
                 </thead>
@@ -383,7 +384,7 @@
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center gap-4">
             <div>
-                <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Tanggal / Bulan / Tahun Arsip</label>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Tanggal Arsip</label>
                 <input type="date" id="input-rekap-mapel-arsip-tgl" onchange="renderRekapKhususMapel()" class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm text-slate-700 focus:outline-none focus:border-indigo-500">
             </div>
             <div class="self-end">
@@ -581,7 +582,7 @@
         <div id="pilihan-mapel-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- 9.1 SETUP PENGETAHUAN (DENGAN CUSTOM MANUAL) -->
+    <!-- 9.1 SETUP PENGETAHUAN (DENGAN BOBOT FLEKSIBEL) -->
     <section id="view-setup-pengetahuan" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -602,19 +603,12 @@
             </div>
             
             <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Penilaian</label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Penilaian & Tentukan Skor Maksimal per Soal</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pengetahuan" value="Pilihan Ganda" onchange="toggleSetupSoalInputs()" class="w-4 h-4 text-blue-600"> Pilihan Ganda</label>
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pengetahuan" value="Isian Singkat" onchange="toggleSetupSoalInputs()" class="w-4 h-4 text-blue-600"> Isian Singkat</label>
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pengetahuan" value="Uraian" onchange="toggleSetupSoalInputs()" class="w-4 h-4 text-blue-600"> Uraian</label>
                     <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-pengetahuan" value="Tes Lisan" onchange="toggleSetupSoalInputs()" class="w-4 h-4 text-blue-600"> Tes Lisan</label>
-                </div>
-                <!-- Opsi Pengetahuan Custom Guru Kelas -->
-                <div class="mt-3 flex items-center gap-3 bg-slate-50 p-3 rounded-xl border">
-                    <label class="flex items-center gap-2 cursor-pointer text-sm font-medium shrink-0">
-                        <input type="checkbox" id="check-pen-lainnya" onchange="toggleSetupSoalInputs()" class="w-4 h-4 text-blue-600"> Lainnya (Tulis Manual)
-                    </label>
-                    <input type="text" id="input-pen-lainnya-nama" oninput="toggleSetupSoalInputs()" placeholder="Ketik nama bentuk tes manual..." class="w-full bg-white border rounded-lg px-3 py-1.5 text-sm font-medium text-slate-800 disabled:opacity-50" disabled>
                 </div>
             </div>
 
@@ -631,7 +625,7 @@
         </div>
     </section>
 
-    <!-- 9.2 SETUP KETERAMPILAN -->
+    <!-- 9.2 SETUP KETERAMPILAN (DENGAN OPSI SKIP) -->
     <section id="view-setup-keterampilan" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -644,35 +638,41 @@
         <div id="alert-setup-keterampilan" class="hidden mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30"></div>
 
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 mb-6 space-y-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Taksonomi SOLO (Keterampilan)</label>
-                <select id="solo-keterampilan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
-                    <option>Unistruktural</option><option>Multistruktural</option><option>Relasional</option><option>Abstrak Diperluas</option>
-                </select>
+            
+            <div class="flex items-center justify-between p-4 bg-rose-50 border border-rose-200 rounded-xl mb-4">
+                <div>
+                    <h4 class="text-sm font-bold text-rose-900">Opsi Lewati Modul Keterampilan</h4>
+                    <p class="text-xs text-rose-700">Centang jika asesmen ini murni hanya mengambil nilai Pengetahuan (100%).</p>
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer font-bold text-sm text-rose-700">
+                    <input type="checkbox" id="skip-ket-andri" onchange="toggleSkipKeterampilanAndri()" class="w-5 h-5 text-rose-600 rounded"> Lewati Keterampilan
+                </label>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Penilaian Keterampilan</label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Praktik Langsung" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Praktik Langsung</label>
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Produk / Hasil Karya" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Produk / Karya</label>
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Proyek" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Proyek</label>
-                    <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Presentasi" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Presentasi</label>
+            <div id="wrapper-section-ket-andri" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Taksonomi SOLO (Keterampilan)</label>
+                    <select id="solo-keterampilan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
+                        <option>Unistruktural</option><option>Multistruktural</option><option>Relasional</option><option>Abstrak Diperluas</option>
+                    </select>
                 </div>
-                <!-- Opsi Keterampilan Custom Guru Kelas -->
-                <div class="mt-3 flex items-center gap-3 bg-slate-50 p-3 rounded-xl border">
-                    <label class="flex items-center gap-2 cursor-pointer text-sm font-medium shrink-0">
-                        <input type="checkbox" id="check-ket-lainnya" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Lainnya (Tulis Manual)
-                    </label>
-                    <input type="text" id="input-ket-lainnya-nama" oninput="toggleSetupSoalKetInputs()" placeholder="Ketik nama penilaian keterampilan manual..." class="w-full bg-white border rounded-lg px-3 py-1.5 text-sm font-medium text-slate-800 disabled:opacity-50" disabled>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Jenis Keterampilan & Tentukan Skor Maksimal per Aspek</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Praktik Langsung" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Praktik Langsung</label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Produk / Hasil Karya" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Produk / Karya</label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Proyek" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Proyek</label>
+                        <label class="flex items-center gap-2 p-3 bg-slate-50 border rounded-xl cursor-pointer text-sm font-medium"><input type="checkbox" name="jenis-keterampilan" value="Presentasi" onchange="toggleSetupSoalKetInputs()" class="w-4 h-4 text-indigo-600"> Presentasi</label>
+                    </div>
                 </div>
-            </div>
 
-            <div id="container-input-soal-keterampilan" class="space-y-3"></div>
+                <div id="container-input-soal-keterampilan" class="space-y-3"></div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tujuan Pembelajaran Keterampilan</label>
-                <input type="text" id="tujuan-pembelajaran-keterampilan" placeholder="Masukkan tujuan pembelajaran keterampilan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tujuan Pembelajaran Keterampilan</label>
+                    <input type="text" id="tujuan-pembelajaran-keterampilan" placeholder="Masukkan tujuan pembelajaran keterampilan" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm">
+                </div>
             </div>
         </div>
 
@@ -686,11 +686,11 @@
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
                 <span id="label-mapel-eksekusi-pen" class="text-xs font-bold text-blue-600 uppercase tracking-wider">Mata Pelajaran</span>
-                <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Pengetahuan Siswa (Input Skor Angka 1-10)</h2>
+                <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Pengetahuan Siswa</h2>
             </div>
             <div class="flex gap-2">
                 <button onclick="switchView('view-setup-keterampilan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
-                <button onclick="lanjutKePenilaianKeterampilan()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">Buka Lembar Keterampilan →</button>
+                <button onclick="lanjutKePenilaianKeterampilan()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">Lanjut Berikutnya →</button>
             </div>
         </div>
 
@@ -700,7 +700,7 @@
                     <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
                         <th class="p-4">No</th>
                         <th class="p-4">Nama Siswa</th>
-                        <th class="p-4 text-center" id="header-kolom-soal-pengetahuan">Butir Soal Pengetahuan</th>
+                        <th class="p-4 text-center">Butir Soal Pengetahuan & Skor Perolehan</th>
                     </tr>
                 </thead>
                 <tbody id="tabel-penilaian-pengetahuan-body" class="divide-y divide-slate-100 text-sm"></tbody>
@@ -708,7 +708,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="lanjutKePenilaianKeterampilan()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Ke Lembar Keterampilan →</button>
+            <button onclick="lanjutKePenilaianKeterampilan()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Lanjut Berikutnya →</button>
         </div>
     </section>
 
@@ -717,7 +717,7 @@
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
                 <span id="label-mapel-eksekusi-ket" class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Mata Pelajaran</span>
-                <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Keterampilan Siswa (Input Skor Angka 1-10)</h2>
+                <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Keterampilan Siswa</h2>
             </div>
             <button onclick="switchView('view-form-penilaian-pengetahuan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali ke Pengetahuan</button>
         </div>
@@ -728,7 +728,7 @@
                     <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
                         <th class="p-4">No</th>
                         <th class="p-4">Nama Siswa</th>
-                        <th class="p-4 text-center" id="header-kolom-soal-keterampilan">Aspek Penilaian Keterampilan</th>
+                        <th class="p-4 text-center">Aspek Penilaian Keterampilan & Skor Perolehan</th>
                     </tr>
                 </thead>
                 <tbody id="tabel-penilaian-keterampilan-body" class="divide-y divide-slate-100 text-sm"></tbody>
@@ -740,24 +740,35 @@
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI FORMATIF / SUMATIF (HALAMAN TERPISAH) -->
+    <!-- 10. REKAP NILAI FORMATIF / SUMATIF (HALAMAN TERPISAH + CETAK PDF) -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4 no-print">
             <div>
                 <span id="label-judul-rekap-halaman" class="text-xs font-bold text-blue-600 uppercase tracking-wider">Arsip</span>
                 <h2 id="teks-judul-rekap" class="text-xl font-bold text-slate-900">Rekapitulasi Nilai</h2>
                 <p id="rekap-realtime-clock" class="text-sm text-slate-500">Memuat waktu real-time...</p>
             </div>
-            <button onclick="switchView('view-pilih-menu-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Ganti Kategori Rekap</button>
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / PDF Arsip</button>
+                <button onclick="switchView('view-pilih-menu-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Ganti Kategori</button>
+            </div>
+        </div>
+
+        <!-- Header Kop Surat khusus cetak PDF -->
+        <div class="hidden print:block text-center mb-6 border-b-2 border-black pb-4">
+            <h3 class="text-lg font-bold uppercase">PEMERINTAH KABUPATEN KAB/KOTA</h3>
+            <h2 class="text-xl font-extrabold uppercase">SDN 2 SABEDO</h2>
+            <p class="text-xs">Desa Sabedo,Kecamatan, Kabupaten — Provinsi</p>
+            <h1 id="print-kop-title" class="text-md font-bold mt-3 underline">ARSIP REKAPITULASI NILAI SISWA</h1>
         </div>
 
         <!-- Banner Peringatan Status Tanggal Aktif Rekap -->
-        <div id="banner-rekap-date-notice" class="hidden bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl text-xs font-medium mb-4 flex justify-between items-center">
+        <div id="banner-rekap-date-notice" class="hidden bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl text-xs font-medium mb-4 flex justify-between items-center no-print">
             <span id="banner-notice-text">⚠️ Anda sedang melihat rekap untuk tanggal masa lampau.</span>
             <button onclick="setRekapHariIni()" class="bg-amber-600 text-white px-3 py-1 rounded-lg font-bold hover:bg-amber-500">Kembali ke Hari Ini</button>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center gap-4">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center gap-4 no-print">
             <div>
                 <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Tanggal Arsip</label>
                 <input type="date" id="input-rekap-nilai-tanggal" onchange="initRekapNilai()" class="bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm text-slate-700 focus:outline-none focus:border-blue-500">
@@ -791,17 +802,28 @@
         </div>
     </div>
 
-    <!-- 11. ANALISIS NILAI (60% Sumatif & 40% Formatif) -->
+    <!-- 11. ANALISIS NILAI (60% Sumatif & 40% Formatif + Smart Badge & Cetak PDF) -->
     <section id="view-analisis" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
-        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6 no-print">
             <div>
                 <h2 class="text-xl font-bold text-slate-900">Analisis Nilai Siswa (Rapor Akhir)</h2>
-                <p class="text-sm text-slate-500">Nilai rapor dihitung berdasarkan formula resmi: 60% Sumatif + 40% Formatif (Klik angka nilai untuk melihat history lengkap)</p>
+                <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif (Hijau = Tuntas ≥75, Kuning = Bimbingan &lt;75)</p>
             </div>
-            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+            <div class="flex gap-2">
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / PDF Rapor</button>
+                <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+            </div>
         </div>
 
-        <div class="mb-6 flex justify-end gap-3">
+        <!-- Kop Cetak PDF Rapor -->
+        <div class="hidden print:block text-center mb-6 border-b-2 border-black pb-4">
+            <h3 class="text-lg font-bold uppercase">PEMERINTAH KABUPATEN KAB/KOTA</h3>
+            <h2 class="text-xl font-extrabold uppercase">SDN 2 SABEDO</h2>
+            <p class="text-xs">Desa Sabedo, Kecamatan, Kabupaten</p>
+            <h1 class="text-md font-bold mt-3 underline">LEMBAR REKAPITULASI RAPOR AKHIR (60% SUMATIF & 40% FORMATIF)</h1>
+        </div>
+
+        <div class="mb-6 flex justify-end gap-3 no-print">
             <button onclick="hitungDanTampilkanRangking()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-xl shadow-md transition">Analisis Ranking Sekarang</button>
             <button onclick="hapusAnalisisRangking()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-3 rounded-xl shadow-md transition">Hapus Analisis Ranking</button>
         </div>
@@ -822,7 +844,7 @@
                             <th class="p-4 text-center">Agama</th>
                             <th class="p-4 text-center">PJOK</th>
                             <th class="p-4 text-center">B. Inggris</th>
-                            <th class="p-4 text-center font-bold text-blue-600">Nilai Rapor (60/40)</th>
+                            <th class="p-4 text-center font-bold text-blue-600">Rata-rata Rapor</th>
                         </tr>
                     </thead>
                     <tbody id="tabel-analisis-body" class="divide-y divide-slate-100 text-sm"></tbody>
@@ -932,7 +954,6 @@
 
     <!-- Skrip Aplikasi -->
     <script>
-        // Konfigurasi Cloud Sync (JSONBin.io)
         const JSONBIN_API_KEY = "$2a$10$EXAMPLE_MASTER_KEY_GANTI_DENGAN_X_MASTER_KEY_ANDA";
         const JSONBIN_BIN_ID = "EXAMPLE_BIN_ID_ANDA";
 
@@ -987,7 +1008,7 @@
         let activeGuruMapel = JSON.parse(sessionStorage.getItem('sdn2_active_gurumapel')) || null; 
         let siswaLoggedIn = sessionStorage.getItem('sdn2_siswalogin') || null;
 
-        let activeKategoriAsesmen = "Formatif"; // Formatif atau Sumatif
+        let activeKategoriAsesmen = "Formatif"; 
         let activeMapelAndri = "";
         let selectedLampauDate = "";
         let tempLampauPresensi = [];
@@ -1079,49 +1100,50 @@
             return `${year}-${month}-${day}`;
         }
 
-        // Kalkulasi Proporsional Baru (Skor 1-10, PG bernilai 1 jika benar, dijamin 100 jika sempurna)
-        function hitungKalkulasiNilaiSiswaManual(studentData, mapelTarget) {
-            const info = jenisInfoMapel[mapelTarget] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], penCounts: {'Pilihan Ganda': 5}, ketCounts: {'Praktik Langsung': 3} };
+        // Kalkulasi Proporsional dengan Bobot Maksimal Per Butir Soal (Dijamin 100 jika sempurna & support skip keterampilan)
+        function hitungKalkulasiNilaiSiswaFleksibel(studentData, mapelTarget) {
+            const info = jenisInfoMapel[mapelTarget] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
             
             let totalPoinPen = 0, totalMaksPen = 0;
             const penList = info.penList || [];
             penList.forEach(jenis => {
                 const scores = (studentData.penScores && studentData.penScores[jenis]) ? studentData.penScores[jenis] : [];
-                const jmlSoal = (info.penCounts && info.penCounts[jenis]) ? info.penCounts[jenis] : scores.length || 5;
+                const maxArr = (info.maxScoresPen && info.maxScoresPen[jenis]) ? info.maxScoresPen[jenis] : [];
                 
-                for(let i=0; i<jmlSoal; i++) {
+                for(let i=0; i<scores.length; i++) {
                     let val = parseFloat(scores[i]) || 0;
-                    if (jenis === 'Pilihan Ganda') {
-                        totalMaksPen += 1; // PG maks 1 per soal
-                        totalPoinPen += (val > 0 ? 1 : 0);
-                    } else {
-                        totalMaksPen += 10; // Lainnya maks 10 per soal
-                        totalPoinPen += Math.min(Math.max(val, 0), 10);
-                    }
+                    let maxVal = parseFloat(maxArr[i]) || (jenis === 'Pilihan Ganda' ? 1 : 10);
+                    totalMaksPen += maxVal;
+                    totalPoinPen += Math.min(Math.max(val, 0), maxVal);
                 }
             });
             const persentasePengetahuan = totalMaksPen > 0 ? (totalPoinPen / totalMaksPen) * 100 : 0;
 
-            let totalPoinKet = 0, totalMaksKet = 0;
-            const ketList = info.ketList || [];
-            ketList.forEach(jenis => {
-                const scores = (studentData.ketScores && studentData.ketScores[jenis]) ? studentData.ketScores[jenis] : [];
-                const jmlSoal = (info.ketCounts && info.ketCounts[jenis]) ? info.ketCounts[jenis] : scores.length || 3;
+            let persentaseKeterampilan = 0;
+            let totalMaksKet = 0;
+            if (!info.skipKet) {
+                let totalPoinKet = 0;
+                const ketList = info.ketList || [];
+                ketList.forEach(jenis => {
+                    const scores = (studentData.ketScores && studentData.ketScores[jenis]) ? studentData.ketScores[jenis] : [];
+                    const maxArr = (info.maxScoresKet && info.maxScoresKet[jenis]) ? info.maxScoresKet[jenis] : [];
 
-                for(let i=0; i<jmlSoal; i++) {
-                    let val = parseFloat(scores[i]) || 0;
-                    totalMaksKet += 10; // Keterampilan maks 10 per aspek
-                    totalPoinKet += Math.min(Math.max(val, 0), 10);
-                }
-            });
-            const persentaseKeterampilan = totalMaksKet > 0 ? (totalPoinKet / totalMaksKet) * 100 : 0;
+                    for(let i=0; i<scores.length; i++) {
+                        let val = parseFloat(scores[i]) || 0;
+                        let maxVal = parseFloat(maxArr[i]) || 10;
+                        totalMaksKet += maxVal;
+                        totalPoinKet += Math.min(Math.max(val, 0), maxVal);
+                    }
+                });
+                persentaseKeterampilan = totalMaksKet > 0 ? (totalPoinKet / totalMaksKet) * 100 : 0;
+            }
 
             let finalScore = 0;
-            if (totalMaksPen > 0 && totalMaksKet > 0) {
+            if (!info.skipKet && totalMaksKet > 0 && totalMaksPen > 0) {
                 finalScore = (0.7 * persentasePengetahuan) + (0.3 * persentaseKeterampilan);
-            } else if (totalMaksPen > 0) {
-                finalScore = persentasePengetahuan;
-            } else if (totalMaksKet > 0) {
+            } else if (info.skipKet || totalMaksKet === 0) {
+                finalScore = persentasePengetahuan; // 100% pengetahuan jika keterampilan diskip
+            } else {
                 finalScore = persentaseKeterampilan;
             }
 
@@ -1554,6 +1576,7 @@
             const judul = kategori === 'Formatif' ? 'Rekapitulasi Nilai Formatif' : 'Rekapitulasi Nilai Sumatif';
             document.getElementById('teks-judul-rekap').innerText = judul;
             document.getElementById('label-judul-rekap-halaman').innerText = `Arsip ${kategori}`;
+            document.getElementById('print-kop-title').innerText = `ARSIP REKAPITULASI NILAI ${kategori.toUpperCase()} SISWA`;
             switchView('view-rekap-nilai');
         }
 
@@ -1565,100 +1588,111 @@
             document.getElementById('label-setup-mapel-title').innerText = `Setup Penilaian (${activeMapelAndri})`;
             document.querySelectorAll('input[name="jenis-pen-mapel"]').forEach(cb => cb.checked = false);
             document.querySelectorAll('input[name="jenis-ket-mapel"]').forEach(cb => cb.checked = false);
-            
-            const chkPenLain = document.getElementById('check-pen-lainnya-mapel');
-            const inpPenLain = document.getElementById('input-pen-lainnya-nama-mapel');
-            if (chkPenLain) chkPenLain.checked = false;
-            if (inpPenLain) { inpPenLain.value = ''; inpPenLain.disabled = true; }
-
-            const chkKetLain = document.getElementById('check-ket-lainnya-mapel');
-            const inpKetLain = document.getElementById('input-ket-lainnya-nama-mapel');
-            if (chkKetLain) chkKetLain.checked = false;
-            if (inpKetLain) { inpKetLain.value = ''; inpKetLain.disabled = true; }
+            document.getElementById('skip-ket-mapel').checked = false;
+            document.getElementById('wrapper-section-ket-mapel').style.display = 'block';
 
             document.getElementById('container-mapel-soal-pen').innerHTML = '';
             document.getElementById('container-mapel-soal-ket').innerHTML = '';
             switchView('view-setup-pengetahuan-mapel');
         }
 
-        function toggleMapelSetupSoal() {
-            const chkLain = document.getElementById('check-pen-lainnya-mapel');
-            const inpLain = document.getElementById('input-pen-lainnya-nama-mapel');
-            if (chkLain && inpLain) {
-                inpLain.disabled = !chkLain.checked;
-                if (!chkLain.checked) inpLain.value = '';
-            }
+        function toggleSkipKeterampilanMapel() {
+            const isSkipped = document.getElementById('skip-ket-mapel').checked;
+            document.getElementById('wrapper-section-ket-mapel').style.display = isSkipped ? 'none' : 'block';
+        }
 
+        function toggleMapelSetupSoal() {
             const container = document.getElementById('container-mapel-soal-pen');
             container.innerHTML = '';
             const checked = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
             
             checked.forEach(cb => {
                 let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
                 div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Soal (${cb.value})</span>
-                    <input type="number" min="1" max="30" value="5" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-mapel-pen-input" data-jenis="${cb.value}">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500">Jumlah Soal:</span>
+                            <input type="number" min="1" max="20" value="5" onchange="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
+                        </div>
+                    </div>
+                    <div id="detail_soal_pen_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
                 `;
                 container.appendChild(div);
+                rebuildDetailSoalMapelPen(cb.value);
             });
+        }
 
-            if (chkLain && chkLain.checked) {
-                let customNama = inpLain.value.trim() || "Pengetahuan Custom";
-                let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
-                div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Soal (${customNama})</span>
-                    <input type="number" min="1" max="30" value="5" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-mapel-pen-input" data-jenis="${customNama}">
+        function rebuildDetailSoalMapelPen(jenis) {
+            const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${jenis}"]`);
+            const detailContainer = document.getElementById(`detail_soal_pen_mapel_${jenis}`);
+            if (!jmlInp || !detailContainer) return;
+            const jml = parseInt(jmlInp.value) || 5;
+            detailContainer.innerHTML = '';
+            
+            for(let i=0; i<jml; i++) {
+                let defaultMax = jenis === 'Pilihan Ganda' ? 1 : 10;
+                let box = document.createElement('div');
+                box.className = "bg-white p-1.5 rounded border text-center";
+                box.innerHTML = `
+                    <span class="block text-[9px] font-bold text-blue-600">S${i+1} Maks:</span>
+                    <input type="number" min="1" max="100" value="${defaultMax}" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-pen-mapel-${jenis}" data-idx="${i}">
                 `;
-                container.appendChild(div);
+                detailContainer.appendChild(box);
             }
         }
 
         function toggleMapelSetupSoalKet() {
-            const chkLain = document.getElementById('check-ket-lainnya-mapel');
-            const inpLain = document.getElementById('input-ket-lainnya-nama-mapel');
-            if (chkLain && inpLain) {
-                inpLain.disabled = !chkLain.checked;
-                if (!chkLain.checked) inpLain.value = '';
-            }
-
             const container = document.getElementById('container-mapel-soal-ket');
             container.innerHTML = '';
             const checked = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
             
             checked.forEach(cb => {
                 let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
                 div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal Keterampilan (${cb.value})</span>
-                    <input type="number" min="1" max="30" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-mapel-ket-input" data-jenis="${cb.value}">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500">Jumlah Aspek:</span>
+                            <input type="number" min="1" max="20" value="3" onchange="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
+                        </div>
+                    </div>
+                    <div id="detail_soal_ket_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
                 `;
                 container.appendChild(div);
+                rebuildDetailSoalMapelKet(cb.value);
             });
+        }
 
-            if (chkLain && chkLain.checked) {
-                let customNama = inpLain.value.trim() || "Keterampilan Custom";
-                let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
-                div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal (${customNama})</span>
-                    <input type="number" min="1" max="30" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-mapel-ket-input" data-jenis="${customNama}">
+        function rebuildDetailSoalMapelKet(jenis) {
+            const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${jenis}"]`);
+            const detailContainer = document.getElementById(`detail_soal_ket_mapel_${jenis}`);
+            if (!jmlInp || !detailContainer) return;
+            const jml = parseInt(jmlInp.value) || 3;
+            detailContainer.innerHTML = '';
+            
+            for(let i=0; i<jml; i++) {
+                let box = document.createElement('div');
+                box.className = "bg-white p-1.5 rounded border text-center";
+                box.innerHTML = `
+                    <span class="block text-[9px] font-bold text-indigo-600">A${i+1} Maks:</span>
+                    <input type="number" min="1" max="100" value="10" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-ket-mapel-${jenis}" data-idx="${i}">
                 `;
-                container.appendChild(div);
+                detailContainer.appendChild(box);
             }
         }
 
         function lanjutKeLembarPenilaianMapel() {
             const tpPen = document.getElementById('tp-pen-mapel').value.trim();
-            const tpKet = document.getElementById('tp-ket-mapel').value.trim();
             const checkedPen = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
+            const skipKet = document.getElementById('skip-ket-mapel').checked;
+            const tpKet = document.getElementById('tp-ket-mapel').value.trim();
             const checkedKet = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
-            const chkPenLain = document.getElementById('check-pen-lainnya-mapel');
-            const chkKetLain = document.getElementById('check-ket-lainnya-mapel');
             const alertBox = document.getElementById('alert-setup-mapel');
 
-            if (!tpPen || !tpKet || (checkedPen.length === 0 && (!chkPenLain || !chkPenLain.checked)) || (checkedKet.length === 0 && (!chkKetLain || !chkKetLain.checked))) {
+            if (!tpPen || checkedPen.length === 0 || (!skipKet && (!tpKet || checkedKet.length === 0))) {
                 alertBox.classList.remove('hidden');
                 alertBox.innerText = "Peringatan: Lengkapi jenis penilaian dan tujuan pembelajaran pengetahuan & keterampilan!";
                 return;
@@ -1666,38 +1700,37 @@
             alertBox.classList.add('hidden');
 
             let penArr = Array.from(checkedPen).map(cb => cb.value);
-            if (chkPenLain && chkPenLain.checked) {
-                let customNama = document.getElementById('input-pen-lainnya-nama-mapel').value.trim() || "Pengetahuan Custom";
-                penArr.push(customNama);
-            }
-
-            let ketArr = Array.from(checkedKet).map(cb => cb.value);
-            if (chkKetLain && chkKetLain.checked) {
-                let customNama = document.getElementById('input-ket-lainnya-nama-mapel').value.trim() || "Keterampilan Custom";
-                ketArr.push(customNama);
-            }
+            let ketArr = skipKet ? [] : Array.from(checkedKet).map(cb => cb.value);
 
             if (!jenisInfoMapel[activeMapelAndri]) jenisInfoMapel[activeMapelAndri] = {};
             jenisInfoMapel[activeMapelAndri].penList = penArr;
             jenisInfoMapel[activeMapelAndri].ketList = ketArr;
-            jenisInfoMapel[activeMapelAndri].tpKetText = tpKet;
+            jenisInfoMapel[activeMapelAndri].skipKet = skipKet;
 
-            jenisInfoMapel[activeMapelAndri].penCounts = {};
+            let maxScoresPen = {};
             penArr.forEach(j => {
-                const inp = document.querySelector(`.jml-mapel-pen-input[data-jenis="${j}"]`);
-                jenisInfoMapel[activeMapelAndri].penCounts[j] = inp ? (parseInt(inp.value) || 5) : 5;
+                maxScoresPen[j] = [];
+                const inputs = document.querySelectorAll(`.max-skor-pen-mapel-${j}`);
+                inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 10));
             });
+            jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
 
-            jenisInfoMapel[activeMapelAndri].ketCounts = {};
-            ketArr.forEach(j => {
-                const inp = document.querySelector(`.jml-mapel-ket-input[data-jenis="${j}"]`);
-                jenisInfoMapel[activeMapelAndri].ketCounts[j] = inp ? (parseInt(inp.value) || 3) : 3;
-            });
+            let maxScoresKet = {};
+            if (!skipKet) {
+                ketArr.forEach(j => {
+                    maxScoresKet[j] = [];
+                    const inputs = document.querySelectorAll(`.max-skor-ket-mapel-${j}`);
+                    inputs.forEach(inp => maxScoresKet[j].push(parseFloat(inp.value) || 10));
+                });
+            }
+            jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
 
             const today = getTodayKey();
             document.getElementById('input-tanggal-mapel-aktif').value = today;
             document.getElementById('label-mapel-aktif-mapel').innerText = `Mata Pelajaran: ${activeMapelAndri} (${activeKategoriAsesmen})`;
             
+            document.getElementById('th-ket-header-mapel').style.display = skipKet ? 'none' : 'table-cell';
+
             if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
             if (!nilaiDataAndri[activeMapelAndri][today]) {
                 nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
@@ -1711,8 +1744,7 @@
             const tbody = document.getElementById('tabel-penilaian-mapel-body');
             tbody.innerHTML = '';
             const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
-            const jenisPen = jenisInfoMapel[activeMapelAndri].penList || ['Pilihan Ganda'];
-            const jenisKet = jenisInfoMapel[activeMapelAndri].ketList || ['Praktik Langsung'];
+            const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
 
             if (!nilaiDataAndri[activeMapelAndri][chosenDate]) {
                 nilaiDataAndri[activeMapelAndri][chosenDate] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
@@ -1721,40 +1753,42 @@
             daftarSiswa.forEach((nama, idx) => {
                 let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
 
-                let htmlPen = jenisPen.map(j => {
-                    let jmlSoal = (jenisInfoMapel[activeMapelAndri].penCounts && jenisInfoMapel[activeMapelAndri].penCounts[j]) ? jenisInfoMapel[activeMapelAndri].penCounts[j] : 5;
-                    if (!studentData.penScores[j]) studentData.penScores[j] = new Array(jmlSoal).fill(0);
+                let htmlPen = infoMapel.penList.map(j => {
+                    let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
+                    if (!studentData.penScores[j]) studentData.penScores[j] = new Array(maxArr.length || 5).fill(0);
                     
                     let inputs = studentData.penScores[j].map((skor, sIdx) => {
-                        let placeholderMax = j === 'Pilihan Ganda' ? '0/1' : '1-10';
+                        let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
                         return `
                             <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                                <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}</span>
-                                <input type="number" min="0" max="${j === 'Pilihan Ganda' ? 1 : 10}" value="${skor || ''}" oninput="updatePenilaianManualMapel(${idx}, '${j}', ${sIdx}, this.value)" class="w-12 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="${placeholderMax}">
+                                <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}(Maks:${mVal})</span>
+                                <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updatePenilaianMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
                             </div>
                         `;
                     }).join('');
-
                     return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div>${inputs}</div></div>`;
                 }).join('');
 
-                let htmlKet = jenisKet.map(j => {
-                    let jmlSoal = (jenisInfoMapel[activeMapelAndri].ketCounts && jenisInfoMapel[activeMapelAndri].ketCounts[j]) ? jenisInfoMapel[activeMapelAndri].ketCounts[j] : 3;
-                    if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(jmlSoal).fill(0);
+                let htmlKet = '';
+                if (!infoMapel.skipKet) {
+                    htmlKet = infoMapel.ketList.map(j => {
+                        let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
+                        if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(maxArr.length || 3).fill(0);
 
-                    let inputs = studentData.ketScores[j].map((skor, sIdx) => {
-                        return `
-                            <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                                <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}</span>
-                                <input type="number" min="0" max="10" value="${skor || ''}" oninput="updateKeterampilanManualMapel(${idx}, '${j}', ${sIdx}, this.value)" class="w-12 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="1-10">
-                            </div>
-                        `;
+                        let inputs = studentData.ketScores[j].map((skor, sIdx) => {
+                            let mVal = maxArr[sIdx] || 10;
+                            return `
+                                <div class="m-1 inline-block bg-white p-1 rounded border text-center">
+                                    <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}(Maks:${mVal})</span>
+                                    <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updateKeterampilanMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
+                                </div>
+                            `;
+                        }).join('');
+                        return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div>${inputs}</div></div>`;
                     }).join('');
+                }
 
-                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div>${inputs}</div></div>`;
-                }).join('');
-
-                const hasilKalkulasi = hitungKalkulasiNilaiSiswaManual(studentData, activeMapelAndri);
+                const hasilKalkulasi = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
                 studentData.final = hasilKalkulasi.final;
 
                 let tr = document.createElement('tr');
@@ -1762,7 +1796,7 @@
                     <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
                     <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
                     <td class="p-4">${htmlPen}</td>
-                    <td class="p-4">${htmlKet}</td>
+                    <td class="p-4" style="display: ${infoMapel.skipKet ? 'none' : 'table-cell'}">${htmlKet}</td>
                     <td class="p-4 text-center font-extrabold text-blue-600" id="mapel_final_${idx}">
                         ${studentData.final.toFixed(1)}
                     </td>
@@ -1771,24 +1805,24 @@
             });
         }
 
-        function updatePenilaianManualMapel(idx, jenis, sIdx, val) {
+        function updatePenilaianMapelManual(idx, jenis, sIdx, val) {
             const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
             let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
             if (!studentData.penScores[jenis]) studentData.penScores[jenis] = [];
             studentData.penScores[jenis][sIdx] = parseFloat(val) || 0;
             
-            const res = hitungKalkulasiNilaiSiswaManual(studentData, activeMapelAndri);
+            const res = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
             studentData.final = res.final;
             document.getElementById(`mapel_final_${idx}`).innerText = studentData.final.toFixed(1);
         }
 
-        function updateKeterampilanManualMapel(idx, jenis, sIdx, val) {
+        function updateKeterampilanMapelManual(idx, jenis, sIdx, val) {
             const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
             let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
             if (!studentData.ketScores[jenis]) studentData.ketScores[jenis] = [];
             studentData.ketScores[jenis][sIdx] = parseFloat(val) || 0;
             
-            const res = hitungKalkulasiNilaiSiswaManual(studentData, activeMapelAndri);
+            const res = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
             studentData.final = res.final;
             document.getElementById(`mapel_final_${idx}`).innerText = studentData.final.toFixed(1);
         }
@@ -1801,13 +1835,13 @@
             if (!nilaiDataAndri[mapel] || !nilaiDataAndri[mapel][chosenDate]) return;
 
             nilaiDataAndri[mapel][chosenDate].forEach((d, idx) => {
-                const res = hitungKalkulasiNilaiSiswaManual(d, mapel);
+                const res = hitungKalkulasiNilaiSiswaFleksibel(d, mapel);
                 d.final = res.final;
                 if (d.final > 0) {
                     if (!targetHistory[daftarSiswa[idx]]) targetHistory[daftarSiswa[idx]] = {};
                     if (!targetHistory[daftarSiswa[idx]][mapel]) targetHistory[daftarSiswa[idx]][mapel] = [];
                     let existing = targetHistory[daftarSiswa[idx]][mapel].find(h => h.date === chosenDate);
-                    let detailText = `[${activeKategoriAsesmen}] Pengetahuan: ${res.penPersen}% | Keterampilan: ${res.ketPersen}%`;
+                    let detailText = `[${activeKategoriAsesmen}] Pengetahuan: ${res.penPersen}% | Ket: ${res.ketPersen}%`;
                     if (existing) {
                         existing.score = d.final;
                         existing.detail = detailText;
@@ -1923,80 +1957,99 @@
         }
 
         function toggleSetupSoalInputs() {
-            const chkLain = document.getElementById('check-pen-lainnya');
-            const inpLain = document.getElementById('input-pen-lainnya-nama');
-            if (chkLain && inpLain) {
-                inpLain.disabled = !chkLain.checked;
-                if (!chkLain.checked) inpLain.value = '';
-            }
-
             const container = document.getElementById('container-input-soal-pengetahuan');
             container.innerHTML = '';
             const checked = document.querySelectorAll('input[name="jenis-pengetahuan"]:checked');
             
             checked.forEach(cb => {
                 let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
                 div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Soal (${cb.value})</span>
-                    <input type="number" min="1" max="30" value="5" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-blue-600 jml-soal-pen-input" data-jenis="${cb.value}">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500">Jumlah Soal:</span>
+                            <input type="number" min="1" max="20" value="5" onchange="rebuildDetailSoalAndriPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-pen" data-jenis="${cb.value}">
+                        </div>
+                    </div>
+                    <div id="detail_soal_pen_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
                 `;
                 container.appendChild(div);
+                rebuildDetailSoalAndriPen(cb.value);
             });
+        }
 
-            if (chkLain && chkLain.checked) {
-                let customNama = inpLain.value.trim() || "Pengetahuan Custom";
-                let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
-                div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Soal (${customNama})</span>
-                    <input type="number" min="1" max="30" value="5" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-blue-600 jml-soal-pen-input" data-jenis="${customNama}">
+        function rebuildDetailSoalAndriPen(jenis) {
+            const jmlInp = document.querySelector(`.jml-soal-andri-pen[data-jenis="${jenis}"]`);
+            const detailContainer = document.getElementById(`detail_soal_pen_andri_${jenis}`);
+            if (!jmlInp || !detailContainer) return;
+            const jml = parseInt(jmlInp.value) || 5;
+            detailContainer.innerHTML = '';
+            
+            for(let i=0; i<jml; i++) {
+                let defaultMax = jenis === 'Pilihan Ganda' ? 1 : 10;
+                let box = document.createElement('div');
+                box.className = "bg-white p-1.5 rounded border text-center";
+                box.innerHTML = `
+                    <span class="block text-[9px] font-bold text-blue-600">S${i+1} Maks:</span>
+                    <input type="number" min="1" max="100" value="${defaultMax}" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-pen-andri-${jenis}" data-idx="${i}">
                 `;
-                container.appendChild(div);
+                detailContainer.appendChild(box);
             }
         }
 
-        function toggleSetupSoalKetInputs() {
-            const chkLain = document.getElementById('check-ket-lainnya');
-            const inpLain = document.getElementById('input-ket-lainnya-nama');
-            if (chkLain && inpLain) {
-                inpLain.disabled = !chkLain.checked;
-                if (!chkLain.checked) inpLain.value = '';
-            }
+        function toggleSkipKeterampilanAndri() {
+            const isSkipped = document.getElementById('skip-ket-andri').checked;
+            document.getElementById('wrapper-section-ket-andri').style.display = isSkipped ? 'none' : 'block';
+        }
 
+        function toggleSetupSoalKetInputs() {
             const container = document.getElementById('container-input-soal-keterampilan');
             container.innerHTML = '';
             const checked = document.querySelectorAll('input[name="jenis-keterampilan"]:checked');
             
             checked.forEach(cb => {
                 let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
+                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
                 div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal Keterampilan (${cb.value})</span>
-                    <input type="number" min="1" max="30" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-soal-ket-input" data-jenis="${cb.value}">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500">Jumlah Aspek:</span>
+                            <input type="number" min="1" max="20" value="3" onchange="rebuildDetailSoalAndriKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-ket" data-jenis="${cb.value}">
+                        </div>
+                    </div>
+                    <div id="detail_soal_ket_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
                 `;
                 container.appendChild(div);
+                rebuildDetailSoalAndriKet(cb.value);
             });
+        }
 
-            if (chkLain && chkLain.checked) {
-                let customNama = inpLain.value.trim() || "Keterampilan Custom";
-                let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border flex justify-between items-center";
-                div.innerHTML = `
-                    <span class="text-xs font-bold text-slate-700">Jumlah Aspek/Soal (${customNama})</span>
-                    <input type="number" min="1" max="30" value="3" class="w-24 bg-white border rounded-lg p-2 text-center text-sm font-bold text-indigo-600 jml-soal-ket-input" data-jenis="${customNama}">
+        function rebuildDetailSoalAndriKet(jenis) {
+            const jmlInp = document.querySelector(`.jml-soal-andri-ket[data-jenis="${jenis}"]`);
+            const detailContainer = document.getElementById(`detail_soal_ket_andri_${jenis}`);
+            if (!jmlInp || !detailContainer) return;
+            const jml = parseInt(jmlInp.value) || 3;
+            detailContainer.innerHTML = '';
+            
+            for(let i=0; i<jml; i++) {
+                let box = document.createElement('div');
+                box.className = "bg-white p-1.5 rounded border text-center";
+                box.innerHTML = `
+                    <span class="block text-[9px] font-bold text-indigo-600">A${i+1} Maks:</span>
+                    <input type="number" min="1" max="100" value="10" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-ket-andri-${jenis}" data-idx="${i}">
                 `;
-                container.appendChild(div);
+                detailContainer.appendChild(box);
             }
         }
 
         function lanjutKeSetupKeterampilan() {
             const tp = document.getElementById('tujuan-pembelajaran-pengetahuan').value.trim();
             const checkedJenis = document.querySelectorAll('input[name="jenis-pengetahuan"]:checked');
-            const chkPenLain = document.getElementById('check-pen-lainnya');
             const alertBox = document.getElementById('alert-setup-pengetahuan');
 
-            if (!tp || (checkedJenis.length === 0 && (!chkPenLain || !chkPenLain.checked))) {
+            if (!tp || checkedJenis.length === 0) {
                 alertBox.classList.remove('hidden');
                 alertBox.innerText = "Peringatan: Pilih minimal 1 jenis penilaian pengetahuan dan isi Tujuan Pembelajaran!";
                 return;
@@ -2004,51 +2057,47 @@
             alertBox.classList.add('hidden');
 
             let jenisArr = Array.from(checkedJenis).map(cb => cb.value);
-            if (chkPenLain && chkPenLain.checked) {
-                let customNama = document.getElementById('input-pen-lainnya-nama').value.trim() || "Pengetahuan Custom";
-                jenisArr.push(customNama);
-            }
-
             if (!jenisInfoMapel[activeMapelAndri]) jenisInfoMapel[activeMapelAndri] = {};
             jenisInfoMapel[activeMapelAndri].penList = jenisArr;
 
-            jenisInfoMapel[activeMapelAndri].penCounts = {};
+            let maxScoresPen = {};
             jenisArr.forEach(j => {
-                const inp = document.querySelector(`.jml-soal-pen-input[data-jenis="${j}"]`);
-                jenisInfoMapel[activeMapelAndri].penCounts[j] = inp ? (parseInt(inp.value) || 5) : 5;
+                maxScoresPen[j] = [];
+                const inputs = document.querySelectorAll(`.max-skor-pen-andri-${j}`);
+                inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 10));
             });
+            jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
 
             document.getElementById('label-mapel-keterampilan').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
             switchView('view-setup-keterampilan');
         }
 
         function lanjutKeLembarPenilaianAndri() {
+            const skipKet = document.getElementById('skip-ket-andri').checked;
             const tpKet = document.getElementById('tujuan-pembelajaran-keterampilan').value.trim();
             const checkedKet = document.querySelectorAll('input[name="jenis-keterampilan"]:checked');
-            const chkKetLain = document.getElementById('check-ket-lainnya');
             const alertBox = document.getElementById('alert-setup-keterampilan');
 
-            if (!tpKet || (checkedKet.length === 0 && (!chkKetLain || !chkKetLain.checked))) {
+            if (!skipKet && (!tpKet || checkedKet.length === 0)) {
                 alertBox.classList.remove('hidden');
-                alertBox.innerText = "Peringatan: Pilih jenis penilaian keterampilan dan isi Tujuan Pembelajaran Keterampilan!";
+                alertBox.innerText = "Peringatan: Pilih jenis keterampilan dan isi Tujuan Pembelajaran Keterampilan, atau centang Lewati Keterampilan!";
                 return;
             }
             alertBox.classList.add('hidden');
 
-            let ketArr = Array.from(checkedKet).map(cb => cb.value);
-            if (chkKetLain && chkKetLain.checked) {
-                let customNama = document.getElementById('input-ket-lainnya-nama').value.trim() || "Keterampilan Custom";
-                ketArr.push(customNama);
-            }
-
+            let ketArr = skipKet ? [] : Array.from(checkedKet).map(cb => cb.value);
             jenisInfoMapel[activeMapelAndri].ketList = ketArr;
-            jenisInfoMapel[activeMapelAndri].tpKetText = tpKet;
+            jenisInfoMapel[activeMapelAndri].skipKet = skipKet;
 
-            jenisInfoMapel[activeMapelAndri].ketCounts = {};
-            ketArr.forEach(j => {
-                const inp = document.querySelector(`.jml-soal-ket-input[data-jenis="${j}"]`);
-                jenisInfoMapel[activeMapelAndri].ketCounts[j] = inp ? (parseInt(inp.value) || 3) : 3;
-            });
+            let maxScoresKet = {};
+            if (!skipKet) {
+                ketArr.forEach(j => {
+                    maxScoresKet[j] = [];
+                    const inputs = document.querySelectorAll(`.max-skor-ket-andri-${j}`);
+                    inputs.forEach(inp => maxScoresKet[j].push(parseFloat(inp.value) || 10));
+                });
+            }
+            jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
 
             document.getElementById('label-mapel-eksekusi-pen').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
             const today = getTodayKey();
@@ -2064,7 +2113,7 @@
             const tbody = document.getElementById('tabel-penilaian-pengetahuan-body');
             tbody.innerHTML = '';
             const today = getTodayKey();
-            const jenisPen = jenisInfoMapel[activeMapelAndri].penList || ['Pilihan Ganda'];
+            const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], maxScoresPen: {} };
 
             if (!nilaiDataAndri[activeMapelAndri][today]) {
                 nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
@@ -2073,16 +2122,16 @@
             daftarSiswa.forEach((nama, idx) => {
                 let studentData = nilaiDataAndri[activeMapelAndri][today][idx];
 
-                let htmlPen = jenisPen.map(j => {
-                    let jmlSoal = (jenisInfoMapel[activeMapelAndri].penCounts && jenisInfoMapel[activeMapelAndri].penCounts[j]) ? jenisInfoMapel[activeMapelAndri].penCounts[j] : 5;
-                    if (!studentData.penScores[j]) studentData.penScores[j] = new Array(jmlSoal).fill(0);
+                let htmlPen = infoMapel.penList.map(j => {
+                    let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
+                    if (!studentData.penScores[j]) studentData.penScores[j] = new Array(maxArr.length || 5).fill(0);
                     
                     let inputs = studentData.penScores[j].map((skor, sIdx) => {
-                        let placeholderMax = j === 'Pilihan Ganda' ? '0/1' : '1-10';
+                        let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
                         return `
                             <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                                <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}</span>
-                                <input type="number" min="0" max="${j === 'Pilihan Ganda' ? 1 : 10}" value="${skor || ''}" oninput="updatePenilaianManualAndri(${idx}, '${j}', ${sIdx}, this.value)" class="w-12 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="${placeholderMax}">
+                                <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}(Maks:${mVal})</span>
+                                <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updatePenilaianManualAndri(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
                             </div>
                         `;
                     }).join('');
@@ -2107,21 +2156,22 @@
             studentData.penScores[jenis][sIdx] = parseFloat(val) || 0;
         }
 
-        function lanjutJePenilaianKeterampilanDariPengetahuan() {
-            lanjutKePenilaianKeterampilan();
-        }
-
         function lanjutKePenilaianKeterampilan() {
-            document.getElementById('label-mapel-eksekusi-ket').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
-            renderTabelFormPenilaianKeterampilan();
-            switchView('view-form-penilaian-keterampilan');
+            const infoMapel = jenisInfoMapel[activeMapelAndri] || {};
+            if (infoMapel.skipKet) {
+                simpanFinalNilaiAndri(false);
+            } else {
+                document.getElementById('label-mapel-eksekusi-ket').innerText = `Mata Pelajaran: ${activeMapelAndri}`;
+                renderTabelFormPenilaianKeterampilan();
+                switchView('view-form-penilaian-keterampilan');
+            }
         }
 
         function renderTabelFormPenilaianKeterampilan() {
             const tbody = document.getElementById('tabel-penilaian-keterampilan-body');
             tbody.innerHTML = '';
             const today = getTodayKey();
-            const jenisKet = jenisInfoMapel[activeMapelAndri].ketList || ['Praktik Langsung'];
+            const infoMapel = jenisInfoMapel[activeMapelAndri] || { ketList: ['Praktik Langsung'], maxScoresKet: {} };
 
             if (!nilaiDataAndri[activeMapelAndri][today]) {
                 nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
@@ -2130,15 +2180,16 @@
             daftarSiswa.forEach((nama, idx) => {
                 let studentData = nilaiDataAndri[activeMapelAndri][today][idx];
 
-                let htmlKet = jenisKet.map(j => {
-                    let jmlSoal = (jenisInfoMapel[activeMapelAndri].ketCounts && jenisInfoMapel[activeMapelAndri].ketCounts[j]) ? jenisInfoMapel[activeMapelAndri].ketCounts[j] : 3;
-                    if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(jmlSoal).fill(0);
+                let htmlKet = infoMapel.ketList.map(j => {
+                    let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
+                    if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(maxArr.length || 3).fill(0);
 
                     let inputs = studentData.ketScores[j].map((skor, sIdx) => {
+                        let mVal = maxArr[sIdx] || 10;
                         return `
                             <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                                <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}</span>
-                                <input type="number" min="0" max="10" value="${skor || ''}" oninput="updateKeterampilanManualAndri(${idx}, '${j}', ${sIdx}, this.value)" class="w-12 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="1-10">
+                                <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}(Maks:${mVal})</span>
+                                <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updateKeterampilanManualAndri(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
                             </div>
                         `;
                     }).join('');
@@ -2171,13 +2222,13 @@
             if (!nilaiDataAndri[mapel] || !nilaiDataAndri[mapel][today]) return;
 
             nilaiDataAndri[mapel][today].forEach((d, idx) => {
-                const res = hitungKalkulasiNilaiSiswaManual(d, mapel);
+                const res = hitungKalkulasiNilaiSiswaFleksibel(d, mapel);
                 d.final = res.final;
                 if (d.final > 0) {
                     if (!targetHistory[daftarSiswa[idx]]) targetHistory[daftarSiswa[idx]] = {};
                     if (!targetHistory[daftarSiswa[idx]][mapel]) targetHistory[daftarSiswa[idx]][mapel] = [];
                     let existing = targetHistory[daftarSiswa[idx]][mapel].find(h => h.date === today);
-                    let detailText = `[${activeKategoriAsesmen}] Pengetahuan: ${res.penPersen}% | Keterampilan: ${res.ketPersen}%`;
+                    let detailText = `[${activeKategoriAsesmen}] Pengetahuan: ${res.penPersen}% | Ket: ${res.ketPersen}%`;
                     if (existing) {
                         existing.score = d.final;
                         existing.detail = detailText;
@@ -2246,7 +2297,8 @@
                     }
 
                     if (score > 0) {
-                        tds += `<td class="p-4 text-center font-bold text-slate-800">${score.toFixed(1)}</td>`;
+                        let badgeColor = score >= 75 ? 'text-emerald-700 bg-emerald-50 px-2 py-1 rounded' : 'text-amber-700 bg-amber-50 px-2 py-1 rounded';
+                        tds += `<td class="p-4 text-center font-bold"><span class="${badgeColor}">${score.toFixed(1)}</span></td>`;
                     } else {
                         tds += `<td class="p-4 text-center text-slate-400">-</td>`;
                     }
@@ -2354,7 +2406,7 @@
             bukaHalamanRekap(activeKategoriAsesmen);
         }
 
-        // Kalkulasi Rapor Akhir Berbasis 60% Sumatif & 40% Formatif
+        // Kalkulasi Rapor Akhir Berbasis 60% Sumatif & 40% Formatif + Smart Badge KKTP
         function hitungNilaiRaporMapel(namaSiswa, mapel) {
             let avgF = hitungRataRataMapel(namaSiswa, mapel, 'Formatif');
             let avgS = hitungRataRataMapel(namaSiswa, mapel, 'Sumatif');
@@ -2362,9 +2414,9 @@
             if (avgF > 0 && avgS > 0) {
                 return Math.round(((0.6 * avgS) + (0.4 * avgF)) * 10) / 10;
             } else if (avgS > 0) {
-                return avgS; // Jika hanya sumatif
+                return avgS;
             } else if (avgF > 0) {
-                return avgF; // Jika hanya formatif
+                return avgF;
             }
             return 0;
         }
@@ -2392,11 +2444,13 @@
                         totalScore += nilaiRapor;
                         countMapelWithScore++;
                     }
-                    tds += `<td class="p-4 text-center text-blue-600 font-bold cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')">${nilaiRapor > 0 ? nilaiRapor.toFixed(1) : '-'}</td>`;
+                    let smartBadge = nilaiRapor >= 75 ? 'text-emerald-700 bg-emerald-50 px-2 py-1 rounded font-bold' : (nilaiRapor > 0 ? 'text-amber-700 bg-amber-50 px-2 py-1 rounded font-bold' : 'text-slate-400');
+                    tds += `<td class="p-4 text-center cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')"><span class="${smartBadge}">${nilaiRapor > 0 ? nilaiRapor.toFixed(1) : '-'}</span></td>`;
                 });
 
                 let rataRataRapor = countMapelWithScore > 0 ? Math.round((totalScore / countMapelWithScore) * 10) / 10 : 0;
-                tds += `<td class="p-4 text-center font-extrabold text-blue-600">${rataRataRapor > 0 ? rataRataRapor.toFixed(1) : '-'}</td>`;
+                let finalBadge = rataRataRapor >= 75 ? 'text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded font-extrabold' : (rataRataRapor > 0 ? 'text-amber-700 bg-amber-100 px-2.5 py-1 rounded font-extrabold' : 'text-slate-400');
+                tds += `<td class="p-4 text-center"><span class="${finalBadge}">${rataRataRapor > 0 ? rataRataRapor.toFixed(1) : '-'}</span></td>`;
                 tr.innerHTML = tds;
                 tbody.appendChild(tr);
             });
