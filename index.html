@@ -758,7 +758,7 @@
         <div class="hidden print:block text-center mb-6 border-b-2 border-black pb-4">
             <h3 class="text-lg font-bold uppercase">PEMERINTAH KABUPATEN KAB/KOTA</h3>
             <h2 class="text-xl font-extrabold uppercase">SDN 2 SABEDO</h2>
-            <p class="text-xs">Desa Sabedo,Kecamatan, Kabupaten — Provinsi</p>
+            <p class="text-xs">Desa Sabedo, Kecamatan, Kabupaten — Provinsi</p>
             <h1 id="print-kop-title" class="text-md font-bold mt-3 underline">ARSIP REKAPITULASI NILAI SISWA</h1>
         </div>
 
@@ -802,12 +802,12 @@
         </div>
     </div>
 
-    <!-- 11. ANALISIS NILAI (60% Sumatif & 40% Formatif + Smart Badge & Cetak PDF) -->
+    <!-- 11. ANALISIS NILAI (60% Sumatif & 40% Formatif + Pembagi Mutlak Seluruh Mapel) -->
     <section id="view-analisis" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6 no-print">
             <div>
                 <h2 class="text-xl font-bold text-slate-900">Analisis Nilai Siswa (Rapor Akhir)</h2>
-                <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif (Hijau = Tuntas ≥75, Kuning = Bimbingan &lt;75)</p>
+                <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif (Mapel kosong/tidak hadir dihitung 0.0 secara mutlak)</p>
             </div>
             <div class="flex gap-2">
                 <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / PDF Rapor</button>
@@ -954,6 +954,7 @@
 
     <!-- Skrip Aplikasi -->
     <script>
+        // Kunci JSONBin.io Anda
         const JSONBIN_API_KEY = "$2a$10$08p/GnNwJeUs6gpVfUcP1O96yuEGc1h4rgJiIoUi8f9Rj3bmggIjS";
         const JSONBIN_BIN_ID = "6ab09b1cac6210605ae453f6";
 
@@ -1100,7 +1101,6 @@
             return `${year}-${month}-${day}`;
         }
 
-        // Kalkulasi Proporsional dengan Bobot Maksimal Per Butir Soal (Dijamin 100 jika sempurna & support skip keterampilan)
         function hitungKalkulasiNilaiSiswaFleksibel(studentData, mapelTarget) {
             const info = jenisInfoMapel[mapelTarget] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
             
@@ -1142,7 +1142,7 @@
             if (!info.skipKet && totalMaksKet > 0 && totalMaksPen > 0) {
                 finalScore = (0.7 * persentasePengetahuan) + (0.3 * persentaseKeterampilan);
             } else if (info.skipKet || totalMaksKet === 0) {
-                finalScore = persentasePengetahuan; // 100% pengetahuan jika keterampilan diskip
+                finalScore = persentasePengetahuan;
             } else {
                 finalScore = persentaseKeterampilan;
             }
@@ -2406,7 +2406,6 @@
             bukaHalamanRekap(activeKategoriAsesmen);
         }
 
-        // Kalkulasi Rapor Akhir Berbasis 60% Sumatif & 40% Formatif + Smart Badge KKTP
         function hitungNilaiRaporMapel(namaSiswa, mapel) {
             let avgF = hitungRataRataMapel(namaSiswa, mapel, 'Formatif');
             let avgS = hitungRataRataMapel(namaSiswa, mapel, 'Sumatif');
@@ -2421,6 +2420,7 @@
             return 0;
         }
 
+        // Analisis dengan Pembagi Mutlak Seluruh Mapel Wajib (Jika kosong dihitung 0.0)
         function initAnalisis() {
             const tbody = document.getElementById('tabel-analisis-body');
             if (!tbody) return;
@@ -2436,21 +2436,22 @@
                 let tds = `<td class="p-4 font-semibold text-slate-500">${daftarSiswa.indexOf(nama) + 1}</td><td class="p-4 font-medium text-slate-900">${nama} ${rankSign}</td>`;
                 
                 let totalScore = 0;
-                let countMapelWithScore = 0;
+                const totalMapelWajib = allMapelGlobal.length; // Pembagi mutlak seluruh mapel (misal 9 mapel)
 
                 allMapelGlobal.forEach(mapel => {
                     let nilaiRapor = hitungNilaiRaporMapel(nama, mapel);
                     if (nilaiRapor > 0) {
                         totalScore += nilaiRapor;
-                        countMapelWithScore++;
                     }
-                    let smartBadge = nilaiRapor >= 75 ? 'text-emerald-700 bg-emerald-50 px-2 py-1 rounded font-bold' : (nilaiRapor > 0 ? 'text-amber-700 bg-amber-50 px-2 py-1 rounded font-bold' : 'text-slate-400');
-                    tds += `<td class="p-4 text-center cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')"><span class="${smartBadge}">${nilaiRapor > 0 ? nilaiRapor.toFixed(1) : '-'}</span></td>`;
+                    // Jika kosong/tidak ada nilai, ditampilkan 0.0 secara adil
+                    let displayVal = nilaiRapor > 0 ? nilaiRapor.toFixed(1) : '0.0';
+                    let smartBadge = nilaiRapor >= 75 ? 'text-emerald-700 bg-emerald-50 px-2 py-1 rounded font-bold' : (nilaiRapor > 0 ? 'text-amber-700 bg-amber-50 px-2 py-1 rounded font-bold' : 'text-slate-400 font-bold');
+                    tds += `<td class="p-4 text-center cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')"><span class="${smartBadge}">${displayVal}</span></td>`;
                 });
 
-                let rataRataRapor = countMapelWithScore > 0 ? Math.round((totalScore / countMapelWithScore) * 10) / 10 : 0;
-                let finalBadge = rataRataRapor >= 75 ? 'text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded font-extrabold' : (rataRataRapor > 0 ? 'text-amber-700 bg-amber-100 px-2.5 py-1 rounded font-extrabold' : 'text-slate-400');
-                tds += `<td class="p-4 text-center"><span class="${finalBadge}">${rataRataRapor > 0 ? rataRataRapor.toFixed(1) : '-'}</span></td>`;
+                let rataRataRapor = totalMapelWajib > 0 ? Math.round((totalScore / totalMapelWajib) * 10) / 10 : 0;
+                let finalBadge = rataRataRapor >= 75 ? 'text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded font-extrabold' : (rataRataRapor > 0 ? 'text-amber-700 bg-amber-100 px-2.5 py-1 rounded font-extrabold' : 'text-slate-400 font-bold');
+                tds += `<td class="p-4 text-center"><span class="${finalBadge}">${rataRataRapor.toFixed(1)}</span></td>`;
                 tr.innerHTML = tds;
                 tbody.appendChild(tr);
             });
@@ -2485,7 +2486,7 @@
             historyHtml += `</div></div>`;
 
             let raporVal = hitungNilaiRaporMapel(nama, mapel);
-            historyHtml += `<div class="bg-blue-50 p-3 rounded-xl border border-blue-200 text-center"><span class="text-xs font-bold text-blue-900">Nilai Rapor Akhir (60% Sumatif + 40% Formatif): <span class="text-lg font-extrabold">${raporVal > 0 ? raporVal.toFixed(1) : '-'}</span></span></div>`;
+            historyHtml += `<div class="bg-blue-50 p-3 rounded-xl border border-blue-200 text-center"><span class="text-xs font-bold text-blue-900">Nilai Rapor Akhir (60% Sumatif + 40% Formatif): <span class="text-lg font-extrabold">${raporVal > 0 ? raporVal.toFixed(1) : '0.0'}</span></span></div>`;
 
             document.getElementById('modal-detail-content').innerHTML = historyHtml;
             document.getElementById('modal-detail-nilai').classList.remove('hidden');
@@ -2502,15 +2503,15 @@
         function hitungDanTampilkanRangking() {
             let calculated = daftarSiswa.map(name => {
                 let sum = 0;
-                let count = 0;
+                const totalMapelWajib = allMapelGlobal.length;
+
                 allMapelGlobal.forEach(m => {
                     let raporM = hitungNilaiRaporMapel(name, m);
                     if (raporM > 0) {
                         sum += raporM;
-                        count++;
                     }
                 });
-                const finalAvg = count > 0 ? Math.round((sum / count) * 10) / 10 : 0;
+                const finalAvg = totalMapelWajib > 0 ? Math.round((sum / totalMapelWajib) * 10) / 10 : 0;
                 return { name: name, avg: finalAvg };
             });
 
@@ -2537,7 +2538,7 @@
             });
 
             initAnalisis();
-            alert("Analisis ranking berhasil dihitung dan disimpan!");
+            alert("Analisis ranking berhasil dihitung berdasarkan rata-rata mutlak seluruh mata pelajaran!");
         }
 
         function hapusAnalisisRangking() {
@@ -2568,7 +2569,7 @@
             tbody.innerHTML = '';
 
             let totalNilaiRaporSemuaMapel = 0;
-            let mapelDinilaiCount = 0;
+            const totalMapelWajib = allMapelGlobal.length;
 
             allMapelGlobal.forEach(mapel => {
                 let avgF = hitungRataRataMapel(namaSiswa, mapel, 'Formatif');
@@ -2580,12 +2581,11 @@
 
                 if (raporM > 0) {
                     totalNilaiRaporSemuaMapel += raporM;
-                    mapelDinilaiCount++;
                 }
 
                 let badgeRapor = '';
                 if (raporM === 0) {
-                    badgeRapor = `<span class="bg-slate-100 text-slate-500 text-xs font-semibold px-2 py-1 rounded border">Belum ada nilai</span>`;
+                    badgeRapor = `<span class="bg-slate-100 text-slate-500 text-xs font-semibold px-2 py-1 rounded border">0.0 • Belum dinilai</span>`;
                 } else if (raporM >= 75) {
                     badgeRapor = `<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2 py-1 rounded border border-emerald-200">${raporM.toFixed(1)} • Tuntas ⭐</span>`;
                 } else {
@@ -2629,7 +2629,7 @@
             }
             document.getElementById('badge-ranking').innerText = rankDisplay;
 
-            const rataRataSiswa = mapelDinilaiCount > 0 ? Math.round((totalNilaiRaporSemuaMapel / mapelDinilaiCount) * 10) / 10 : 0;
+            const rataRataSiswa = totalMapelWajib > 0 ? Math.round((totalNilaiRaporSemuaMapel / totalMapelWajib) * 10) / 10 : 0;
             const elMotivasi = document.getElementById('catatan-motivasi-siswa');
             if (rataRataSiswa >= 85) {
                 elMotivasi.innerText = `"Prestasi yang luar biasa, ${namaSiswa}! Pertahankan semangat belajarmu dan teruslah menjadi inspirasi bagi teman-teman."`;
