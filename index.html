@@ -892,7 +892,7 @@
         </div>
     </section>
 
-    <!-- 11.1 MODAL NARASI RAPOR OTOMATIS (INOVASI POIN 3) -->
+    <!-- 11.1 MODAL NARASI RAPOR OTOMATIS -->
     <div id="modal-narasi-rapor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -2115,6 +2115,7 @@
             }
         }
 
+        // PERBAIKAN UTAMA: Pengambilan data soal dinamis tanpa batas 5 soal
         function lanjutKeSetupKeterampilan() {
             const tp = document.getElementById('tujuan-pembelajaran-pengetahuan').value.trim();
             const checkedJenis = document.querySelectorAll('input[name="jenis-pengetahuan"]:checked');
@@ -2134,8 +2135,16 @@
             let maxScoresPen = {};
             jenisArr.forEach(j => {
                 maxScoresPen[j] = [];
-                const inputs = document.querySelectorAll(`.max-skor-pen-andri-${j}`);
-                inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 1));
+                // Mengambil seluruh input max skor tanpa terpotong
+                const inputs = document.querySelectorAll(`input[class*="max-skor-pen-andri-${j}"]`);
+                if (inputs.length > 0) {
+                    inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 1));
+                } else {
+                    // Fallback aman berdasarkan jumlah soal yang diketik di input DOM
+                    const jmlInp = document.querySelector(`.jml-soal-andri-pen[data-jenis="${j}"]`);
+                    const jml = jmlInp ? parseInt(jmlInp.value) || 5 : 5;
+                    maxScoresPen[j] = new Array(jml).fill(1);
+                }
             });
             jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
 
@@ -2206,7 +2215,7 @@
                     }
                     
                     let inputs = studentData.penScores[j].map((skor, sIdx) => {
-                        let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
+                        let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
                         return `
                             <div class="m-1 inline-block bg-white p-1 rounded border text-center">
                                 <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}(Maks:${mVal})</span>
@@ -2323,7 +2332,7 @@
 
             simpanKeLocalStorage();
             if (!isAuto) {
-                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan & disinkronkan ke Cloud!`);
+                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan secara permanen & disinkronkan ke Cloud!`);
                 switchView('view-ruang-kelas');
             }
         }
@@ -2539,7 +2548,7 @@
             });
         }
 
-        // Inovasi Poin 3: Generator Draf Narasi Rapor Otomatis berbasis Taksonomi SOLO
+        // Generator Draf Narasi Rapor Otomatis berbasis Taksonomi SOLO
         function bukaModalNarasiRapor() {
             const container = document.getElementById('container-narasi-list');
             container.innerHTML = '';
