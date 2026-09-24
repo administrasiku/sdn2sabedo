@@ -147,8 +147,8 @@
             </div>
             <div onclick="switchView('view-analisis')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">🔍</div>
-                <h3 class="text-lg font-bold text-slate-900">Analisis Nilai Siswa</h3>
-                <p class="text-slate-500 text-sm mt-1">Rata-rata rapor 60% Sumatif & 40% Formatif.</p>
+                <h3 class="text-lg font-bold text-slate-900">Analisis Nilai & Remedial</h3>
+                <p class="text-slate-500 text-sm mt-1">Rata-rata rapor & draf catatan remedial otomatis.</p>
             </div>
         </div>
     </section>
@@ -582,7 +582,7 @@
         <div id="pilihan-mapel-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- 9.1 SETUP PENGETAHUAN (DENGAN BOBOT FLEKSIBEL & SERAGAM MASSAL) -->
+    <!-- 9.1 SETUP PENGETAHUAN -->
     <section id="view-setup-pengetahuan" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -636,7 +636,7 @@
         </div>
     </section>
 
-    <!-- 9.2 SETUP KETERAMPILAN (DENGAN OPSI SKIP & SERAGAM) -->
+    <!-- 9.2 SETUP KETERAMPILAN -->
     <section id="view-setup-keterampilan" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -762,7 +762,7 @@
         </div>
     </section>
 
-    <!-- 10. REKAP NILAI FORMATIF / SUMATIF (HALAMAN TERPISAH + CETAK PDF) -->
+    <!-- 10. REKAP NILAI FORMATIF / SUMATIF -->
     <section id="view-rekap-nilai" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-4 mb-6 gap-4 no-print">
             <div>
@@ -776,7 +776,6 @@
             </div>
         </div>
 
-        <!-- Header Kop Surat khusus cetak PDF -->
         <div class="hidden print:block text-center mb-6 border-b-2 border-black pb-4">
             <h3 class="text-lg font-bold uppercase">PEMERINTAH KABUPATEN KAB/KOTA</h3>
             <h2 class="text-xl font-extrabold uppercase">SDN 2 SABEDO</h2>
@@ -784,7 +783,6 @@
             <h1 id="print-kop-title" class="text-md font-bold mt-3 underline">ARSIP REKAPITULASI NILAI SISWA</h1>
         </div>
 
-        <!-- Banner Peringatan Status Tanggal Aktif Rekap -->
         <div id="banner-rekap-date-notice" class="hidden bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl text-xs font-medium mb-4 flex justify-between items-center no-print">
             <span id="banner-notice-text">⚠️ Anda sedang melihat rekap untuk tanggal masa lampau.</span>
             <button onclick="setRekapHariIni()" class="bg-amber-600 text-white px-3 py-1 rounded-lg font-bold hover:bg-amber-500">Kembali ke Hari Ini</button>
@@ -824,20 +822,20 @@
         </div>
     </div>
 
-    <!-- 11. ANALISIS NILAI (60% Sumatif & 40% Formatif + Pembagi Mutlak Seluruh Mapel) -->
+    <!-- 11. ANALISIS NILAI & REMEDIAL OTOMATIS -->
     <section id="view-analisis" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6 no-print">
             <div>
-                <h2 class="text-xl font-bold text-slate-900">Analisis Nilai Siswa (Rapor Akhir)</h2>
-                <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif (Mapel kosong/tidak hadir dihitung 0.0 secara mutlak)</p>
+                <h2 class="text-xl font-bold text-slate-900">Analisis Nilai Siswa & Catatan Remedial</h2>
+                <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif. Dilengkapi generator daftar remedial otomatis.</p>
             </div>
-            <div class="flex gap-2">
-                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / PDF Rapor</button>
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="bukaModalRemedialOtomatis()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">⚡ Draf Remedial & Pengayaan</button>
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak Rapor</button>
                 <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
             </div>
         </div>
 
-        <!-- Kop Cetak PDF Rapor -->
         <div class="hidden print:block text-center mb-6 border-b-2 border-black pb-4">
             <h3 class="text-lg font-bold uppercase">PEMERINTAH KABUPATEN KAB/KOTA</h3>
             <h2 class="text-xl font-extrabold uppercase">SDN 2 SABEDO</h2>
@@ -892,6 +890,21 @@
             </div>
         </div>
     </section>
+
+    <!-- 11.1 MODAL REMEDIAL OTOMATIS -->
+    <div id="modal-remedial-otomatis" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-xl font-bold text-slate-900">⚡ Draf Otomatis Program Remedial & Pengayaan</h3>
+                <button onclick="document.getElementById('modal-remedial-otomatis').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            </div>
+            <p class="text-xs text-slate-500">Sistem memindai siswa yang belum tuntas (< 75) di setiap mapel untuk diberikan bimbingan khusus.</p>
+            <div id="container-remedial-list" class="space-y-3 text-sm"></div>
+            <div class="flex justify-end pt-2">
+                <button onclick="document.getElementById('modal-remedial-otomatis').classList.add('hidden')" class="bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Tutup</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 12. PORTAL SISWA -->
     <section id="view-portal-siswa" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
@@ -976,7 +989,6 @@
 
     <!-- Skrip Aplikasi -->
     <script>
-        // Kunci JSONBin.io Anda
         const JSONBIN_API_KEY = "$2a$10$08p/GnNwJeUs6gpVfUcP1O96yuEGc1h4rgJiIoUi8f9Rj3bmggIjS";
         const JSONBIN_BIN_ID = "6ab09b1cac6210605ae453f6";
 
@@ -1636,7 +1648,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Soal:</span>
-                            <input type="number" min="1" max="20" value="5" oninput="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="25" value="5" oninput="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_pen_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -1678,7 +1690,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Aspek:</span>
-                            <input type="number" min="1" max="20" value="3" oninput="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="25" value="3" oninput="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_ket_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -1777,7 +1789,10 @@
 
                 let htmlPen = infoMapel.penList.map(j => {
                     let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
-                    if (!studentData.penScores[j]) studentData.penScores[j] = new Array(maxArr.length || 5).fill(0);
+                    let targetSoal = maxArr.length > 0 ? maxArr.length : 5;
+                    if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
+                        studentData.penScores[j] = new Array(targetSoal).fill(0);
+                    }
                     
                     let inputs = studentData.penScores[j].map((skor, sIdx) => {
                         let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
@@ -1795,7 +1810,10 @@
                 if (!infoMapel.skipKet) {
                     htmlKet = infoMapel.ketList.map(j => {
                         let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
-                        if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(maxArr.length || 3).fill(0);
+                        let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                        if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
+                            studentData.ketScores[j] = new Array(targetAspek).fill(0);
+                        }
 
                         let inputs = studentData.ketScores[j].map((skor, sIdx) => {
                             let mVal = maxArr[sIdx] || 10;
@@ -1903,7 +1921,6 @@
 
             daftarSiswa.forEach((nama, idx) => {
                 let records = dapatkanRekamanMapelSiswa(nama, mapel, activeKategoriAsesmen);
-                
                 let filteredRecs = records.filter(r => r.date === chosenArsipTgl);
                 let targetScore = 0;
                 let targetDate = chosenArsipTgl;
@@ -1991,7 +2008,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Soal:</span>
-                            <input type="number" min="1" max="20" value="5" oninput="rebuildDetailSoalAndriPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-pen" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="25" value="5" oninput="rebuildDetailSoalAndriPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-pen" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_pen_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -2052,7 +2069,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Aspek:</span>
-                            <input type="number" min="1" max="20" value="3" oninput="rebuildDetailSoalAndriKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-ket" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="25" value="3" oninput="rebuildDetailSoalAndriKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-ket" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_ket_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -2164,7 +2181,10 @@
 
                 let htmlPen = infoMapel.penList.map(j => {
                     let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
-                    if (!studentData.penScores[j]) studentData.penScores[j] = new Array(maxArr.length || 5).fill(0);
+                    let targetSoal = maxArr.length > 0 ? maxArr.length : 5;
+                    if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
+                        studentData.penScores[j] = new Array(targetSoal).fill(0);
+                    }
                     
                     let inputs = studentData.penScores[j].map((skor, sIdx) => {
                         let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
@@ -2222,7 +2242,10 @@
 
                 let htmlKet = infoMapel.ketList.map(j => {
                     let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
-                    if (!studentData.ketScores[j]) studentData.ketScores[j] = new Array(maxArr.length || 3).fill(0);
+                    let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                    if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
+                        studentData.ketScores[j] = new Array(targetAspek).fill(0);
+                    }
 
                     let inputs = studentData.ketScores[j].map((skor, sIdx) => {
                         let mVal = maxArr[sIdx] || 10;
@@ -2494,6 +2517,44 @@
                 tr.innerHTML = tds;
                 tbody.appendChild(tr);
             });
+        }
+
+        // Inovasi: Generator Draf Remedial & Pengayaan Otomatis
+        function bukaModalRemedialOtomatis() {
+            const container = document.getElementById('container-remedial-list');
+            container.innerHTML = '';
+            
+            let adaRemedial = false;
+
+            daftarSiswa.forEach(nama => {
+                let mapelBelumTuntas = [];
+                allMapelGlobal.forEach(mapel => {
+                    let rapor = hitungNilaiRaporMapel(nama, mapel);
+                    if (rapor > 0 && rapor < 75) {
+                        mapelBelumTuntas.push({ mapel: mapel, nilai: rapor });
+                    }
+                });
+
+                if (mapelBelumTuntas.length > 0) {
+                    adaRemedial = true;
+                    let listMapelStr = mapelBelumTuntas.map(m => `<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-xs">${m.mapel} (${m.nilai})</span>`).join(' ');
+                    
+                    let card = document.createElement('div');
+                    card.className = "bg-amber-50 border border-amber-200 p-3.5 rounded-xl space-y-1";
+                    card.innerHTML = `
+                        <div class="font-bold text-slate-900">${nama}</div>
+                        <div class="text-xs text-slate-600 flex items-center gap-2 flex-wrap">Mapel Perlu Remedial (<75): ${listMapelStr}</div>
+                        <div class="text-[11px] text-indigo-700 font-medium italic mt-1">Saran Tindak Lanjut: Berikan bimbingan ulang konsep materi dan penugasan perbaikan terstruktur.</div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+
+            if (!adaRemedial) {
+                container.innerHTML = `<div class="p-6 text-center text-slate-500 font-medium">🎉 Luar biasa! Seluruh siswa telah tuntas mencapai Kriteria Ketercapaian (≥ 75) di semua mata pelajaran. Tidak ada siswa yang memerlukan remedial saat ini.</div>`;
+            }
+
+            document.getElementById('modal-remedial-otomatis').classList.remove('hidden');
         }
 
         function bukaModalHistoryMapel(nama, mapel) {
