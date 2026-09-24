@@ -147,8 +147,8 @@
             </div>
             <div onclick="switchView('view-analisis')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">🔍</div>
-                <h3 class="text-lg font-bold text-slate-900">Analisis Nilai & Remedial</h3>
-                <p class="text-slate-500 text-sm mt-1">Rata-rata rapor & draf catatan remedial otomatis.</p>
+                <h3 class="text-lg font-bold text-slate-900">Analisis Nilai & Rapor</h3>
+                <p class="text-slate-500 text-sm mt-1">Rata-rata, draf narasi rapor & remedial otomatis.</p>
             </div>
         </div>
     </section>
@@ -822,15 +822,16 @@
         </div>
     </div>
 
-    <!-- 11. ANALISIS NILAI & REMEDIAL OTOMATIS -->
+    <!-- 11. ANALISIS NILAI & NARASI RAPOR OTOMATIS -->
     <section id="view-analisis" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6 no-print">
             <div>
-                <h2 class="text-xl font-bold text-slate-900">Analisis Nilai Siswa & Catatan Remedial</h2>
-                <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif. Dilengkapi generator daftar remedial otomatis.</p>
+                <h2 class="text-xl font-bold text-slate-900">Analisis Nilai Siswa & Narasi Rapor Otomatis</h2>
+                <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif. Dilengkapi generator draf deskripsi kualitatif rapor.</p>
             </div>
             <div class="flex gap-2 flex-wrap">
-                <button onclick="bukaModalRemedialOtomatis()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">⚡ Draf Remedial & Pengayaan</button>
+                <button onclick="bukaModalNarasiRapor()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">✨ Draf Narasi Rapor</button>
+                <button onclick="bukaModalRemedialOtomatis()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">⚡ Draf Remedial</button>
                 <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak Rapor</button>
                 <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
             </div>
@@ -891,7 +892,22 @@
         </div>
     </section>
 
-    <!-- 11.1 MODAL REMEDIAL OTOMATIS -->
+    <!-- 11.1 MODAL NARASI RAPOR OTOMATIS (INOVASI POIN 3) -->
+    <div id="modal-narasi-rapor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-xl font-bold text-slate-900">✨ Draf Otomatis Narasi Deskripsi Rapor Kurikulum Merdeka</h3>
+                <button onclick="document.getElementById('modal-narasi-rapor').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            </div>
+            <p class="text-xs text-slate-500">Draf narasi kualitatif otomatis berdasarkan pencapaian rata-rata siswa pada seluruh mata pelajaran.</p>
+            <div id="container-narasi-list" class="space-y-3 text-sm"></div>
+            <div class="flex justify-end pt-2">
+                <button onclick="document.getElementById('modal-narasi-rapor').classList.add('hidden')" class="bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11.2 MODAL REMEDIAL OTOMATIS -->
     <div id="modal-remedial-otomatis" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -2523,7 +2539,50 @@
             });
         }
 
-        // Inovasi: Generator Draf Remedial & Pengayaan Otomatis
+        // Inovasi Poin 3: Generator Draf Narasi Rapor Otomatis berbasis Taksonomi SOLO
+        function bukaModalNarasiRapor() {
+            const container = document.getElementById('container-narasi-list');
+            container.innerHTML = '';
+
+            daftarSiswa.forEach(nama => {
+                let totalScore = 0;
+                let count = 0;
+                allMapelGlobal.forEach(m => {
+                    let r = hitungNilaiRaporMapel(nama, m);
+                    if (r > 0) {
+                        totalScore += r;
+                        count++;
+                    }
+                });
+                let avg = count > 0 ? totalScore / allMapelGlobal.length : 0;
+
+                let soloLevel = "Unistruktural (Perlu Bimbingan Dasar)";
+                let deskripsiNarasi = "menunjukkan pemahaman dasar pada konsep materi pembelajaran dan memerlukan bimbingan rutin dalam menyelesaikan penugasan kompleks.";
+                if (avg >= 85) {
+                    soloLevel = "Abstrak Diperluas (Sangat Memuaskan)";
+                    deskripsiNarasi = "menunjukkan penguasaan konsep yang sangat mendalam, mampu menganalisis materi dengan sangat baik, serta konsisten menunjukkan kemandirian belajar yang tinggi.";
+                } else if (avg >= 75) {
+                    soloLevel = "Relasional / Multistruktural (Tuntas & Berkembang)";
+                    deskripsiNarasi = "menunjukkan penguasaan yang baik terhadap tujuan pembelajaran, mampu menghubungkan antar konsep dengan tepat, dan aktif dalam proses KBM.";
+                }
+
+                let card = document.createElement('div');
+                card.className = "bg-indigo-50/60 border border-indigo-200 p-4 rounded-xl space-y-1.5";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-900">${nama}</span>
+                        <span class="text-xs bg-indigo-600 text-white px-2.5 py-0.5 rounded-full font-bold">Rata-rata: ${avg.toFixed(1)}</span>
+                    </div>
+                    <div class="text-xs text-indigo-900 font-semibold">Level SOLO: ${soloLevel}</div>
+                    <p class="text-xs text-slate-600 italic leading-relaxed">"Ananda ${nama} ${deskripsiNarasi}"</p>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('modal-narasi-rapor').classList.remove('hidden');
+        }
+
+        // Generator Draf Remedial & Pengayaan Otomatis
         function bukaModalRemedialOtomatis() {
             const container = document.getElementById('container-remedial-list');
             container.innerHTML = '';
