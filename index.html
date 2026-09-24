@@ -1648,7 +1648,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Soal:</span>
-                            <input type="number" min="1" max="25" value="5" oninput="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="50" value="5" oninput="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_pen_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -1690,7 +1690,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Aspek:</span>
-                            <input type="number" min="1" max="25" value="3" oninput="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="50" value="3" oninput="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_ket_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -1790,6 +1790,7 @@
                 let htmlPen = infoMapel.penList.map(j => {
                     let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
                     let targetSoal = maxArr.length > 0 ? maxArr.length : 5;
+                    
                     if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
                         studentData.penScores[j] = new Array(targetSoal).fill(0);
                     }
@@ -1803,7 +1804,7 @@
                             </div>
                         `;
                     }).join('');
-                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div>${inputs}</div></div>`;
+                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
                 }).join('');
 
                 let htmlKet = '';
@@ -1811,6 +1812,7 @@
                     htmlKet = infoMapel.ketList.map(j => {
                         let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
                         let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                        
                         if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
                             studentData.ketScores[j] = new Array(targetAspek).fill(0);
                         }
@@ -1824,7 +1826,7 @@
                                 </div>
                             `;
                         }).join('');
-                        return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div>${inputs}</div></div>`;
+                        return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
                     }).join('');
                 }
 
@@ -2008,7 +2010,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Soal:</span>
-                            <input type="number" min="1" max="25" value="5" oninput="rebuildDetailSoalAndriPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-pen" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="50" value="5" oninput="rebuildDetailSoalAndriPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-pen" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_pen_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -2069,7 +2071,7 @@
                         <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-500">Jumlah Aspek:</span>
-                            <input type="number" min="1" max="25" value="3" oninput="rebuildDetailSoalAndriKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-ket" data-jenis="${cb.value}">
+                            <input type="number" min="1" max="50" value="3" oninput="rebuildDetailSoalAndriKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-andri-ket" data-jenis="${cb.value}">
                         </div>
                     </div>
                     <div id="detail_soal_ket_andri_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
@@ -2182,6 +2184,7 @@
                 let htmlPen = infoMapel.penList.map(j => {
                     let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
                     let targetSoal = maxArr.length > 0 ? maxArr.length : 5;
+                    
                     if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
                         studentData.penScores[j] = new Array(targetSoal).fill(0);
                     }
@@ -2196,7 +2199,7 @@
                         `;
                     }).join('');
 
-                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div>${inputs}</div></div>`;
+                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
                 }).join('');
 
                 let tr = document.createElement('tr');
@@ -2243,6 +2246,7 @@
                 let htmlKet = infoMapel.ketList.map(j => {
                     let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
                     let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                    
                     if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
                         studentData.ketScores[j] = new Array(targetAspek).fill(0);
                     }
@@ -2257,7 +2261,7 @@
                         `;
                     }).join('');
 
-                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div>${inputs}</div></div>`;
+                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
                 }).join('');
 
                 let tr = document.createElement('tr');
