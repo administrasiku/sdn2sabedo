@@ -2119,7 +2119,7 @@
             jenisArr.forEach(j => {
                 maxScoresPen[j] = [];
                 const inputs = document.querySelectorAll(`.max-skor-pen-andri-${j}`);
-                inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 10));
+                inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 1));
             });
             jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
 
@@ -2307,7 +2307,7 @@
 
             simpanKeLocalStorage();
             if (!isAuto) {
-                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan secara permanen & disinkronkan ke Cloud!`);
+                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan & disinkronkan ke Cloud!`);
                 switchView('view-ruang-kelas');
             }
         }
