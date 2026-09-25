@@ -333,7 +333,10 @@
                 <label class="block text-xs font-bold text-slate-600 uppercase">Tanggal Aktif Rekap:</label>
                 <input type="date" id="input-tanggal-mapel-aktif" onchange="gantiTanggalMapelAktif(this.value)" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-700 font-bold">
             </div>
-            <span class="text-xs text-slate-400 italic">Sistem menghitung otomatis berdasarkan bobot maksimal soal. Dijamin nilai 100 jika benar semua!</span>
+            <div class="flex gap-2">
+                <button onclick="isiCepatNilaiMapel(100)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">⚡ Isi Sempurna (100)</button>
+                <button onclick="isiCepatNilaiMapel(75)" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">⚡ Isi Standar Tuntas (75)</button>
+            </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
@@ -716,6 +719,15 @@
             </div>
         </div>
 
+        <!-- Inovasi Baru: Tombol Isi Cepat Massal di Lembar Siswa -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex items-center justify-between flex-wrap gap-3">
+            <span class="text-xs font-bold text-slate-600 uppercase">⚡ Pengisian Cepat Massal (Opsional):</span>
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="isiCepatNilaiAndri(100)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">Isi Semua Sempurna (100)</button>
+                <button onclick="isiCepatNilaiAndri(75)" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">Isi Semua Standar Tuntas (75)</button>
+            </div>
+        </div>
+
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
             <table class="w-full text-left border-collapse min-w-[700px]">
                 <thead>
@@ -796,6 +808,8 @@
             <div class="self-end flex gap-2">
                 <button onclick="bukaRekapMapelSingle()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Input Massal / Rekap Sekarang</button>
                 <button onclick="setRekapHariIni()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Hari Ini</button>
+                <!-- Inovasi Tambahan: Tombol Unduh CSV -->
+                <button onclick="unduhRekapCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">📥 Unduh ke Excel/CSV</button>
             </div>
         </div>
 
@@ -2115,6 +2129,39 @@
             }
         }
 
+        // FUNGSI INOVASI 1: TOMBOL ISI CEPAT MASSAL DI LEMBAR SISWA
+        function isiCepatNilaiAndri(targetNilai) {
+            const today = getTodayKey();
+            if (!nilaiDataAndri[activeMapelAndri] || !nilaiDataAndri[activeMapelAndri][today]) return;
+            
+            const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], maxScoresPen: {} };
+
+            nilaiDataAndri[activeMapelAndri][today].forEach((studentData) => {
+                infoMapel.penList.forEach(j => {
+                    let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
+                    let targetSoal = maxArr.length > 0 ? maxArr.length : 5;
+                    
+                    if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
+                        studentData.penScores[j] = new Array(targetSoal).fill(0);
+                    }
+                    
+                    // Jika targetNilai 100, isi dengan skor maksimal per soal. Jika 75, proporsional.
+                    for (let sIdx = 0; sIdx < targetSoal; sIdx++) {
+                        let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
+                        if (targetNilai === 100) {
+                            studentData.penScores[j][sIdx] = mVal;
+                        } else {
+                            // Target 75% dari max
+                            studentData.penScores[j][sIdx] = Math.round((75 / 100) * mVal * 10) / 10;
+                        }
+                    }
+                });
+            });
+
+            renderTabelFormPenilaianPengetahuan();
+            alert(`Berhasil mengisi cepat seluruh siswa dengan estimasi nilai ${targetNilai}!`);
+        }
+
         // PERBAIKAN UTAMA: Pengambilan data soal dinamis tanpa batas 5 soal
         function lanjutKeSetupKeterampilan() {
             const tp = document.getElementById('tujuan-pembelajaran-pengetahuan').value.trim();
@@ -2135,14 +2182,12 @@
             let maxScoresPen = {};
             jenisArr.forEach(j => {
                 maxScoresPen[j] = [];
-                // Mengambil seluruh input max skor tanpa terpotong
                 const inputs = document.querySelectorAll(`input[class*="max-skor-pen-andri-${j}"]`);
                 if (inputs.length > 0) {
                     inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 1));
                 } else {
-                    // Fallback aman berdasarkan jumlah soal yang diketik di input DOM
                     const jmlInp = document.querySelector(`.jml-soal-andri-pen[data-jenis="${j}"]`);
-                    const jml = jmlInp ? parseInt(jmlInp.value) || 5 : 5;
+                    const jml = jmlInp ? parseInt(jmlInp.value) || 25 : 25;
                     maxScoresPen[j] = new Array(jml).fill(1);
                 }
             });
@@ -2210,6 +2255,15 @@
                     let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
                     let targetSoal = maxArr.length > 0 ? maxArr.length : 5;
                     
+                    const jmlInp = document.querySelector(`.jml-soal-andri-pen[data-jenis="${j}"]`);
+                    if (jmlInp && parseInt(jmlInp.value)) {
+                        targetSoal = parseInt(jmlInp.value);
+                        if (maxArr.length !== targetSoal) {
+                            maxArr = new Array(targetSoal).fill(1);
+                            infoMapel.maxScoresPen[j] = maxArr;
+                        }
+                    }
+
                     if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
                         studentData.penScores[j] = new Array(targetSoal).fill(0);
                     }
@@ -2399,6 +2453,35 @@
                 tr.innerHTML = tds;
                 tbody.appendChild(tr);
             });
+        }
+
+        // Inovasi Tambahan: Unduh Rekap ke Format CSV/Excel
+        function unduhRekapCSV() {
+            const chosenDate = document.getElementById('input-rekap-nilai-tanggal').value || getTodayKey();
+            const targetHistory = getHistoryObj(activeKategoriAsesmen);
+            
+            let csvContent = "data:text/csv;charset=utf-8,No;Nama Siswa;" + allMapelGlobal.join(";") + "\n";
+            
+            daftarSiswa.forEach((nama, idx) => {
+                let row = [(idx + 1), `"${nama}"`];
+                allMapelGlobal.forEach(mapel => {
+                    let score = 0;
+                    if (targetHistory[nama] && targetHistory[nama][mapel]) {
+                        let found = targetHistory[nama][mapel].find(h => h.date === chosenDate);
+                        if (found) score = found.score;
+                    }
+                    row.push(score > 0 ? score.toFixed(1) : "0.0");
+                });
+                csvContent += row.join(";") + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Rekap_Nilai_${activeKategoriAsesmen}_${chosenDate}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function bukaRekapMapelSingle() {
