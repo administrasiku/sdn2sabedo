@@ -137,8 +137,14 @@
             </div>
             <div onclick="switchView('view-pilih-kategori-penilaian')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold mb-4">📝</div>
-                <h3 class="text-lg font-bold text-slate-900">Penilaian</h3>
+                <h3 class="text-lg font-bold text-slate-900">Penilaian Akademik</h3>
                 <p class="text-slate-500 text-sm mt-1">Pilih kategori Formatif atau Sumatif.</p>
+            </div>
+            <!-- MENU BARU DPL -->
+            <div onclick="switchView('view-dpl-pilih-siswa')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-emerald-500/30 hover:border-emerald-500 hover:shadow-md cursor-pointer transition">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">🌱</div>
+                <h3 class="text-lg font-bold text-slate-900">Penilaian DPL (Karakter)</h3>
+                <p class="text-slate-500 text-sm mt-1">Dimensi Profil Lulusan Skala B, C, M & Grafik.</p>
             </div>
             <div onclick="switchView('view-pilih-menu-rekap')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
@@ -241,6 +247,82 @@
         </div>
     </section>
 
+    <!-- BARU: 14. MODUL DPL (DIMENSI PROFIL LULUSAN) - PILIH SISWA -->
+    <section id="view-dpl-pilih-siswa" class="view-section p-6 md:p-10 max-w-5xl mx-auto w-full">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+            <div>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Modul Karakter</span>
+                <h2 class="text-xl font-bold text-slate-900">Penilaian Dimensi Profil Lulusan (DPL)</h2>
+                <p class="text-xs text-slate-500">Pilih siswa untuk menilai perkembangan karakter berdasarkan 8 Dimensi Utama.</p>
+            </div>
+            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <label class="block text-xs font-semibold text-slate-500">Periode / Tanggal Penilaian:</label>
+                <input type="date" id="input-dpl-periode" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-700">
+            </div>
+            <button onclick="bukaRekapDplGlobal()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm">📈 Lihat Rekap & Grafik DPL Kelas</button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="grid-dpl-siswa-container"></div>
+    </section>
+
+    <!-- BARU: 14.1 LEMBAR PENILAIAN DPL PER SISWA -->
+    <section id="view-dpl-form-penilaian" class="view-section p-6 md:p-10 max-w-5xl mx-auto w-full">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+            <div>
+                <span id="label-dpl-siswa-aktif" class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Nama Siswa</span>
+                <h2 class="text-xl font-bold text-slate-900">Rubrik Asesmen DPL (Skala B, C, M)</h2>
+            </div>
+            <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Pilih Siswa Lain</button>
+        </div>
+
+        <div id="container-rubrik-dpl" class="space-y-6 mb-6"></div>
+
+        <!-- Pratinjau Narasi Rapor Otomatis -->
+        <div class="bg-indigo-50 border border-indigo-200 p-5 rounded-2xl mb-6 space-y-2">
+            <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-wider">✨ Pratinjau Draf Narasi Deskripsi Rapor Karakter</h4>
+            <p id="preview-narasi-dpl" class="text-xs text-slate-700 italic leading-relaxed">Pilih predikat B, C, atau M pada rubrik di atas untuk melihat draf kalimat laporan akhir secara otomatis.</p>
+        </div>
+
+        <div class="flex justify-end">
+            <button onclick="simpanNilaiDplSiswa()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan Penilaian Karakter DPL</button>
+        </div>
+    </section>
+
+    <!-- BARU: 14.2 REKAP & DIAGRAF PERKEMBANGAN DPL KELAS -->
+    <section id="view-dpl-rekap" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+            <div>
+                <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Arsip & Analisis Karakter</span>
+                <h2 class="text-xl font-bold text-slate-900">Rekapitulasi & Grafik Perkembangan DPL Kelas</h2>
+            </div>
+            <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
+
+        <!-- Visualisasi Diagram Pencapaian DPL -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 uppercase">📊 Grafik Statistik Predikat DPL Seluruh Kelas</h3>
+            <div id="container-grafik-dpl" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
+            <table class="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                        <th class="p-4 border-r">No</th>
+                        <th class="p-4 border-r">Nama Siswa</th>
+                        <th class="p-4 text-center">Predikat Dominan</th>
+                        <th class="p-4 text-center">Aksi Detail</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-rekap-dpl-body" class="divide-y divide-slate-100 text-sm"></tbody>
+            </table>
+        </div>
+    </section>
+
     <!-- 6. SETUP PENILAIAN GURU MAPEL -->
     <section id="view-setup-pengetahuan-mapel" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
@@ -333,7 +415,10 @@
                 <label class="block text-xs font-bold text-slate-600 uppercase">Tanggal Aktif Rekap:</label>
                 <input type="date" id="input-tanggal-mapel-aktif" onchange="gantiTanggalMapelAktif(this.value)" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-700 font-bold">
             </div>
-            <span class="text-xs text-slate-400 italic">Sistem menghitung otomatis berdasarkan bobot maksimal soal. Dijamin nilai 100 jika benar semua!</span>
+            <div class="flex gap-2">
+                <button onclick="isiCepatNilaiMapel(100)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">⚡ Isi Sempurna (100)</button>
+                <button onclick="isiCepatNilaiMapel(75)" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">⚡ Isi Standar Tuntas (75)</button>
+            </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
@@ -1050,6 +1135,75 @@
             {user: "dika15", pass: "dik2d9", nama: "Dika"}
         ];
 
+        // Definisi Rubrik DPL (8 Dimensi Utama & Subdimensi beserta deskripsi B, C, M)
+        const dplRubrikMaster = [
+            {
+                dimensi: "1. Keimanan dan Ketakwaan Terhadap Tuhan Yang Maha Esa",
+                sub: [
+                    { nama: "Hubungan dengan Tuhan Yang Maha Esa", descB: "Mengenal ajaran Tuhan Yang Maha Esa melalui cerita, doa, dan praktik ibadah serta mulai memahami nilai kebaikan dalam kehidupan nyata.", descC: "Membiasakan diri melaksanakan ajaran Tuhan Yang Maha Esa dalam kehidupan nyata secara konsisten dengan bimbingan orang tua dan guru serta mampu mensyukurinya.", descM: "Melaksanakan ibadah secara mandiri sesuai ajaran Tuhan Yang Maha Esa secara konsisten dalam kehidupan nyata serta menjadi contoh dalam beribadah dan sikap religius di sekolah dan keluarga." },
+                    { nama: "Hubungan dengan Sesama Manusia", descB: "Mengenal dan mencoba bersikap jujur, peduli, dan tanggung jawab dengan bimbingan.", descC: "Membiasakan bersikap jujur, adil, peduli, dan bertanggung jawab dalam interaksi dengan sesama.", descM: "Mampu mengajak teman sebaya untuk peduli terhadap sesama serta menunjukkan inisiatif dalam menjaga hubungan yang baik di lingkungan sekolah dan keluarga." },
+                    { nama: "Hubungan dengan Lingkungan Alam", descB: "Menunjukkan pemahaman tentang pentingnya menjaga kebersihan lingkungan dan kelestarian alam dengan bimbingan.", descC: "Membiasakan menjaga kebersihan lingkungan dan kelestarian alam secara konsisten dan mandiri.", descM: "Menjadi contoh bagi teman dalam kepedulian lingkungan serta mampu menunjukkan inisiatif dalam menjaga kebersihan lingkungan dan kelestarian alam." }
+                ]
+            },
+            {
+                dimensi: "2. Kewargaan",
+                sub: [
+                    { nama: "Kewargaan Lokal", descB: "Menunjukkan kesadaran atas aturan, norma, dan nilai sosial budaya yang berlaku di keluarga, satuan pendidikan, dan masyarakat.", descC: "Berperilaku sesuai aturan, norma, dan nilai sosial budaya yang berlaku di keluarga, satuan pendidikan, dan masyarakat dengan bimbingan.", descM: "Berperilaku sesuai aturan, norma, dan nilai sosial budaya yang berlaku di keluarga, satuan pendidikan, dan masyarakat secara mandiri." },
+                    { nama: "Kewargaan Nasional", descB: "Menunjukkan kesadaran atas aturan, norma, dan nilai sosial budaya yang berlaku di lingkup nasional.", descC: "Berperilaku sesuai aturan, norma, dan nilai sosial budaya yang berlaku di lingkup nasional dengan bimbingan untuk menguatkan wawasan kebangsaan.", descM: "Berperilaku sesuai aturan, norma, dan nilai sosial budaya yang berlaku di lingkup nasional secara mandiri." },
+                    { nama: "Kewargaan Global", descB: "Mengenal aturan, norma, dan nilai sosial budaya yang berlaku di lingkup global dan mengenali keberadaan negara lain di dunia beserta simbol-simbolnya.", descC: "Mengenali keberadaan negara lain di dunia dan simbol-simbolnya dengan bimbingan.", descM: "Berperilaku sesuai aturan, norma, dan nilai sosial budaya yang berlaku di lingkup global dan menghargai keberagamannya dengan tetap menjaga identitas diri dan budaya nasional." }
+                ]
+            },
+            {
+                dimensi: "3. Penalaran Kritis",
+                sub: [
+                    { nama: "Penyampaian Argumentasi", descB: "Menyampaikan argumen sederhana namun belum tepat.", descC: "Menyampaikan argumen sederhana secara runtut disertai alasan.", descM: "Menyampaikan argumen sederhana secara runtut disertai alasan secara mandiri." },
+                    { nama: "Pengambilan Keputusan", descB: "Mengambil keputusan namun belum logis dan belum berdasarkan informasi yang relevan.", descC: "Mengambil keputusan secara logis berdasarkan informasi yang relevan.", descM: "Mengambil keputusan secara logis berdasarkan informasi yang relevan secara mandiri." },
+                    { nama: "Penyelesaian Masalah", descB: "Menyelesaikan masalah sederhana dan menghasilkan solusi namun kurang tepat.", descC: "Menyelesaikan masalah sederhana dan menghasilkan solusi yang tepat sesuai dengan konteks.", descM: "Menyelesaikan masalah sederhana dan menghasilkan solusi yang tepat sesuai dengan konteks secara mandiri." }
+                ]
+            },
+            {
+                dimensi: "4. Kreativitas",
+                sub: [
+                    { nama: "Gagasan Baru", descB: "Menyampaikan gagasan secara sederhana meskipun belum runtut.", descC: "Menyampaikan gagasan sederhana dengan relevan dan jelas.", descM: "Menyampaikan beberapa gagasan sederhana dengan logis, runtut, dan jelas serta mengadaptasi berbagai gagasan." },
+                    { nama: "Fleksibilitas Berfikir", descB: "Menemukan solusi masalah sederhana yang ditemui di lingkungan kelas dengan bantuan orang dewasa.", descC: "Menemukan beberapa solusi alternatif dengan memberikan berbagai gagasan.", descM: "Menemukan beberapa solusi alternatif dan memberikan umpan balik serta mengkritisi tindakan dan/atau karya yang dihasilkan." },
+                    { nama: "Karya", descB: "Membuat tindakan dan/atau karya sederhana yang kreatif sesuai minat dan kesukaannya.", descC: "Membuat tindakan dan/atau karya sederhana yang kreatif dengan berbagai ide yang sesuai minat dan kesukaannya.", descM: "Membuat tindakan dan/atau karya sederhana yang kreatif dengan berbagai ide yang sesuai minat dan kesukaannya serta mengkritisi tindakan dan/atau karya yang dihasilkan." }
+                ]
+            },
+            {
+                dimensi: "5. Kolaborasi",
+                sub: [
+                    { nama: "Peduli", descB: "Mulai menunjukkan kepedulian pada teman sebaya dan anggota keluarga dengan bimbingan guru dan orang tua di lingkungan satuan pendidikan dan keluarga.", descC: "Menunjukkan kepedulian secara konsisten pada teman sebaya dan anggota keluarga dengan bimbingan guru dan orang tua di lingkungan satuan pendidikan dan keluarga.", descM: "Menunjukkan inisiatif kepedulian secara konsisten pada teman sebaya dan anggota keluarga di lingkungan satuan pendidikan dan keluarga." },
+                    { nama: "Berbagi", descB: "Mulai berbagi hal yang dianggap penting dan berharga kepada teman sebaya dan anggota keluarga dengan bimbingan guru dan orang tua.", descC: "Berbagi hal yang dianggap penting dan berharga kepada teman atau anggota keluarga dengan bimbingan guru dan orang tua.", descM: "Menunjukkan inisiatif untuk berbagi hal yang dianggap penting dan berharga kepada teman atau anggota keluarga." },
+                    { nama: "Kerjasama", descB: "Mulai bekerja sama dengan teman sebaya dan anggota keluarga dengan bimbingan guru dan orang tua di lingkungan satuan pendidikan dan keluarga.", descC: "Bekerja sama dengan teman sebaya dan anggota keluarga dengan bimbingan guru dan orang tua di lingkungan satuan pendidikan dan keluarga.", descM: "Menunjukkan inisiatif untuk bekerja sama dengan teman sebaya dan anggota keluarga di lingkungan satuan pendidikan dan keluarga." }
+                ]
+            },
+            {
+                dimensi: "6. Kemandirian",
+                sub: [
+                    { nama: "Bertanggung Jawab", descB: "Melakukan upaya mencapai tujuan pembelajaran sesuai arahan.", descC: "Berlatih menetapkan tujuan pembelajaran untuk dirinya.", descM: "Berlatih mencapai tujuan pembelajaran yang telah ditentukan sendiri secara tepat waktu." },
+                    { nama: "Kepemimpinan", descB: "Menjalankan peran yang diberikan dalam konteks pembelajaran sesuai arahan.", descC: "Menjalankan peran yang diberikan dalam konteks pembelajaran dengan arahan minimal.", descM: "Berinisiatif untuk menjalankan peran dalam konteks pembelajaran secara otonom." },
+                    { nama: "Pengembangan Diri", descB: "Mengenal minat dan bakat sebagai potensi diri dengan bimbingan penuh.", descC: "Mengenal minat dan bakat sebagai potensi diri dan mengeksplorasi berbagai kegiatan pengembangan diri dengan bimbingan.", descM: "Mengenal minat dan bakat sebagai potensi diri dan mengeksplorasi berbagai kegiatan pengembangan diri dengan bimbingan minimal." }
+                ]
+            },
+            {
+                dimensi: "7. Kesehatan",
+                sub: [
+                    { nama: "Hidup Bersih dan Sehat", descB: "Berperilaku hidup bersih dan sehat dengan memperhatikan dan menjaga kebersihan diri namun masih perlu bimbingan.", descC: "Berperilaku hidup bersih dan sehat dengan memperhatikan dan menjaga kebersihan diri dengan bimbingan minimal.", descM: "Mengajak orang lain untuk bersama-sama berperilaku hidup bersih dan sehat dengan memperhatikan dan menjaga kebersihan diri secara otonom dan teratur." },
+                    { nama: "Kebugaran & Kesehatan Fisik/Mental", descB: "Berperilaku sehat fisik dan mental, menjaga kebugaran dengan berolahraga secara teratur, menerapkan pola makan sehat dan bergizi seimbang, serta mengendalikan emosi dengan bimbingan penuh.", descC: "Berperilaku sehat fisik dan mental, menjaga kebugaran dengan berolahraga secara teratur, menerapkan pola makan sehat dan bergizi seimbang, serta mengendalikan emosi dengan bimbingan.", descM: "Mengajak teman sebaya agar berperilaku sehat secara fisik dan mental, menjaga kebugaran dengan berolahraga secara teratur, menerapkan pola makan sehat dan bergizi seimbang, serta mengendalikan emosi dengan bimbingan minimal." },
+                    { nama: "Kesehatan Lingkungan", descB: "Berperan aktif meningkatkan kesehatan lingkungan rumah dan sekolah dengan bimbingan penuh.", descC: "Berperan aktif meningkatkan kesehatan lingkungan rumah dan sekolah.", descM: "Mengajak teman sebaya untuk meningkatkan kesehatan lingkungan rumah dan sekolah." }
+                ]
+            },
+            {
+                dimensi: "8. Komunikasi",
+                sub: [
+                    { nama: "Menyimak", descB: "Mendengarkan secara aktif sejumlah teks lisan sederhana yang dipilih untuk mendapatkan informasi eksplisit dan implisit.", descC: "Mendengarkan secara aktif sejumlah teks lisan sederhana yang dipilih untuk mendapatkan informasi eksplisit dan implisit, dan memberikan tanggapan sederhana.", descM: "Mendengarkan secara aktif sejumlah teks lisan sederhana yang dipilih untuk mendapatkan informasi eksplisit dan implisit, dan memberikan tanggapan sederhana dan kritis." },
+                    { nama: "Berbicara", descB: "Menyampaikan, menggali, dan menanggapi secara lisan berbagai jenis informasi melalui teks lisan sederhana namun belum tepat dan lancar.", descC: "Menyampaikan, menggali, dan menanggapi secara lisan berbagai jenis informasi melalui teks lisan sederhana secara cukup tepat, lancar, dan efektif.", descM: "Menyampaikan, menggali, dan menanggapi secara lisan berbagai jenis informasi melalui teks lisan sederhana secara benar, tepat, lancar, dan efektif." },
+                    { nama: "Membaca", descB: "Membaca secara aktif sejumlah teks tertulis sederhana yang dipilih untuk mendapatkan informasi eksplisit dan implisit.", descC: "Membaca secara aktif sejumlah teks tertulis sederhana yang dipilih untuk mendapatkan informasi eksplisit dan implisit, dan memberikan tanggapan sederhana.", descM: "Membaca secara aktif sejumlah teks tertulis sederhana yang dipilih untuk mendapatkan informasi eksplisit dan implisit, dan memberikan tanggapan sederhana dan kritis." },
+                    { nama: "Menulis", descB: "Menyampaikan, menggali, dan menanggapi secara lisan berbagai jenis informasi melalui teks tertulis sederhana namun belum tepat dan lancar.", descC: "Menyampaikan, menggali, dan menanggapi secara lisan berbagai jenis informasi melalui teks tertulis sederhana secara cukup tepat, lancar, dan efektif.", descM: "Menyampaikan, menggali, dan menanggapi secara lisan berbagai jenis informasi melalui teks tertulis sederhana secara benar, tepat, lancar, dan efektif." }
+                ]
+            }
+        ];
+
         const daftarMapelAndri = ["Pendidikan Pancasila", "Matematika", "IPAS", "Bahasa Indonesia", "Seni Rupa", "Mulok"];
         const daftarMapelMapel = ["Pendidikan Agama", "PJOK", "Bahasa Inggris"];
         const allMapelGlobal = [...daftarMapelAndri, ...daftarMapelMapel];
@@ -1068,6 +1222,7 @@
         let nilaiDataAndri = JSON.parse(localStorage.getItem('sdn2_nilaidata')) || {}; 
         let historyNilaiFormatif = JSON.parse(localStorage.getItem('sdn2_history_formatif')) || {}; 
         let historyNilaiSumatif = JSON.parse(localStorage.getItem('sdn2_history_sumatif')) || {}; 
+        let dplDataStorage = JSON.parse(localStorage.getItem('sdn2_dpldata')) || {}; // Storage DPL baru
         let rankingGlobal = JSON.parse(localStorage.getItem('sdn2_ranking')) || {}; 
         let isRankingDisplayed = JSON.parse(localStorage.getItem('sdn2_isrank')) || false;
         let jenisInfoMapel = JSON.parse(localStorage.getItem('sdn2_jenismapel')) || {}; 
@@ -1082,12 +1237,14 @@
         let tempLampauPresensi = [];
         let selectedMultiMapelList = [];
         let historyAsalView = "portal"; 
+        let activeDplSiswa = "";
 
         function simpanKeLocalStorage() {
             localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
             localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
             localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
             localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
+            localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
             localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
             localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
             localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
@@ -1101,6 +1258,7 @@
                 nilaidata: nilaiDataAndri,
                 historyFormatif: historyNilaiFormatif,
                 historySumatif: historyNilaiSumatif,
+                dpldata: dplDataStorage,
                 ranking: rankingGlobal,
                 isrank: isRankingDisplayed,
                 jenismapel: jenisInfoMapel
@@ -1131,6 +1289,7 @@
                     nilaiDataAndri = data.record.nilaidata || nilaiDataAndri;
                     historyNilaiFormatif = data.record.historyFormatif || historyNilaiFormatif;
                     historyNilaiSumatif = data.record.historySumatif || historyNilaiSumatif;
+                    dplDataStorage = data.record.dpldata || dplDataStorage;
                     rankingGlobal = data.record.ranking || rankingGlobal;
                     isRankingDisplayed = data.record.isrank || isRankingDisplayed;
                     jenisInfoMapel = data.record.jenismapel || jenisInfoMapel;
@@ -1230,12 +1389,14 @@
             const elInpRekap = document.getElementById('input-rekap-tanggal');
             const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
             const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
+            const elInpDplPeriode = document.getElementById('input-dpl-periode');
             const elRekapToday = document.getElementById('rekap-presensi-today-info');
 
             if (elDisp) elDisp.value = todayStr;
             if (elInpRekap) elInpRekap.value = todayStr;
             if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
             if (elInpArsip) elInpArsip.value = todayStr;
+            if (elInpDplPeriode) elInpDplPeriode.value = todayStr;
             if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
             
             const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
@@ -1247,6 +1408,7 @@
             initPresensiHariIni();
             initMapelPenilaian();
             initAnalisis();
+            initDplPilihSiswa();
 
             if (!authRole) {
                 switchView('view-landing');
@@ -1303,6 +1465,10 @@
                 initAnalisis();
             } else if(viewId === 'view-rekap-khusus-mapel') {
                 renderRekapKhususMapel();
+            } else if(viewId === 'view-dpl-pilih-siswa') {
+                initDplPilihSiswa();
+            } else if(viewId === 'view-dpl-rekap') {
+                renderRekapGrafikDpl();
             }
         }
 
@@ -1628,6 +1794,206 @@
             });
 
             document.getElementById('modal-analisis-kehadiran').classList.remove('hidden');
+        }
+
+        // ================= LOGIC MODUL DPL (DIMENSI PROFIL LULUSAN) BARU =================
+        function initDplPilihSiswa() {
+            const container = document.getElementById('grid-dpl-siswa-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            daftarSiswa.forEach(nama => {
+                let card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-500 hover:shadow-md cursor-pointer transition flex items-center justify-between";
+                card.onclick = () => bukaFormDplSiswa(nama);
+                card.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-slate-900">${nama}</h4>
+                        <span class="text-[11px] text-emerald-600 font-semibold">Klik untuk menilai karakter →</span>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">🌱</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function bukaFormDplSiswa(namaSiswa) {
+            activeDplSiswa = namaSiswa;
+            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            document.getElementById('label-dpl-siswa-aktif').innerText = `Penilaian DPL: ${namaSiswa} [Periode: ${periode}]`;
+
+            if (!dplDataStorage[namaSiswa]) dplDataStorage[namaSiswa] = {};
+            if (!dplDataStorage[namaSiswa][periode]) dplDataStorage[namaSiswa][periode] = {};
+
+            const container = document.getElementById('container-rubrik-dpl');
+            container.innerHTML = '';
+
+            dplRubrikMaster.forEach((dim, dIdx) => {
+                let dimBox = document.createElement('div');
+                dimBox.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4";
+                
+                let subHtml = dim.sub.map((subItem, sIdx) => {
+                    let currentVal = dplDataStorage[namaSiswa][periode][dim.dimensi] && dplDataStorage[namaSiswa][periode][dim.dimensi][subItem.nama] ? dplDataStorage[namaSiswa][periode][dim.dimensi][subItem.nama] : 'C';
+                    
+                    return `
+                        <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                <span class="text-xs font-bold text-slate-800">${sIdx + 1}. ${subItem.nama}</span>
+                                <div class="flex gap-2">
+                                    <button onclick="setDplVal('${dim.dimensi}', '${subItem.nama}', 'B')" id="btn_${dIdx}_${sIdx}_B" class="px-3 py-1 rounded-lg text-xs font-bold transition ${currentVal === 'B' ? 'bg-amber-600 text-white shadow-sm' : 'bg-slate-200 text-slate-700'}">B (Berkembang)</button>
+                                    <button onclick="setDplVal('${dim.dimensi}', '${subItem.nama}', 'C')" id="btn_${dIdx}_${sIdx}_C" class="px-3 py-1 rounded-lg text-xs font-bold transition ${currentVal === 'C' ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200 text-slate-700'}">C (Cakap)</button>
+                                    <button onclick="setDplVal('${dim.dimensi}', '${subItem.nama}', 'M')" id="btn_${dIdx}_${sIdx}_M" class="px-3 py-1 rounded-lg text-xs font-bold transition ${currentVal === 'M' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-200 text-slate-700'}">M (Mahir)</button>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-slate-500 italic" id="desc_${dIdx}_${sIdx}">Rubrik: ${subItem['desc' + currentVal]}</p>
+                        </div>
+                    `;
+                }).join('');
+
+                dimBox.innerHTML = `
+                    <h3 class="text-sm font-extrabold text-slate-900 border-b pb-2">${dim.dimensi}</h3>
+                    <div class="space-y-3">${subHtml}</div>
+                `;
+                container.appendChild(dimBox);
+            });
+
+            updatePreviewNarasiDpl();
+            switchView('view-dpl-form-penilaian');
+        }
+
+        function setDplVal(dimensi, subNama, val) {
+            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            if (!dplDataStorage[activeDplSiswa]) dplDataStorage[activeDplSiswa] = {};
+            if (!dplDataStorage[activeDplSiswa][periode]) dplDataStorage[activeDplSiswa][periode] = {};
+            if (!dplDataStorage[activeDplSiswa][periode][dimensi]) dplDataStorage[activeDplSiswa][periode][dimensi] = {};
+            
+            dplDataStorage[activeDplSiswa][periode][dimensi][subNama] = val;
+
+            // Update UI warna tombol aktif & deskripsi secara live
+            dplRubrikMaster.forEach((dim, dIdx) => {
+                if (dim.dimensi === dimensi) {
+                    dim.sub.forEach((subItem, sIdx) => {
+                        if (subItem.nama === subNama) {
+                            ['B', 'C', 'M'].forEach(grade => {
+                                const btn = document.getElementById(`btn_${dIdx}_${sIdx}_${grade}`);
+                                if(btn) {
+                                    btn.className = `px-3 py-1 rounded-lg text-xs font-bold transition ${grade === val ? (grade==='B'?'bg-amber-600 text-white shadow-sm':(grade==='C'?'bg-blue-600 text-white shadow-sm':'bg-emerald-600 text-white shadow-sm')) : 'bg-slate-200 text-slate-700'}`;
+                                }
+                            });
+                            const descEl = document.getElementById(`desc_${dIdx}_${sIdx}`);
+                            if(descEl) descEl.innerText = `Rubrik: ${subItem['desc' + val]}`;
+                        }
+                    });
+                }
+            });
+
+            updatePreviewNarasiDpl();
+        }
+
+        function updatePreviewNarasiDpl() {
+            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            const studentDpl = (dplDataStorage[activeDplSiswa] && dplDataStorage[activeDplSiswa][periode]) ? dplDataStorage[activeDplSiswa][periode] : {};
+            
+            let countM = 0, countC = 0, countB = 0;
+            Object.keys(studentDpl).forEach(dim => {
+                Object.keys(studentDpl[dim]).forEach(sub => {
+                    let v = studentDpl[dim][sub];
+                    if (v === 'M') countM++;
+                    else if (v === 'C') countC++;
+                    else if (v === 'B') countB++;
+                });
+            });
+
+            let predikatDominan = countM >= countC ? "Mahir (M)" : (countC >= countB ? "Cakap (C)" : "Berkembang (B)");
+            let textNarasi = `Ananda ${activeDplSiswa} menunjukkan perkembangan Dimensi Profil Lulusan yang sangat positif pada periode ini dengan predikat dominan ${predikatDominan}. Siswa aktif dan konsisten menunjukkan penguasaan nilai-nilai karakter luhur sesuai rubrik sekolah.`;
+            
+            const elPrev = document.getElementById('preview-narasi-dpl');
+            if (elPrev) elPrev.innerText = `"${textNarasi}"`;
+        }
+
+        function simpanNilaiDplSiswa() {
+            simpanKeLocalStorage();
+            alert(`Penilaian karakter DPL untuk ${activeDplSiswa} berhasil disimpan & disinkronkan ke Cloud!`);
+            switchView('view-dpl-pilih-siswa');
+        }
+
+        function bukaRekapDplGlobal() {
+            switchView('view-dpl-rekap');
+        }
+
+        function renderRekapGrafikDpl() {
+            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            
+            // Hitung total B, C, M kelas untuk grafik
+            let totalB = 0, totalC = 0, totalM = 0;
+            daftarSiswa.forEach(nama => {
+                let sData = (dplDataStorage[nama] && dplDataStorage[nama][periode]) ? dplDataStorage[nama][periode] : {};
+                Object.keys(sData).forEach(dim => {
+                    Object.keys(sData[dim]).forEach(sub => {
+                        let v = sData[dim][sub];
+                        if (v === 'B') totalB++;
+                        else if (v === 'C') totalC++;
+                        else if (v === 'M') totalM++;
+                    });
+                });
+            });
+
+            const totalSemua = (totalB + totalC + totalM) || 1;
+            const persB = Math.round((totalB / totalSemua) * 100);
+            const persC = Math.round((totalC / totalSemua) * 100);
+            const persM = Math.round((totalM / totalSemua) * 100);
+
+            // Render Grafik / Statistik di UI
+            const grafikContainer = document.getElementById('container-grafik-dpl');
+            grafikContainer.innerHTML = `
+                <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-center space-y-1">
+                    <span class="text-xs font-bold text-amber-700 uppercase">Berkembang (B)</span>
+                    <div class="text-2xl font-extrabold text-amber-900">${totalB} Subdimensi (${persB}%)</div>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-center space-y-1">
+                    <span class="text-xs font-bold text-blue-700 uppercase">Cakap (C)</span>
+                    <div class="text-2xl font-extrabold text-blue-900">${totalC} Subdimensi (${persC}%)</div>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-center space-y-1">
+                    <span class="text-xs font-bold text-emerald-700 uppercase">Mahir (M)</span>
+                    <div class="text-2xl font-extrabold text-emerald-900">${totalM} Subdimensi (${persM}%)</div>
+                </div>
+                <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl text-center space-y-1">
+                    <span class="text-xs font-bold text-purple-700 uppercase">Total Terdata</span>
+                    <div class="text-2xl font-extrabold text-purple-900">${totalB + totalC + totalM} Penilaian</div>
+                </div>
+            `;
+
+            // Render Tabel Rekap DPL Siswa
+            const tbody = document.getElementById('tabel-rekap-dpl-body');
+            tbody.innerHTML = '';
+
+            daftarSiswa.forEach((nama, idx) => {
+                let sData = (dplDataStorage[nama] && dplDataStorage[nama][periode]) ? dplDataStorage[nama][periode] : {};
+                let cM = 0, cC = 0, cB = 0;
+                Object.keys(sData).forEach(dim => {
+                    Object.keys(sData[dim]).forEach(sub => {
+                        let v = sData[dim][sub];
+                        if (v === 'M') cM++;
+                        else if (v === 'C') cC++;
+                        else if (v === 'B') cB++;
+                    });
+                });
+
+                let dominan = cM >= cC ? "Mahir (M)" : (cC >= cB ? "Cakap (C)" : "Berkembang (B)");
+                let badgeColor = dominan.includes("Mahir") ? "bg-emerald-100 text-emerald-700" : (dominan.includes("Cakap") ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700");
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
+                    <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
+                    <td class="p-4 text-center"><span class="px-3 py-1 rounded-full text-xs font-bold ${badgeColor}">${dominan}</span> (M:${cM}, C:${cC}, B:${cB})</td>
+                    <td class="p-4 text-center">
+                        <button onclick="bukaFormDplSiswa('${nama}')" class="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">Ubah / Lihat Detail</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         // ================= ALUR ASESMEN (FORMATIF / SUMATIF) =================
@@ -2377,7 +2743,6 @@
                     }
 
                     let inputs = studentData.ketScores[j].map((skor, sIdx) => {
-                        // Membaca bobot maksimal aspek keterampilan dari setup dengan presisi
                         let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
                         return `
                             <div class="m-1 inline-block bg-white p-1 rounded border text-center">
@@ -2433,7 +2798,7 @@
 
             simpanKeLocalStorage();
             if (!isAuto) {
-                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan secara permanen & disinkronkan ke Cloud!`);
+                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan & disinkronkan ke Cloud!`);
                 switchView('view-ruang-kelas');
             }
         }
