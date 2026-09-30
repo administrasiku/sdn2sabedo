@@ -144,7 +144,7 @@
             <div onclick="switchView('view-dpl-pilih-siswa')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-emerald-500/30 hover:border-emerald-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">🌱</div>
                 <h3 class="text-lg font-bold text-slate-900">Penilaian DPL (Karakter)</h3>
-                <p class="text-slate-500 text-sm mt-1">Dimensi Profil Lulusan Skala B, C, M & Deskripsi.</p>
+                <p class="text-slate-500 text-sm mt-1">Dimensi Profil Lulusan, History & Keunggulan.</p>
             </div>
             <div onclick="switchView('view-pilih-menu-rekap')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
@@ -253,17 +253,21 @@
             <div>
                 <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Modul Karakter</span>
                 <h2 class="text-xl font-bold text-slate-900">Penilaian Dimensi Profil Lulusan (DPL)</h2>
-                <p class="text-xs text-slate-500">Pilih siswa untuk menilai perkembangan karakter berdasarkan rubrik resmi B, C, M.</p>
+                <p class="text-xs text-slate-500">Pilih siswa untuk menilai perkembangan karakter berdasarkan periode (Misal: Juli-Agustus).</p>
             </div>
             <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <label class="block text-xs font-semibold text-slate-500">Periode / Tanggal Penilaian:</label>
-                <input type="date" id="input-dpl-periode" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-700">
+                <label class="block text-xs font-semibold text-slate-500">Pilih Periode Penilaian DPL:</label>
+                <select id="input-dpl-periode" onchange="gantiPeriodeDpl()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-700">
+                    <option value="Juli-Agustus 2026">Periode 1: Juli - Agustus 2026</option>
+                    <option value="September-Oktober 2026">Periode 2: September - Oktober 2026</option>
+                    <option value="November-Desember 2026">Periode 3: November - Desember 2026</option>
+                </select>
             </div>
-            <button onclick="switchView('view-dpl-rekap')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm">📈 Lihat Rekap Kelas & Grafik DPL</button>
+            <button onclick="switchView('view-dpl-rekap')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm">📈 Lihat Rekap Kelas & Keunggulan Siswa</button>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="grid-dpl-siswa-container"></div>
@@ -274,7 +278,7 @@
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
                 <span id="label-dpl-siswa-aktif" class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Nama Siswa</span>
-                <h2 class="text-xl font-bold text-slate-900">Rubrik Asesmen DPL (Tata Letak Samping-Menyamping)</h2>
+                <h2 class="text-xl font-bold text-slate-900">Rubrik Asesmen DPL (Pencatatan Riwayat Multi-Periode)</h2>
             </div>
             <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Pilih Siswa Lain</button>
         </div>
@@ -286,14 +290,23 @@
         </div>
     </section>
 
-    <!-- 14.2 REKAP KELAS DPL (DENGAN PEMISAHAN "LIHAT DETAIL" VS "UBAH") -->
+    <!-- 14.2 REKAP KELAS DPL (DENGAN KOLOM DIMENSI KEUNGGULAN & LIHAT DETAIL VS UBAH) -->
     <section id="view-dpl-rekap" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
                 <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Arsip & Analisis Karakter</span>
-                <h2 class="text-xl font-bold text-slate-900">Rekapitulasi & Grafik Perkembangan DPL Kelas</h2>
+                <h2 class="text-xl font-bold text-slate-900">Rekapitulasi & Keunggulan Peserta Didik</h2>
             </div>
             <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex items-center gap-4">
+            <label class="block text-xs font-semibold text-slate-500">Filter Arsip Periode:</label>
+            <select id="filter-rekap-dpl-periode" onchange="renderRekapGrafikDpl()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-700">
+                <option value="Juli-Agustus 2026">Periode 1: Juli - Agustus 2026</option>
+                <option value="September-Oktober 2026">Periode 2: September - Oktober 2026</option>
+                <option value="November-Desember 2026">Periode 3: November - Desember 2026</option>
+            </select>
         </div>
 
         <!-- Grafik Statistik -->
@@ -308,8 +321,8 @@
                     <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
                         <th class="p-4 border-r">No</th>
                         <th class="p-4 border-r">Nama Siswa</th>
-                        <th class="p-4 text-center">Predikat Dominan</th>
-                        <th class="p-4 text-center">Aksi (Lihat Detail vs Ubah)</th>
+                        <th class="p-4 text-center border-r">Dimensi Keunggulan Utama 🏆</th>
+                        <th class="p-4 text-center">Aksi (Lihat Detail History vs Ubah)</th>
                     </tr>
                 </thead>
                 <tbody id="tabel-rekap-dpl-body" class="divide-y divide-slate-100 text-sm"></tbody>
@@ -317,11 +330,11 @@
         </div>
     </section>
 
-    <!-- 14.3 MODAL / VIEW LIHAT DETAIL DPL (READ-ONLY) -->
+    <!-- 14.3 MODAL / VIEW LIHAT DETAIL DPL (READ-ONLY DENGAN HISTORY MULTI-PERIODE) -->
     <section id="view-dpl-detail-readonly" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
-                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Pratinjau Resmi Rapor Karakter</span>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Pratinjau Resmi Rapor Karakter & History</span>
                 <h2 id="title-dpl-detail-siswa" class="text-xl font-bold text-slate-900">Detail Laporan DPL</h2>
             </div>
             <button onclick="switchView('view-dpl-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali ke Rekap</button>
@@ -1233,6 +1246,7 @@
         let nilaiDataAndri = JSON.parse(localStorage.getItem('sdn2_nilaidata')) || {}; 
         let historyNilaiFormatif = JSON.parse(localStorage.getItem('sdn2_history_formatif')) || {}; 
         let historyNilaiSumatif = JSON.parse(localStorage.getItem('sdn2_history_sumatif')) || {}; 
+        // Struktur dplDataStorage kini menyimpan array history berdasar timestamp/periode agar tidak tertimpa
         let dplDataStorage = JSON.parse(localStorage.getItem('sdn2_dpldata')) || {}; 
         let rankingGlobal = JSON.parse(localStorage.getItem('sdn2_ranking')) || {}; 
         let isRankingDisplayed = JSON.parse(localStorage.getItem('sdn2_isrank')) || false;
@@ -1400,14 +1414,12 @@
             const elInpRekap = document.getElementById('input-rekap-tanggal');
             const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
             const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
-            const elInpDplPeriode = document.getElementById('input-dpl-periode');
             const elRekapToday = document.getElementById('rekap-presensi-today-info');
 
             if (elDisp) elDisp.value = todayStr;
             if (elInpRekap) elInpRekap.value = todayStr;
             if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
             if (elInpArsip) elInpArsip.value = todayStr;
-            if (elInpDplPeriode) elInpDplPeriode.value = todayStr;
             if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
             
             const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
@@ -1807,7 +1819,7 @@
             document.getElementById('modal-analisis-kehadiran').classList.remove('hidden');
         }
 
-        // ================= LOGIC DPL (DIMENSI PROFIL LULUSAN) TERBARU =================
+        // ================= LOGIC DPL MULTI-PERIODE & HISTORY TERBARU =================
         function initDplPilihSiswa() {
             const container = document.getElementById('grid-dpl-siswa-container');
             if (!container) return;
@@ -1828,13 +1840,23 @@
             });
         }
 
+        function gantiPeriodeDpl() {
+            // Dipicu saat dropdown periode diubah di halaman pilih siswa
+        }
+
         function bukaFormDplSiswa(namaSiswa) {
             activeDplSiswa = namaSiswa;
-            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            const periode = document.getElementById('input-dpl-periode').value || "Juli-Agustus 2026";
             document.getElementById('label-dpl-siswa-aktif').innerText = `Penilaian DPL: ${namaSiswa} [Periode: ${periode}]`;
 
+            // Struktur DPL: dplDataStorage[namaSiswa][periode] menyimpan array/log historis
             if (!dplDataStorage[namaSiswa]) dplDataStorage[namaSiswa] = {};
-            if (!dplDataStorage[namaSiswa][periode]) dplDataStorage[namaSiswa][periode] = {};
+            if (!dplDataStorage[namaSiswa][periode]) {
+                dplDataStorage[namaSiswa][periode] = {
+                    timestamp: new Date().toISOString(),
+                    penilaian: {}
+                };
+            }
 
             const container = document.getElementById('container-rubrik-dpl-side');
             container.innerHTML = '';
@@ -1844,8 +1866,8 @@
                 dimBox.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4";
                 
                 let subHtml = dim.sub.map((subItem, sIdx) => {
-                    let savedData = (dplDataStorage[namaSiswa][periode][dim.dimensi] && dplDataStorage[namaSiswa][periode][dim.dimensi][subItem.nama]) 
-                        ? dplDataStorage[namaSiswa][periode][dim.dimensi][subItem.nama] 
+                    let savedData = (dplDataStorage[namaSiswa][periode].penilaian[dim.dimensi] && dplDataStorage[namaSiswa][periode].penilaian[dim.dimensi][subItem.nama]) 
+                        ? dplDataStorage[namaSiswa][periode].penilaian[dim.dimensi][subItem.nama] 
                         : { grade: 'C', catatan: '' };
                     
                     let currentGrade = savedData.grade || 'C';
@@ -1868,8 +1890,8 @@
                             </div>
 
                             <!-- Kanan: Tabel / Kotak Deskripsi Live -->
-                            <div class="md:col-span-7 bg-white p-3 rounded-xl border border-indigo-100 shadow-sm">
-                                <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-wider block mb-1">Pratinjau Deskripsi Otomatis:</span>
+                            <div class="md:col-span-7 bg-white p-3 rounded-xl border border-emerald-100 shadow-sm">
+                                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block mb-1">Pratinjau Deskripsi Otomatis:</span>
                                 <p id="box_desc_${dIdx}_${sIdx}" class="text-xs text-slate-700 italic leading-relaxed">"${generatedText}"</p>
                             </div>
                         </div>
@@ -1887,13 +1909,15 @@
         }
 
         function setDplGrade(dimensi, subNama, grade, dIdx, sIdx) {
-            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            const periode = document.getElementById('input-dpl-periode').value || "Juli-Agustus 2026";
             if (!dplDataStorage[activeDplSiswa]) dplDataStorage[activeDplSiswa] = {};
-            if (!dplDataStorage[activeDplSiswa][periode]) dplDataStorage[activeDplSiswa][periode] = {};
-            if (!dplDataStorage[activeDplSiswa][periode][dimensi]) dplDataStorage[activeDplSiswa][periode][dimensi] = {};
-            if (!dplDataStorage[activeDplSiswa][periode][dimensi][subNama]) dplDataStorage[activeDplSiswa][periode][dimensi][subNama] = { grade: 'C', catatan: '' };
+            if (!dplDataStorage[activeDplSiswa][periode]) {
+                dplDataStorage[activeDplSiswa][periode] = { timestamp: new Date().toISOString(), penilaian: {} };
+            }
+            if (!dplDataStorage[activeDplSiswa][periode].penilaian[dimensi]) dplDataStorage[activeDplSiswa][periode].penilaian[dimensi] = {};
+            if (!dplDataStorage[activeDplSiswa][periode].penilaian[dimensi][subNama]) dplDataStorage[activeDplSiswa][periode].penilaian[dimensi][subNama] = { grade: 'C', catatan: '' };
 
-            dplDataStorage[activeDplSiswa][periode][dimensi][subNama].grade = grade;
+            dplDataStorage[activeDplSiswa][periode].penilaian[dimensi][subNama].grade = grade;
 
             // Update UI Tombol
             ['B', 'C', 'M'].forEach(g => {
@@ -1920,13 +1944,15 @@
         }
 
         function setDplCatatan(dimensi, subNama, val) {
-            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            const periode = document.getElementById('input-dpl-periode').value || "Juli-Agustus 2026";
             if (!dplDataStorage[activeDplSiswa]) dplDataStorage[activeDplSiswa] = {};
-            if (!dplDataStorage[activeDplSiswa][periode]) dplDataStorage[activeDplSiswa][periode] = {};
-            if (!dplDataStorage[activeDplSiswa][periode][dimensi]) dplDataStorage[activeDplSiswa][periode][dimensi] = {};
-            if (!dplDataStorage[activeDplSiswa][periode][dimensi][subNama]) dplDataStorage[activeDplSiswa][periode][dimensi][subNama] = { grade: 'C', catatan: '' };
+            if (!dplDataStorage[activeDplSiswa][periode]) {
+                dplDataStorage[activeDplSiswa][periode] = { timestamp: new Date().toISOString(), penilaian: {} };
+            }
+            if (!dplDataStorage[activeDplSiswa][periode].penilaian[dimensi]) dplDataStorage[activeDplSiswa][periode].penilaian[dimensi] = {};
+            if (!dplDataStorage[activeDplSiswa][periode].penilaian[dimensi][subNama]) dplDataStorage[activeDplSiswa][periode].penilaian[dimensi][subNama] = { grade: 'C', catatan: '' };
 
-            dplDataStorage[activeDplSiswa][periode][dimensi][subNama].catatan = val;
+            dplDataStorage[activeDplSiswa][periode].penilaian[dimensi][subNama].catatan = val;
         }
 
         function simpanNilaiDplSiswa() {
@@ -1935,12 +1961,43 @@
             switchView('view-dpl-pilih-siswa');
         }
 
+        // Fungsi helper mendeteksi Dimensi Keunggulan Utama Peserta Didik
+        function hitungDimensiKeunggulanSiswa(sData) {
+            let dimSkor = {};
+            // Inisialisasi 8 dimensi
+            dplRubrikMaster.forEach(d => dimSkor[d.dimensi] = 0);
+
+            Object.keys(sData).forEach(dim => {
+                Object.keys(sData[dim]).forEach(sub => {
+                    let item = sData[dim][sub];
+                    let v = typeof item === 'object' ? item.grade : item;
+                    // Beri bobot: M = 3, C = 2, B = 1
+                    let bobot = v === 'M' ? 3 : (v === 'C' ? 2 : 1);
+                    if (dimSkor[dim] !== undefined) {
+                        dimSkor[dim] += bobot;
+                    }
+                });
+            });
+
+            let maxScore = 0;
+            let bestDimensi = "Belum Ada";
+            Object.keys(dimSkor).forEach(dim => {
+                if (dimSkor[dim] > maxScore) {
+                    maxScore = dimSkor[dim];
+                    // Ambil nama pendek dimensi (misal: "Keimanan dan Ketakwaan..." -> "Keimanan")
+                    bestDimensi = dim.split('.')[1] ? dim.split('.')[1].trim().split(' ')[0] : dim;
+                }
+            });
+
+            return maxScore > 0 ? bestDimensi : "Belum Dinilai";
+        }
+
         function renderRekapGrafikDpl() {
-            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
+            const periode = document.getElementById('filter-rekap-dpl-periode').value || "Juli-Agustus 2026";
             
             let totalB = 0, totalC = 0, totalM = 0;
             daftarSiswa.forEach(nama => {
-                let sData = (dplDataStorage[nama] && dplDataStorage[nama][periode]) ? dplDataStorage[nama][periode] : {};
+                let sData = (dplDataStorage[nama] && dplDataStorage[nama][periode] && dplDataStorage[nama][periode].penilaian) ? dplDataStorage[nama][periode].penilaian : {};
                 Object.keys(sData).forEach(dim => {
                     Object.keys(sData[dim]).forEach(sub => {
                         let item = sData[dim][sub];
@@ -1977,33 +2034,21 @@
                 </div>
             `;
 
-            // Render Tabel Rekap DPL Kelas dengan pemisahan tombol "Lihat Detail" vs "Ubah"
+            // Render Tabel Rekap DPL Kelas dengan Kolom Keunggulan & Pemisahan Lihat Detail vs Ubah
             const tbody = document.getElementById('tabel-rekap-dpl-body');
             tbody.innerHTML = '';
 
             daftarSiswa.forEach((nama, idx) => {
-                let sData = (dplDataStorage[nama] && dplDataStorage[nama][periode]) ? dplDataStorage[nama][periode] : {};
-                let cM = 0, cC = 0, cB = 0;
-                Object.keys(sData).forEach(dim => {
-                    Object.keys(sData[dim]).forEach(sub => {
-                        let item = sData[dim][sub];
-                        let v = typeof item === 'object' ? item.grade : item;
-                        if (v === 'M') cM++;
-                        else if (v === 'C') cC++;
-                        else if (v === 'B') cB++;
-                    });
-                });
-
-                let dominan = cM >= cC ? "Mahir (M)" : (cC >= cB ? "Cakap (C)" : "Berkembang (B)");
-                let badgeColor = dominan.includes("Mahir") ? "bg-emerald-100 text-emerald-700" : (dominan.includes("Cakap") ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700");
+                let sData = (dplDataStorage[nama] && dplDataStorage[nama][periode] && dplDataStorage[nama][periode].penilaian) ? dplDataStorage[nama][periode].penilaian : {};
+                let keunggulanUtama = hitungDimensiKeunggulanSiswa(sData);
 
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
                     <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
-                    <td class="p-4 text-center"><span class="px-3 py-1 rounded-full text-xs font-bold ${badgeColor}">${dominan}</span> (M:${cM}, C:${cC}, B:${cB})</td>
+                    <td class="p-4 text-center border-r font-extrabold text-emerald-700 bg-emerald-50/50">⭐ ${keunggulanUtama}</td>
                     <td class="p-4 text-center flex justify-center gap-2">
-                        <button onclick="bukaDetailDplReadonly('${nama}')" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">Lihat Detail (Read-Only)</button>
+                        <button onclick="bukaDetailDplHistory('${nama}')" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">Lihat Detail & History</button>
                         <button onclick="bukaFormDplSiswa('${nama}')" class="bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-amber-100 transition">Ubah</button>
                     </td>
                 `;
@@ -2011,45 +2056,62 @@
             });
         }
 
-        // FUNGSI LIHAT DETAIL DPL (READ-ONLY)
-        function bukaDetailDplReadonly(namaSiswa) {
-            const periode = document.getElementById('input-dpl-periode').value || getTodayKey();
-            document.getElementById('title-dpl-detail-siswa').innerText = `Laporan Resmi Profil Karakter: ${namaSiswa} [Periode: ${periode}]`;
-
-            const sData = (dplDataStorage[namaSiswa] && dplDataStorage[namaSiswa][periode]) ? dplDataStorage[namaSiswa][periode] : {};
+        // FUNGSI LIHAT DETAIL DPL DENGAN RIWAYAT (HISTORY) MULTI-PERIODE LENGKAP
+        function bukaDetailDplHistory(namaSiswa) {
+            document.getElementById('title-dpl-detail-siswa').innerText = `Riwayat Linimasa Karakter & Rapor DPL: ${namaSiswa}`;
             const container = document.getElementById('container-dpl-detail-content');
             container.innerHTML = '';
 
-            dplRubrikMaster.forEach((dim) => {
-                let card = document.createElement('div');
-                card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3";
+            let studentHistories = dplDataStorage[namaSiswa] || {};
+            let periodKeys = Object.keys(studentHistories);
 
-                let subRows = dim.sub.map((subItem) => {
-                    let subInfo = sData[dim.dimensi] && sData[dim.dimensi][subItem.nama] ? sData[dim.dimensi][subItem.nama] : { grade: 'C', catatan: '-' };
-                    let grade = typeof subInfo === 'object' ? subInfo.grade : subInfo;
-                    let catatan = typeof subInfo === 'object' ? (subInfo.catatan || '-') : '-';
-                    let fullText = `Ananda ${namaSiswa} ${subItem['desc' + grade]}`;
+            if (periodKeys.length === 0) {
+                container.innerHTML = `<div class="p-8 bg-white rounded-2xl border text-center text-slate-400">Belum ada riwayat penilaian DPL yang tercatat untuk siswa ini.</div>`;
+            } else {
+                periodKeys.forEach(periode => {
+                    let pData = studentHistories[periode];
+                    let penObj = pData.penilaian || {};
 
-                    let badgeGrade = grade === 'M' ? 'bg-emerald-100 text-emerald-700' : (grade === 'C' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700');
+                    let periodBox = document.createElement('div');
+                    periodBox.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 mb-4";
+                    
+                    let headerHtml = `<div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-extrabold text-emerald-700 text-sm">📅 Periode: ${periode}</span>
+                        <span class="text-xs text-slate-400">Tercatat: ${new Date(pData.timestamp || Date.now()).toLocaleDateString('id-ID')}</span>
+                    </div>`;
 
-                    return `
-                        <div class="p-3.5 bg-slate-50 border rounded-xl space-y-1.5">
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs font-bold text-slate-800">${subItem.nama}</span>
-                                <span class="px-2.5 py-0.5 rounded text-xs font-extrabold ${badgeGrade}">Predikat: ${grade}</span>
+                    let dimensiHtml = dplRubrikMaster.map(dim => {
+                        let subRows = dim.sub.map(subItem => {
+                            let subInfo = penObj[dim.dimensi] && penObj[dim.dimensi][subItem.nama] ? penObj[dim.dimensi][subItem.nama] : { grade: 'C', catatan: '-' };
+                            let grade = typeof subInfo === 'object' ? subInfo.grade : subInfo;
+                            let catatan = typeof subInfo === 'object' ? (subInfo.catatan || '-') : '-';
+                            let fullText = `Ananda ${namaSiswa} ${subItem['desc' + grade]}`;
+                            let badgeGrade = grade === 'M' ? 'bg-emerald-100 text-emerald-700' : (grade === 'C' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700');
+
+                            return `
+                                <div class="p-3 bg-slate-50 border rounded-xl space-y-1">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs font-bold text-slate-800">${subItem.nama}</span>
+                                        <span class="px-2 py-0.5 rounded text-[11px] font-extrabold ${badgeGrade}">Predikat: ${grade}</span>
+                                    </div>
+                                    <p class="text-xs text-slate-700 italic">"${fullText}"</p>
+                                    ${catatan !== '-' ? `<p class="text-[11px] text-indigo-600 font-medium">Catatan: ${catatan}</p>` : ''}
+                                </div>
+                            `;
+                        }).join('');
+
+                        return `
+                            <div class="space-y-2 pt-2">
+                                <h4 class="text-xs font-bold text-slate-900 uppercase">${dim.dimensi}</h4>
+                                <div class="space-y-2">${subRows}</div>
                             </div>
-                            <p class="text-xs text-slate-700 italic">"${fullText}"</p>
-                            ${catatan !== '-' ? `<p class="text-[11px] text-indigo-600 font-medium pt-1">Catatan Anekdot: ${catatan}</p>` : ''}
-                        </div>
-                    `;
-                }).join('');
+                        `;
+                    }).join('');
 
-                card.innerHTML = `
-                    <h3 class="text-sm font-extrabold text-slate-900 border-b pb-2">${dim.dimensi}</h3>
-                    <div class="space-y-2">${subRows}</div>
-                `;
-                container.appendChild(card);
-            });
+                    periodBox.innerHTML = headerHtml + dimensiHtml;
+                    container.appendChild(periodBox);
+                });
+            }
 
             switchView('view-dpl-detail-readonly');
         }
