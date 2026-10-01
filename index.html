@@ -115,7 +115,7 @@
         </div>
     </section>
 
-    <!-- 5. DASHBOARD RUANG KELAS GURU KELAS (LOCKDOWN MODE & GERBANG CLOUD) -->
+    <!-- 5. DASHBOARD RUANG KELAS GURU KELAS -->
     <section id="view-ruang-kelas" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 mb-6 gap-4">
             <div>
@@ -559,7 +559,7 @@
         </div>
     </section>
 
-    <!-- 6.03 FORM INPUT REKAPITULASI MASA LAMPAU DENGAN PENILAIAN MASSAL OTOMATIS -->
+    <!-- 6.03 FORM INPUT REKAPITULASI MASA LAMPAU DENGAN PENILAIAN MASSAK INSTAN TANPA ALERT -->
     <section id="view-form-rekap-multimapel" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -570,7 +570,7 @@
         </div>
 
         <div class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-xl text-xs font-medium mb-6 space-y-1">
-            <p>💡 <strong>Inovasi Penilaian Massal:</strong> Di atas setiap kolom mata pelajaran, Anda dapat mengetik nilai seragam (misal 85) lalu menekan tombol <strong>"Terapkan"</strong> kecil untuk mengisi seluruh siswa di kolom tersebut secara instan!</p>
+            <p>💡 <strong>Inovasi Penilaian Massal Instan:</strong> Di atas setiap kolom mata pelajaran, ketik angka (misal 85) lalu klik <strong>"Terapkan"</strong> untuk mengisi seluruh siswa pada kolom tersebut seketika tanpa pop-up notifikasi!</p>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
@@ -999,7 +999,7 @@
             <div class="flex gap-2 flex-wrap">
                 <button onclick="bukaModalNarasiRapor()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">✨ Draf Narasi Rapor</button>
                 <button onclick="bukaModalRemedialOtomatis()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">⚡ Draf Remedial</button>
-                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️️ Cetak Rapor</button>
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak Rapor</button>
                 <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
             </div>
         </div>
@@ -3232,7 +3232,7 @@
             switchView('view-form-rekap-multimapel');
         }
 
-        // INOVASI: RENDER TABEL DENGAN TOMBOL TERAPKAN MASSAL DI ATAS
+        // FUNGSI RENDER TABEL DENGAN TOMBOL TERAPKAN MASSAL (TANPA NOTIFIKASI ALERT)
         function renderTabelFormMultiMapel() {
             const headerTr = document.getElementById('header-multimapel-table');
             let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
@@ -3275,18 +3275,15 @@
             });
         }
 
+        // TERAPKAN NILAI MASSAL TANPA ALERT NOTIFIKASI
         function terapkanNilaiMassalMapel(mapel) {
             const bulkInp = document.getElementById(`bulk_val_${mapel}`);
-            if (!bulkInp || bulkInp.value.trim() === '') {
-                alert(`Masukkan nilai angka terlebih dahulu pada kotak "Nilai" di atas kolom ${mapel}.`);
-                return;
-            }
+            if (!bulkInp || bulkInp.value.trim() === '') return;
             const val = parseFloat(bulkInp.value) || 0;
             const inputs = document.querySelectorAll(`.input-mapel-col-${mapel}`);
             inputs.forEach(inp => {
                 inp.value = val;
             });
-            alert(`Berhasil menerapkan nilai ${val} ke seluruh siswa untuk mata pelajaran ${mapel}!`);
         }
 
         function simpanMultiMapelLampau() {
