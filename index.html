@@ -559,7 +559,7 @@
         </div>
     </section>
 
-    <!-- 6.03 FORM INPUT REKAPITULASI MASA LAMPAU DENGAN PENILAIAN MASSAL INSTAN -->
+    <!-- 6.03 FORM INPUT REKAPITULASI MASA LAMPAU DENGAN PENILAIAN MASSAL AMAN -->
     <section id="view-form-rekap-multimapel" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -570,7 +570,7 @@
         </div>
 
         <div class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-xl text-xs font-medium mb-6 space-y-1">
-            <p>💡 <strong>Inovasi Penilaian Massal Instan:</strong> Di atas setiap kolom mata pelajaran, ketik angka (misal 85) lalu klik <strong>"Terapkan"</strong> untuk mengisi seluruh siswa pada kolom tersebut seketika tanpa pop-up notifikasi!</p>
+            <p>💡 <strong>Panduan Pengisian Massal:</strong> Ketik angka nilai (misal 85) di kotak kecil atas kolom mapel lalu klik tombol <strong>"Terapkan"</strong>. Seluruh siswa pada kolom tersebut langsung terisi otomatis tanpa jeda dan tanpa pop-up notifikasi.</p>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
@@ -3232,17 +3232,18 @@
             switchView('view-form-rekap-multimapel');
         }
 
+        // RENDER TABEL MULTIMAPEL MENGGUNAKAN INDEKS AMAN BEBAS SPASI
         function renderTabelFormMultiMapel() {
             const headerTr = document.getElementById('header-multimapel-table');
             let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
             
-            selectedMultiMapelList.forEach(m => {
+            selectedMultiMapelList.forEach((m, mIdx) => {
                 hHtml += `
                     <th class="p-3 text-center border-r">
                         <div class="font-bold text-slate-800 mb-1">${m}</div>
                         <div class="flex items-center justify-center gap-1">
-                            <input type="number" min="0" max="100" id="bulk_val_${m}" class="w-16 bg-white border border-slate-300 rounded p-1 text-center text-xs font-bold text-indigo-600" placeholder="Nilai">
-                            <button onclick="terapkanNilaiMassalMapel('${m}')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-2.5 py-1 rounded text-[10px] shadow-2xs">Terapkan</button>
+                            <input type="number" min="0" max="100" id="bulk_val_${mIdx}" class="w-16 bg-white border border-slate-300 rounded p-1 text-center text-xs font-bold text-indigo-600" placeholder="Nilai">
+                            <button onclick="terapkanNilaiMassalMapel(${mIdx}, '${m}')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-2.5 py-1 rounded text-[10px] shadow-2xs">Terapkan</button>
                         </div>
                     </th>
                 `;
@@ -3257,7 +3258,7 @@
                 let tr = document.createElement('tr');
                 let tdHtml = `<td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td><td class="p-4 font-medium text-slate-900 border-r">${nama}</td>`;
                 
-                selectedMultiMapelList.forEach(m => {
+                selectedMultiMapelList.forEach((m, mIdx) => {
                     let existingVal = "";
                     if (targetHistory[nama] && targetHistory[nama][m]) {
                         let f = targetHistory[nama][m].find(h => h.date === selectedLampauDate);
@@ -3265,7 +3266,7 @@
                     }
                     tdHtml += `
                         <td class="p-4 text-center">
-                            <input type="number" min="0" max="100" value="${existingVal > 0 ? existingVal : ''}" id="multim_${m}_${idx}" class="w-24 bg-slate-50 border rounded-lg p-2 text-center text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500 input-mapel-col-${m}" placeholder="0-100">
+                            <input type="number" min="0" max="100" value="${existingVal > 0 ? existingVal : ''}" id="multim_${mIdx}_${idx}" class="w-24 bg-slate-50 border rounded-lg p-2 text-center text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500 input-mapel-col-${mIdx}" placeholder="0-100">
                         </td>
                     `;
                 });
@@ -3274,12 +3275,12 @@
             });
         }
 
-        // TERAPKAN NILAI MASSAL TANPA NOTIFIKASI ALERT
-        function terapkanNilaiMassalMapel(mapel) {
-            const bulkInp = document.getElementById(`bulk_val_${mapel}`);
+        // FUNGSI EKSEKUSI TERAPKAN NILAI MASSAL SECARA INSTAN TANPA ALERT
+        function terapkanNilaiMassalMapel(mIdx, mapelName) {
+            const bulkInp = document.getElementById(`bulk_val_${mIdx}`);
             if (!bulkInp || bulkInp.value.trim() === '') return;
             const val = parseFloat(bulkInp.value) || 0;
-            const inputs = document.querySelectorAll(`.input-mapel-col-${mapel}`);
+            const inputs = document.querySelectorAll(`.input-mapel-col-${mIdx}`);
             inputs.forEach(inp => {
                 inp.value = val;
             });
@@ -3287,9 +3288,9 @@
 
         function simpanMultiMapelLampau() {
             const targetHistory = getHistoryObj(activeKategoriAsesmen);
-            selectedMultiMapelList.forEach(mapel => {
+            selectedMultiMapelList.forEach((mapel, mIdx) => {
                 daftarSiswa.forEach((nama, idx) => {
-                    let inp = document.getElementById(`multim_${mapel}_${idx}`);
+                    let inp = document.getElementById(`multim_${mIdx}_${idx}`);
                     if (inp && inp.value.trim() !== '') {
                         let score = parseFloat(inp.value) || 0;
                         score = Math.round(score * 10) / 10;
