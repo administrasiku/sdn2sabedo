@@ -559,7 +559,7 @@
         </div>
     </section>
 
-    <!-- 6.03 FORM INPUT REKAPITULASI MASA LAMPAU DENGAN PENILAIAN MASSAK INSTAN TANPA ALERT -->
+    <!-- 6.03 FORM INPUT REKAPITULASI MASA LAMPAU DENGAN PENILAIAN MASSAL INSTAN -->
     <section id="view-form-rekap-multimapel" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -3232,7 +3232,6 @@
             switchView('view-form-rekap-multimapel');
         }
 
-        // FUNGSI RENDER TABEL DENGAN TOMBOL TERAPKAN MASSAL (TANPA NOTIFIKASI ALERT)
         function renderTabelFormMultiMapel() {
             const headerTr = document.getElementById('header-multimapel-table');
             let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
@@ -3275,7 +3274,7 @@
             });
         }
 
-        // TERAPKAN NILAI MASSAL TANPA ALERT NOTIFIKASI
+        // TERAPKAN NILAI MASSAL TANPA NOTIFIKASI ALERT
         function terapkanNilaiMassalMapel(mapel) {
             const bulkInp = document.getElementById(`bulk_val_${mapel}`);
             if (!bulkInp || bulkInp.value.trim() === '') return;
