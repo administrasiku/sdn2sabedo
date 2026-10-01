@@ -144,7 +144,7 @@
             <div onclick="switchView('view-dpl-pilih-siswa')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-emerald-500/30 hover:border-emerald-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">🌱</div>
                 <h3 class="text-lg font-bold text-slate-900">Penilaian DPL (Karakter)</h3>
-                <p class="text-slate-500 text-sm mt-1">Linimasa Periode, Tanggal & Keunggulan Siswa.</p>
+                <p class="text-slate-500 text-sm mt-1">Linimasa Tanggal Fleksibel & Hapus History Sesi.</p>
             </div>
             <div onclick="switchView('view-pilih-menu-rekap')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
@@ -320,7 +320,7 @@
             </select>
         </div>
 
-        <!-- Grafik Statistik -->
+        <!-- Grafik Statistik (Dengan rincian jumlah siswa dan persentase) -->
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 space-y-4">
             <h3 class="text-sm font-bold text-slate-900 uppercase">📊 Grafik Statistik Predikat DPL Seluruh Kelas</h3>
             <div id="container-grafik-dpl" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -333,7 +333,7 @@
                         <th class="p-4 border-r">No</th>
                         <th class="p-4 border-r">Nama Siswa</th>
                         <th class="p-4 text-center border-r">Dimensi Keunggulan Utama 🏆</th>
-                        <th class="p-4 text-center">Aksi (Lihat Detail History vs Ubah)</th>
+                        <th class="p-4 text-center">Aksi (Lihat Detail & Hapus History vs Ubah)</th>
                     </tr>
                 </thead>
                 <tbody id="tabel-rekap-dpl-body" class="divide-y divide-slate-100 text-sm"></tbody>
@@ -341,16 +341,20 @@
         </div>
     </section>
 
-    <!-- 14.3 MODAL / VIEW LIHAT DETAIL DPL (READ-ONLY DENGAN LINIMASA TANGGAL) -->
+    <!-- 14.3 VIEW LIHAT DETAIL DPL (DENGAN DAFTAR HALAMAN KARTU TANGGAL & FITUR HAPUS PER TANGGAL) -->
     <section id="view-dpl-detail-readonly" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
-                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Pratinjau Resmi Rapor Karakter & Linimasa</span>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Pratinjau Rapor Karakter & Daftar History Linimasa</span>
                 <h2 id="title-dpl-detail-siswa" class="text-xl font-bold text-slate-900">Detail Laporan DPL</h2>
             </div>
             <button onclick="switchView('view-dpl-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali ke Rekap</button>
         </div>
 
+        <!-- Halaman / Kartu Daftar Tanggal Evaluasi (List View) -->
+        <div id="container-dpl-history-cards" class="space-y-4 mb-6"></div>
+
+        <!-- Container Detail Sesi Tanggal yang Sedang Dibuka -->
         <div id="container-dpl-detail-content" class="space-y-6 mb-6"></div>
 
         <div class="flex justify-end gap-3">
@@ -1257,7 +1261,6 @@
         let nilaiDataAndri = JSON.parse(localStorage.getItem('sdn2_nilaidata')) || {}; 
         let historyNilaiFormatif = JSON.parse(localStorage.getItem('sdn2_history_formatif')) || {}; 
         let historyNilaiSumatif = JSON.parse(localStorage.getItem('sdn2_history_sumatif')) || {}; 
-        // dplDataStorage menyimpan multi-tanggal array per siswa & periode
         let dplDataStorage = JSON.parse(localStorage.getItem('sdn2_dpldata')) || {}; 
         let rankingGlobal = JSON.parse(localStorage.getItem('sdn2_ranking')) || {}; 
         let isRankingDisplayed = JSON.parse(localStorage.getItem('sdn2_isrank')) || false;
@@ -1830,7 +1833,7 @@
             document.getElementById('modal-analisis-kehadiran').classList.remove('hidden');
         }
 
-        // ================= LOGIC DPL MULTI-TANGGAL & HISTORY TERBARU =================
+        // ================= LOGIC DPL MULTI-TANGGAL & HAPUS PER TANGGAL =================
         function initDplPilihSiswa() {
             const container = document.getElementById('grid-dpl-siswa-container');
             if (!container) return;
@@ -1862,7 +1865,6 @@
 
             document.getElementById('label-dpl-siswa-aktif').innerText = `Penilaian DPL: ${namaSiswa} [Periode: ${periode}]`;
 
-            // Struktur storage: dplDataStorage[namaSiswa][periode][tanggalSpesifik] = { penilaian: {...} }
             if (!dplDataStorage[namaSiswa]) dplDataStorage[namaSiswa] = {};
             if (!dplDataStorage[namaSiswa][periode]) dplDataStorage[namaSiswa][periode] = {};
             if (!dplDataStorage[namaSiswa][periode][tanggalSpesifik]) {
@@ -1963,7 +1965,6 @@
                 }
             });
 
-            // Cari teks rubrik subdimensi yang sesuai
             let rubrikSub = "";
             dplRubrikMaster.forEach(d => {
                 if (d.dimensi === dimensi) {
@@ -2004,17 +2005,15 @@
             switchView('view-dpl-pilih-siswa');
         }
 
-        // Fungsi Helper untuk mendeteksi Dimensi Keunggulan Utama & Cek Peningkatan Tren
         function hitungAnalisisKarakterSiswa(studentHistories, periode) {
             let dimSkor = {};
             dplRubrikMaster.forEach(d => dimSkor[d.dimensi] = 0);
 
             let periodObj = studentHistories[periode] || {};
-            let dateKeys = Object.keys(periodObj).sort(); // Urutkan tanggal
+            let dateKeys = Object.keys(periodObj).sort();
 
             if (dateKeys.length === 0) return { keunggulan: "Belum Dinilai", tren: "Stabil" };
 
-            // Ambil data tanggal terakhir sebagai representasi utama rekap
             let latestDate = dateKeys[dateKeys.length - 1];
             let latestPenilaian = periodObj[latestDate].penilaian || {};
 
@@ -2036,13 +2035,11 @@
                 }
             });
 
-            // Deteksi Tren Peningkatan jika ada lebih dari 1 tanggal asesmen
             let trenStr = "Stabil";
             if (dateKeys.length >= 2) {
                 let firstDate = dateKeys[0];
                 let firstPenilaian = periodObj[firstDate].penilaian || {};
                 
-                // Hitung rata-rata bobot awal vs akhir
                 let sumFirst = 0, countFirst = 0;
                 let sumLast = 0, countLast = 0;
 
@@ -2082,10 +2079,15 @@
             const periode = document.getElementById('filter-rekap-dpl-periode').value || "Juli-Agustus 2026";
             
             let totalB = 0, totalC = 0, totalM = 0;
+            let totalSiswaSudahDinilai = 0;
+            const totalSiswaKelas = daftarSiswa.length;
+
             daftarSiswa.forEach(nama => {
                 let studentHistories = dplDataStorage[nama] || {};
                 let periodObj = studentHistories[periode] || {};
-                // Ambil semua tanggal dalam periode ini
+                let adaDataSiswa = Object.keys(periodObj).length > 0;
+                if (adaDataSiswa) totalSiswaSudahDinilai++;
+
                 Object.keys(periodObj).forEach(tgl => {
                     let penilaian = periodObj[tgl].penilaian || {};
                     Object.keys(penilaian).forEach(dim => {
@@ -2105,27 +2107,32 @@
             const persC = Math.round((totalC / totalSemua) * 100);
             const persM = Math.round((totalM / totalSemua) * 100);
 
+            // Perbaikan Format Statistik Grafik: Menampilkan persentase sekaligus jumlah siswa riil di kelas
             const grafikContainer = document.getElementById('container-grafik-dpl');
             grafikContainer.innerHTML = `
                 <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-center space-y-1">
                     <span class="text-xs font-bold text-amber-700 uppercase">Berkembang (B)</span>
-                    <div class="text-2xl font-extrabold text-amber-900">${totalB} Asesmen (${persB}%)</div>
+                    <div class="text-xl font-extrabold text-amber-900">${persB}% (${totalB} subdimensi)</div>
+                    <p class="text-[10px] text-amber-600">Skala awal bimbingan</p>
                 </div>
                 <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-center space-y-1">
                     <span class="text-xs font-bold text-blue-700 uppercase">Cakap (C)</span>
-                    <div class="text-2xl font-extrabold text-blue-900">${totalC} Asesmen (${persC}%)</div>
+                    <div class="text-xl font-extrabold text-blue-900">${persC}% (${totalC} subdimensi)</div>
+                    <p class="text-[10px] text-blue-600">Skala konsisten</p>
                 </div>
                 <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-center space-y-1">
                     <span class="text-xs font-bold text-emerald-700 uppercase">Mahir (M)</span>
-                    <div class="text-2xl font-extrabold text-emerald-900">${totalM} Asesmen (${persM}%)</div>
+                    <div class="text-xl font-extrabold text-emerald-900">${persM}% (${totalM} subdimensi)</div>
+                    <p class="text-[10px] text-emerald-600">Skala mandiri & teladan</p>
                 </div>
                 <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl text-center space-y-1">
-                    <span class="text-xs font-bold text-purple-700 uppercase">Total Terdata</span>
-                    <div class="text-2xl font-extrabold text-purple-900">${totalB + totalC + totalM} Rekap</div>
+                    <span class="text-xs font-bold text-purple-700 uppercase">Partisipasi Kelas</span>
+                    <div class="text-xl font-extrabold text-purple-900">${totalSiswaSudahDinilai} dari ${totalSiswaKelas} Siswa</div>
+                    <p class="text-[10px] text-purple-600">Sudah dinilai periode ini</p>
                 </div>
             `;
 
-            // Render Tabel Rekap DPL Kelas dengan Kolom Keunggulan & Tren Peningkatan
+            // Render Tabel Rekap DPL Kelas
             const tbody = document.getElementById('tabel-rekap-dpl-body');
             tbody.innerHTML = '';
 
@@ -2152,77 +2159,132 @@
             });
         }
 
-        // FUNGSI LIHAT DETAIL DPL DENGAN LINIMASA MULTI-TANGGAL
+        // FUNGSI LIHAT DETAIL DPL DENGAN DAFTAR HALAMAN KARTU TANGGAL (PAGINATION / LIST VIEW) & FITUR HAPUS PER TANGGAL
         function bukaDetailDplHistory(namaSiswa) {
+            activeDplSiswa = namaSiswa;
             document.getElementById('title-dpl-detail-siswa').innerText = `Riwayat Linimasa Karakter & Rapor DPL: ${namaSiswa}`;
-            const container = document.getElementById('container-dpl-detail-content');
-            container.innerHTML = '';
+            
+            renderDplHistoryCardsView(namaSiswa);
+            switchView('view-dpl-detail-readonly');
+        }
+
+        function renderDplHistoryCardsView(namaSiswa) {
+            const containerCards = document.getElementById('container-dpl-history-cards');
+            const containerContent = document.getElementById('container-dpl-detail-content');
+            containerCards.innerHTML = '';
+            containerContent.innerHTML = '';
 
             let studentHistories = dplDataStorage[namaSiswa] || {};
             let periodKeys = Object.keys(studentHistories);
 
             if (periodKeys.length === 0) {
-                container.innerHTML = `<div class="p-8 bg-white rounded-2xl border text-center text-slate-400">Belum ada riwayat penilaian DPL yang tercatat untuk siswa ini.</div>`;
-            } else {
-                periodKeys.forEach(periode => {
-                    let datesObj = studentHistories[periode] || {};
-                    let sortedDates = Object.keys(datesObj).sort(); // Urutkan tanggal kronologis
-
-                    let periodBox = document.createElement('div');
-                    periodBox.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 mb-4";
-                    
-                    let periodHeader = `<h3 class="text-base font-extrabold text-emerald-800 border-b pb-2">📦 Periode Utama: ${periode}</h3>`;
-                    let timelineHtml = "";
-
-                    sortedDates.forEach(tgl => {
-                        let tglData = datesObj[tgl];
-                        let penilaian = tglData.penilaian || {};
-
-                        let dimensiHtml = dplRubrikMaster.map(dim => {
-                            let subRows = dim.sub.map(subItem => {
-                                let subInfo = penilaian[dim.dimensi] && penilaian[dim.dimensi][subItem.nama] ? penilaian[dim.dimensi][subItem.nama] : { grade: 'C', catatan: '-' };
-                                let grade = typeof subInfo === 'object' ? subInfo.grade : subInfo;
-                                let catatan = typeof subInfo === 'object' ? (subInfo.catatan || '-') : '-';
-                                let fullText = `Ananda ${namaSiswa} ${subItem['desc' + grade]}`;
-                                let badgeGrade = grade === 'M' ? 'bg-emerald-100 text-emerald-700' : (grade === 'C' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700');
-
-                                return `
-                                    <div class="p-3 bg-white border rounded-xl space-y-1 shadow-2xs">
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-xs font-bold text-slate-800">${subItem.nama}</span>
-                                            <span class="px-2 py-0.5 rounded text-[11px] font-extrabold ${badgeGrade}">Predikat: ${grade}</span>
-                                        </div>
-                                        <p class="text-xs text-slate-700 italic">"${fullText}"</p>
-                                        ${catatan !== '-' ? `<p class="text-[11px] text-indigo-600 font-medium">Catatan: ${catatan}</p>` : ''}
-                                    </div>
-                                `;
-                            }).join('');
-
-                            return `
-                                <div class="space-y-2 pt-2">
-                                    <h5 class="text-xs font-bold text-slate-700 uppercase">${dim.dimensi}</h5>
-                                    <div class="space-y-2">${subRows}</div>
-                                </div>
-                            `;
-                        }).join('');
-
-                        timelineHtml += `
-                            <div class="p-4 bg-slate-50 border-l-4 border-emerald-500 rounded-xl space-y-3 mb-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs font-bold text-emerald-700">📅 Tanggal Evaluasi: ${tgl}</span>
-                                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">Asesmen Berkala</span>
-                                </div>
-                                <div class="space-y-2">${dimensiHtml}</div>
-                            </div>
-                        `;
-                    });
-
-                    periodBox.innerHTML = periodHeader + `<div class="space-y-3 mt-3">${timelineHtml}</div>`;
-                    container.appendChild(periodBox);
-                });
+                containerCards.innerHTML = `<div class="p-8 bg-white rounded-2xl border text-center text-slate-400">Belum ada riwayat penilaian DPL yang tercatat untuk siswa ini.</div>`;
+                return;
             }
 
-            switchView('view-dpl-detail-readonly');
+            let totalSesiCount = 0;
+            periodKeys.forEach(periode => {
+                let datesObj = studentHistories[periode] || {};
+                let sortedDates = Object.keys(datesObj).sort().reverse(); // Urutkan tanggal terbaru di atas
+
+                sortedDates.forEach(tgl => {
+                    totalSesiCount++;
+                    let tglId = `sesi_${periode.replace(/[^a-zA-Z0-9]/g, '_')}_${tgl}`;
+
+                    // Buat Kartu Ringkasan Tanggal (List View Halaman)
+                    let card = document.createElement('div');
+                    card.className = "bg-white p-4 rounded-2xl shadow-2xs border border-slate-200 flex justify-between items-center hover:border-indigo-400 transition";
+                    card.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">📅</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Evaluasi Tanggal: ${tgl}</h4>
+                                <span class="text-xs text-slate-500">Periode: ${periode}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="tampilkanDetailSesiTanggal('${namaSiswa}', '${periode}', '${tgl}')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition">Buka Sesi Ini</button>
+                            <button onclick="hapusSesiTanggalDpl('${namaSiswa}', '${periode}', '${tgl}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-3.5 py-2 rounded-xl text-xs transition border border-rose-200" title="Hapus sesi tanggal ini">🗑️ Hapus</button>
+                        </div>
+                    `;
+                    containerCards.appendChild(card);
+                });
+            });
+
+            if (totalSesiCount > 0) {
+                // Otomatis buka sesi tanggal pertama/terbaru agar langsung terlihat
+                let firstPeriode = periodKeys[0];
+                let firstDates = Object.keys(studentHistories[firstPeriode]).sort().reverse();
+                if (firstDates.length > 0) {
+                    tampilkanDetailSesiTanggal(namaSiswa, firstPeriode, firstDates[0]);
+                }
+            }
+        }
+
+        function tampilkanDetailSesiTanggal(namaSiswa, periode, tgl) {
+            const containerContent = document.getElementById('container-dpl-detail-content');
+            let tglData = dplDataStorage[namaSiswa][periode][tgl] || { penilaian: {} };
+            let penilaian = tglData.penilaian || {};
+
+            let dimensiHtml = dplRubrikMaster.map(dim => {
+                let subRows = dim.sub.map(subItem => {
+                    let subInfo = penilaian[dim.dimensi] && penilaian[dim.dimensi][subItem.nama] ? penilaian[dim.dimensi][subItem.nama] : { grade: 'C', catatan: '-' };
+                    let grade = typeof subInfo === 'object' ? subInfo.grade : subInfo;
+                    let catatan = typeof subInfo === 'object' ? (subInfo.catatan || '-') : '-';
+                    let fullText = `Ananda ${namaSiswa} ${subItem['desc' + grade]}`;
+                    let badgeGrade = grade === 'M' ? 'bg-emerald-100 text-emerald-700' : (grade === 'C' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700');
+
+                    return `
+                        <div class="p-3 bg-white border rounded-xl space-y-1 shadow-2xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-800">${subItem.nama}</span>
+                                <span class="px-2 py-0.5 rounded text-[11px] font-extrabold ${badgeGrade}">Predikat: ${grade}</span>
+                            </div>
+                            <p class="text-xs text-slate-700 italic">"${fullText}"</p>
+                            ${catatan !== '-' ? `<p class="text-[11px] text-indigo-600 font-medium">Catatan: ${catatan}</p>` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="space-y-2 pt-2">
+                        <h4 class="text-xs font-bold text-slate-900 uppercase">${dim.dimensi}</h4>
+                        <div class="space-y-2">${subRows}</div>
+                    </div>
+                `;
+            }).join('');
+
+            containerContent.innerHTML = `
+                <div class="bg-indigo-50/60 p-6 rounded-2xl border border-indigo-200 space-y-4">
+                    <div class="flex justify-between items-center border-b border-indigo-200 pb-3">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Sesi Terpilih</span>
+                            <h3 class="font-extrabold text-indigo-950 text-base">Tanggal Evaluasi: ${tgl} [${periode}]</h3>
+                        </div>
+                        <span class="text-xs bg-indigo-600 text-white font-bold px-3 py-1 rounded-full">Aktif Dilihat</span>
+                    </div>
+                    <div class="space-y-3">${dimensiHtml}</div>
+                </div>
+            `;
+        }
+
+        // Fitur Hapus History Fleksibel (Hapus Per Tanggal Tertentu)
+        function hapusSesiTanggalDpl(namaSiswa, periode, tgl) {
+            if (!confirm(`⚠️ Apakah Anda yakin ingin menghapus arsip penilaian DPL untuk tanggal ${tgl} (${periode})? Tindakan ini tidak dapat dibatalkan.`)) {
+                return;
+            }
+
+            if (dplDataStorage[namaSiswa] && dplDataStorage[namaSiswa][periode]) {
+                delete dplDataStorage[namaSiswa][periode][tgl];
+                // Jika periode kosong, hapus key periode juga
+                if (Object.keys(dplDataStorage[namaSiswa][periode]).length === 0) {
+                    delete dplDataStorage[namaSiswa][periode];
+                }
+            }
+
+            simpanKeLocalStorage();
+            alert(`Arsip tanggal ${tgl} berhasil dihapus.`);
+            renderDplHistoryCardsView(namaSiswa);
         }
 
         // ================= ALUR ASESMEN (FORMATIF / SUMATIF) =================
