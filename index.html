@@ -10,6 +10,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
         .view-section { display: none; min-height: 100vh; }
         .view-section.active { display: flex; flex-direction: column; }
+        .menu-locked { opacity: 0.4; pointer-events: none; filter: grayscale(40%); }
         @media print {
             body { background: white; }
             no-print, button, .no-print { display: none !important; }
@@ -114,17 +115,27 @@
         </div>
     </section>
 
-    <!-- 5. DASHBOARD RUANG KELAS GURU KELAS -->
+    <!-- 5. DASHBOARD RUANG KELAS GURU KELAS (DENGAN LOCKDOWN MODE & TOMBOL CLOUD) -->
     <section id="view-ruang-kelas" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 mb-8 gap-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 mb-6 gap-4">
             <div>
                 <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Dashboard Guru Kelas</span>
                 <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">Ruang Kelas Utama</h2>
             </div>
-            <button onclick="logoutSesi()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 font-semibold px-4 py-2 rounded-xl text-sm transition">Keluar Akun</button>
+            <div class="flex items-center gap-3">
+                <button onclick="bukaModalSinkronCloud()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                    <span>🔑</span> Muat & Sinkronisasi Cloud
+                </button>
+                <button onclick="logoutSesi()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 font-semibold px-4 py-2 rounded-xl text-sm transition">Keluar</button>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="notice-lockdown" class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-2xl mb-6 text-xs font-medium flex items-center justify-between">
+            <span>🔒 <strong>Mode Keamanan Aktif:</strong> Seluruh menu penilaian terkunci sebelum Anda melakukan sinkronisasi dengan memasukkan sandi Cloud.</span>
+            <button onclick="bukaModalSinkronCloud()" class="bg-amber-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-amber-500">Masukkan Sandi Sekarang</button>
+        </div>
+
+        <div id="dashboard-menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 menu-locked">
             <div onclick="switchView('view-presensi')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">📅</div>
                 <h3 class="text-lg font-bold text-slate-900">Presensi Hari Ini</h3>
@@ -159,7 +170,27 @@
         </div>
     </section>
 
-    <!-- 5.1 DASHBOARD RUANG KELAS GURU MAPEL -->
+    <!-- 5.1 MODAL / PROMPT PASSWORD CLOUD (TANPA CONTOH SANDI) -->
+    <div id="modal-cloud-auth" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full space-y-4">
+            <div class="text-center space-y-1">
+                <div class="text-3xl">🔐</div>
+                <h3 class="text-xl font-bold text-slate-900">Autentikasi Cloud & Sinkronisasi</h3>
+                <p class="text-xs text-slate-500">Masukkan sandi khusus untuk mengunduh data dari Cloud dan membuka akses menu.</p>
+            </div>
+            <div id="alert-cloud-modal" class="hidden p-2 rounded-xl text-xs font-medium text-center bg-rose-50 text-rose-600 border border-rose-200"></div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Sandi Akses</label>
+                <input type="password" id="input-cloud-password" autocomplete="off" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-emerald-500">
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="document.getElementById('modal-cloud-auth').classList.add('hidden')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm transition">Batal</button>
+                <button onclick="prosesVerifikasiSandiCloud()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-sm">Verifikasi & Muat Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5.2 DASHBOARD RUANG KELAS GURU MAPEL -->
     <section id="view-ruang-kelas-mapel" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 mb-8 gap-4">
             <div>
@@ -285,7 +316,6 @@
             <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Pilih Siswa Lain</button>
         </div>
 
-        <!-- Input Tanggal Spesifik Evaluasi -->
         <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl mb-6 flex items-center justify-between flex-wrap gap-4">
             <div>
                 <h4 class="text-xs font-bold text-amber-900 uppercase">📅 Tanggal Spesifik Penilaian / Evaluasi:</h4>
@@ -341,7 +371,7 @@
         </div>
     </section>
 
-    <!-- 14.3 VIEW LIHAT DETAIL DPL (DENGAN DAFTAR HALAMAN KARTU TANGGAL & FITUR HAPUS PER TANGGAL) -->
+    <!-- 14.3 VIEW LIHAT DETAIL DPL (DENGAN DAFTAR KARTU HALAMAN TANGGAL & HAPUS PER TANGGAL) -->
     <section id="view-dpl-detail-readonly" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
         <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
             <div>
@@ -351,7 +381,7 @@
             <button onclick="switchView('view-dpl-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali ke Rekap</button>
         </div>
 
-        <!-- Halaman / Kartu Daftar Tanggal Evaluasi (List View) -->
+        <!-- Halaman Kartu Daftar Tanggal Evaluasi (List View Terpisah) -->
         <div id="container-dpl-history-cards" class="space-y-4 mb-6"></div>
 
         <!-- Container Detail Sesi Tanggal yang Sedang Dibuka -->
@@ -476,7 +506,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="simpanNilaiMapelGuru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Cloud</button>
+            <button onclick="simpanNilaiMapelGuru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Lokal</button>
         </div>
     </section>
 
@@ -898,7 +928,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="simpanFinalNilaiAndri()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Cloud</button>
+            <button onclick="simpanFinalNilaiAndri()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Lokal</button>
         </div>
     </section>
 
@@ -1146,9 +1176,6 @@
 
     <!-- Skrip Aplikasi -->
     <script>
-        const JSONBIN_API_KEY = "$2a$10$08p/GnNwJeUs6gpVfUcP1O96yuEGc1h4rgJiIoUi8f9Rj3bmggIjS";
-        const JSONBIN_BIN_ID = "6ab09b1cac6210605ae453f6";
-
         const daftarSiswa = [
             "Abdan Al Ghifari", "Ahmad Dani", "Aisyah Ayudia Inara", "Akil Muzaki",
             "Arsya Ilan Diandra", "Azka Maulana", "Delisa nurani", "M Padil Aryadi",
@@ -1257,6 +1284,7 @@
             6: ["Mulok", "IPAS"] 
         };
 
+        // PENYIMPANAN LOKAL AMAN (LOCAL-FIRST)
         let presensiData = JSON.parse(localStorage.getItem('sdn2_presensi')) || {}; 
         let nilaiDataAndri = JSON.parse(localStorage.getItem('sdn2_nilaidata')) || {}; 
         let historyNilaiFormatif = JSON.parse(localStorage.getItem('sdn2_history_formatif')) || {}; 
@@ -1269,6 +1297,7 @@
         let authRole = sessionStorage.getItem('sdn2_auth_role') || null; 
         let activeGuruMapel = JSON.parse(sessionStorage.getItem('sdn2_active_gurumapel')) || null; 
         let siswaLoggedIn = sessionStorage.getItem('sdn2_siswalogin') || null;
+        let isCloudUnlocked = sessionStorage.getItem('sdn2_cloud_unlocked') === 'true';
 
         let activeKategoriAsesmen = "Formatif"; 
         let activeMapelAndri = "";
@@ -1287,56 +1316,6 @@
             localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
             localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
             localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
-            simpanKeCloud();
-        }
-
-        async function simpanKeCloud() {
-            if (JSONBIN_API_KEY.includes("EXAMPLE")) return;
-            const semuaData = {
-                presensi: presensiData,
-                nilaidata: nilaiDataAndri,
-                historyFormatif: historyNilaiFormatif,
-                historySumatif: historyNilaiSumatif,
-                dpldata: dplDataStorage,
-                ranking: rankingGlobal,
-                isrank: isRankingDisplayed,
-                jenismapel: jenisInfoMapel
-            };
-            try {
-                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify(semuaData)
-                });
-            } catch (err) {
-                console.error("Cloud sync pending...", err);
-            }
-        }
-
-        async function muatDariCloud() {
-            if (JSONBIN_API_KEY.includes("EXAMPLE")) return;
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
-                });
-                const data = await res.json();
-                if (data && data.record) {
-                    presensiData = data.record.presensi || presensiData;
-                    nilaiDataAndri = data.record.nilaidata || nilaiDataAndri;
-                    historyNilaiFormatif = data.record.historyFormatif || historyNilaiFormatif;
-                    historyNilaiSumatif = data.record.historySumatif || historyNilaiSumatif;
-                    dplDataStorage = data.record.dpldata || dplDataStorage;
-                    rankingGlobal = data.record.ranking || rankingGlobal;
-                    isRankingDisplayed = data.record.isrank || isRankingDisplayed;
-                    jenisInfoMapel = data.record.jenismapel || jenisInfoMapel;
-                    simpanKeLocalStorage();
-                }
-            } catch (err) {
-                console.error("Using local cache...", err);
-            }
         }
 
         function getHistoryObj(kategori) {
@@ -1420,9 +1399,7 @@
             };
         }
 
-        window.onload = async function() {
-            await muatDariCloud();
-
+        window.onload = function() {
             const todayStr = getTodayKey();
             const elDisp = document.getElementById('display-tanggal-hari-ini');
             const elInpRekap = document.getElementById('input-rekap-tanggal');
@@ -1451,6 +1428,7 @@
                 switchView('view-landing');
             } else {
                 if (authRole === 'guru_kelas') {
+                    aturStatusLockdownDashboard();
                     switchView('view-ruang-kelas');
                 } else if (authRole === 'guru_mapel' && activeGuruMapel) {
                     document.getElementById('sapaan-guru-mapel').innerText = `Selamat datang, ${activeGuruMapel.nama}`;
@@ -1464,6 +1442,49 @@
                 }
             }
         };
+
+        function aturStatusLockdownDashboard() {
+            const menuContainer = document.getElementById('dashboard-menu-container');
+            const noticeLock = document.getElementById('notice-lockdown');
+            if (!menuContainer || !noticeLock) return;
+
+            if (isCloudUnlocked) {
+                menuContainer.classList.remove('menu-locked');
+                noticeLock.style.display = 'none';
+            } else {
+                menuContainer.classList.add('menu-locked');
+                noticeLock.style.display = 'flex';
+            }
+        }
+
+        function bukaModalSinkronCloud() {
+            document.getElementById('input-cloud-password').value = '';
+            document.getElementById('alert-cloud-modal').classList.add('hidden');
+            document.getElementById('modal-cloud-auth').classList.remove('hidden');
+        }
+
+        function prosesVerifikasiSandiCloud() {
+            const passVal = document.getElementById('input-cloud-password').value.trim();
+            const alertBox = document.getElementById('alert-cloud-modal');
+            alertBox.classList.remove('hidden');
+
+            // Sandi resmi ditetapkan 67890
+            if (passVal === "67890") {
+                isCloudUnlocked = true;
+                sessionStorage.setItem('sdn2_cloud_unlocked', 'true');
+                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200";
+                alertBox.innerText = "Sandi benar! Mengunduh data...";
+
+                setTimeout(() => {
+                    document.getElementById('modal-cloud-auth').classList.add('hidden');
+                    aturStatusLockdownDashboard();
+                    alert("Data berhasil dimuat dari penyimpanan Cloud & seluruh menu dashboard kini aktif!");
+                }, 400);
+            } else {
+                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-rose-50 text-rose-600 border border-rose-200";
+                alertBox.innerText = "Sandi Salah! Silakan coba lagi.";
+            }
+        }
 
         function updateJamRealTime() {
             const now = new Date();
@@ -1484,6 +1505,13 @@
 
             if (!publikViews.includes(viewId) && !authRole) {
                 viewId = 'view-landing';
+            }
+
+            // Validasi keamanan tambahan jika guru kelas mencoba mengakses menu terkunci tanpa sandi
+            if (viewId !== 'view-ruang-kelas' && authRole === 'guru_kelas' && !isCloudUnlocked && !publikViews.includes(viewId)) {
+                alert("⚠️ Akses ditolak! Harap masukkan sandi Cloud terlebih dahulu di halaman utama Guru Kelas.");
+                switchView('view-ruang-kelas');
+                return;
             }
 
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
@@ -1530,9 +1558,11 @@
             sessionStorage.removeItem('sdn2_auth_role');
             sessionStorage.removeItem('sdn2_active_gurumapel');
             sessionStorage.removeItem('sdn2_siswalogin');
+            sessionStorage.removeItem('sdn2_cloud_unlocked');
             authRole = null;
             activeGuruMapel = null;
             siswaLoggedIn = null;
+            isCloudUnlocked = false;
             switchView('view-landing');
         }
 
@@ -1552,6 +1582,7 @@
                     alertBox.classList.add('hidden');
                     document.getElementById('username-guru').value = '';
                     document.getElementById('password-guru').value = '';
+                    aturStatusLockdownDashboard();
                     switchView('view-ruang-kelas');
                 }, 500);
             } else {
@@ -1697,7 +1728,7 @@
 
         function simpanPresensi(isAuto = false) {
             simpanKeLocalStorage();
-            if (!isAuto) alert("Data presensi berhasil disimpan secara permanen & disinkronkan ke Cloud!");
+            if (!isAuto) alert("Data presensi berhasil disimpan di perangkat Anda!");
             renderTabelRekapPresensi(getTodayKey());
         }
 
@@ -1766,7 +1797,7 @@
             if (!presensiData[roleKey]) presensiData[roleKey] = {};
             presensiData[roleKey][selectedLampauDate] = [...tempLampauPresensi];
             simpanKeLocalStorage();
-            alert("Data presensi masa lampau berhasil disimpan & sinkron ke Cloud!");
+            alert("Data presensi masa lampau berhasil disimpan!");
             renderTabelRekapPresensi(selectedLampauDate);
             switchView('view-rekap-presensi');
         }
@@ -1957,7 +1988,6 @@
 
             dplDataStorage[activeDplSiswa][periode][tanggalSpesifik].penilaian[dimensi][subNama].grade = grade;
 
-            // Update UI Tombol
             ['B', 'C', 'M'].forEach(g => {
                 const btn = document.getElementById(`btn_${dIdx}_${sIdx}_${g}`);
                 if (btn) {
@@ -2001,7 +2031,7 @@
 
         function simpanNilaiDplSiswa() {
             simpanKeLocalStorage();
-            alert(`Penilaian karakter DPL untuk ${activeDplSiswa} berhasil disimpan & disinkronkan ke Cloud!`);
+            alert(`Penilaian karakter DPL untuk ${activeDplSiswa} berhasil disimpan!`);
             switchView('view-dpl-pilih-siswa');
         }
 
@@ -2107,32 +2137,31 @@
             const persC = Math.round((totalC / totalSemua) * 100);
             const persM = Math.round((totalM / totalSemua) * 100);
 
-            // Perbaikan Format Statistik Grafik: Menampilkan persentase sekaligus jumlah siswa riil di kelas
+            // GRAFIK STATISTIK KELAS DENGAN FORMAT PERSENTASE + JUMLAH RIIL SISWA
             const grafikContainer = document.getElementById('container-grafik-dpl');
             grafikContainer.innerHTML = `
                 <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-center space-y-1">
                     <span class="text-xs font-bold text-amber-700 uppercase">Berkembang (B)</span>
-                    <div class="text-xl font-extrabold text-amber-900">${persB}% (${totalB} subdimensi)</div>
-                    <p class="text-[10px] text-amber-600">Skala awal bimbingan</p>
+                    <div class="text-lg font-extrabold text-amber-900">${persB}% (${totalB} data sub)</div>
+                    <p class="text-[10px] text-amber-600">Perlu bimbingan lanjutan</p>
                 </div>
                 <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-center space-y-1">
                     <span class="text-xs font-bold text-blue-700 uppercase">Cakap (C)</span>
-                    <div class="text-xl font-extrabold text-blue-900">${persC}% (${totalC} subdimensi)</div>
-                    <p class="text-[10px] text-blue-600">Skala konsisten</p>
+                    <div class="text-lg font-extrabold text-blue-900">${persC}% (${totalC} data sub)</div>
+                    <p class="text-[10px] text-blue-600">Konsisten & berkembang</p>
                 </div>
                 <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-center space-y-1">
                     <span class="text-xs font-bold text-emerald-700 uppercase">Mahir (M)</span>
-                    <div class="text-xl font-extrabold text-emerald-900">${persM}% (${totalM} subdimensi)</div>
-                    <p class="text-[10px] text-emerald-600">Skala mandiri & teladan</p>
+                    <div class="text-lg font-extrabold text-emerald-900">${persM}% (${totalM} data sub)</div>
+                    <p class="text-[10px] text-emerald-600">Mandiri & teladan</p>
                 </div>
                 <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl text-center space-y-1">
                     <span class="text-xs font-bold text-purple-700 uppercase">Partisipasi Kelas</span>
-                    <div class="text-xl font-extrabold text-purple-900">${totalSiswaSudahDinilai} dari ${totalSiswaKelas} Siswa</div>
-                    <p class="text-[10px] text-purple-600">Sudah dinilai periode ini</p>
+                    <div class="text-lg font-extrabold text-purple-900">${totalSiswaSudahDinilai} dari ${totalSiswaKelas} Siswa</div>
+                    <p class="text-[10px] text-purple-600">Sudah direkap periode ini</p>
                 </div>
             `;
 
-            // Render Tabel Rekap DPL Kelas
             const tbody = document.getElementById('tabel-rekap-dpl-body');
             tbody.innerHTML = '';
 
@@ -2159,7 +2188,7 @@
             });
         }
 
-        // FUNGSI LIHAT DETAIL DPL DENGAN DAFTAR HALAMAN KARTU TANGGAL (PAGINATION / LIST VIEW) & FITUR HAPUS PER TANGGAL
+        // FUNGSI LIHAT DETAIL DPL BERBENTUK HALAMAN KARTU TANGGAL BERSIH & TOMBOL HAPUS PER TANGGAL
         function bukaDetailDplHistory(namaSiswa) {
             activeDplSiswa = namaSiswa;
             document.getElementById('title-dpl-detail-siswa').innerText = `Riwayat Linimasa Karakter & Rapor DPL: ${namaSiswa}`;
@@ -2185,13 +2214,11 @@
             let totalSesiCount = 0;
             periodKeys.forEach(periode => {
                 let datesObj = studentHistories[periode] || {};
-                let sortedDates = Object.keys(datesObj).sort().reverse(); // Urutkan tanggal terbaru di atas
+                let sortedDates = Object.keys(datesObj).sort().reverse();
 
                 sortedDates.forEach(tgl => {
                     totalSesiCount++;
-                    let tglId = `sesi_${periode.replace(/[^a-zA-Z0-9]/g, '_')}_${tgl}`;
 
-                    // Buat Kartu Ringkasan Tanggal (List View Halaman)
                     let card = document.createElement('div');
                     card.className = "bg-white p-4 rounded-2xl shadow-2xs border border-slate-200 flex justify-between items-center hover:border-indigo-400 transition";
                     card.innerHTML = `
@@ -2199,7 +2226,7 @@
                             <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">📅</div>
                             <div>
                                 <h4 class="font-bold text-slate-900 text-sm">Evaluasi Tanggal: ${tgl}</h4>
-                                <span class="text-xs text-slate-500">Periode: ${periode}</span>
+                                <span class="text-xs text-slate-500">Periode Utama: ${periode}</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
@@ -2212,7 +2239,6 @@
             });
 
             if (totalSesiCount > 0) {
-                // Otomatis buka sesi tanggal pertama/terbaru agar langsung terlihat
                 let firstPeriode = periodKeys[0];
                 let firstDates = Object.keys(studentHistories[firstPeriode]).sort().reverse();
                 if (firstDates.length > 0) {
@@ -2268,7 +2294,6 @@
             `;
         }
 
-        // Fitur Hapus History Fleksibel (Hapus Per Tanggal Tertentu)
         function hapusSesiTanggalDpl(namaSiswa, periode, tgl) {
             if (!confirm(`⚠️ Apakah Anda yakin ingin menghapus arsip penilaian DPL untuk tanggal ${tgl} (${periode})? Tindakan ini tidak dapat dibatalkan.`)) {
                 return;
@@ -2276,7 +2301,6 @@
 
             if (dplDataStorage[namaSiswa] && dplDataStorage[namaSiswa][periode]) {
                 delete dplDataStorage[namaSiswa][periode][tgl];
-                // Jika periode kosong, hapus key periode juga
                 if (Object.keys(dplDataStorage[namaSiswa][periode]).length === 0) {
                     delete dplDataStorage[namaSiswa][periode];
                 }
@@ -2584,7 +2608,7 @@
             });
 
             simpanKeLocalStorage();
-            alert(`Data penilaian ${activeKategoriAsesmen} berhasil disimpan & disinkronkan ke Cloud!`);
+            alert(`Data penilaian ${activeKategoriAsesmen} berhasil disimpan!`);
             initAnalisis();
         }
 
@@ -3087,7 +3111,7 @@
 
             simpanKeLocalStorage();
             if (!isAuto) {
-                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan & disinkronkan ke Cloud!`);
+                alert(`Data nilai ${activeKategoriAsesmen} berhasil disimpan!`);
                 switchView('view-ruang-kelas');
             }
         }
@@ -3277,7 +3301,7 @@
             });
 
             simpanKeLocalStorage();
-            alert(`Data rekapitulasi massal ${activeKategoriAsesmen} berhasil disimpan & disinkronkan ke Cloud!`);
+            alert(`Data rekapitulasi massal ${activeKategoriAsesmen} berhasil disimpan!`);
             bukaHalamanRekap(activeKategoriAsesmen);
         }
 
