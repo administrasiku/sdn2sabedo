@@ -3240,52 +3240,142 @@
         }
 
         function bukaRekapMapelSingle() {
-    const inputTgl = document.getElementById('input-rekap-nilai-tanggal');
-    if (!inputTgl || !inputTgl.value) {
-        alert("Silakan pilih tanggal masa lampau terlebih dahulu.");
+    selectedLampauDate = document.getElementById('input-rekap-nilai-tanggal').value;
+    const today = getTodayKey();
+
+    if (!selectedLampauDate) {
+        alert("Pilih tanggal terlebih dahulu.");
         return;
     }
 
-    selectedLampauDate = inputTgl.value;
-    const today = getTodayKey();
-
     if (selectedLampauDate === today) {
-        alert("Tanggal yang dipilih adalah hari ini. Silakan gunakan menu penilaian reguler di bawah.");
+        alert("Tanggal yang dipilih adalah hari ini. Tabel rekapitulasi harian sudah otomatis ditampilkan di bawah.");
         initRekapNilai();
         return;
     }
 
-    // Pastikan parsing tanggal aman dari pergeseran zona waktu
-    const parts = selectedLampauDate.split('-');
-    const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-    const dayOfWeek = dateObj.getDay();
+    // Parsing tanggal secara aman dengan melampirkan waktu lokal 'T00:00:00'
+    // untuk mencegah pergeseran zona waktu (UTC offset bug)
+    const dateObj = new Date(selectedLampauDate + 'T00:00:00');
+    
+    if (isNaN(dateObj.getTime())) {
+        alert("Format tanggal tidak valid.");
+        return;
+    }
 
-    if (dayOfWeek === 0) {
-        if (!confirm("⚠️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap nilai pada tanggal ini?")) {
+    if (dateObj.getDay() === 0) {
+        if (!confirm("⚠️️ Peringatan: Tanggal yang dipilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap nilai pada tanggal ini?")) {
             return;
         }
     }
 
-    const jadwalHari = jadwalPelajaran[dayOfWeek] || daftarMapelAndri;
+    const dayOfWeek = dateObj.getDay();
+    let jadwalHari = jadwalPelajaran[dayOfWeek] || [];
+    
+    // Fallback pengaman: Jika jadwal hari tersebut kosong, gunakan seluruh mapel guru kelas
+    // agar tombol tidak macet/tidak merespons
     selectedMultiMapelList = jadwalHari.filter(m => daftarMapelAndri.includes(m));
-
     if (selectedMultiMapelList.length === 0) {
-        selectedMultiMapelList = [...daftarMapelAndri]; // Fallback aman agar form tetap terbuka
+        selectedMultiMapelList = [...daftarMapelAndri];
     }
 
-    const labelDate = document.getElementById('label-multimapel-date');
-    if (labelDate) {
-        labelDate.innerText = `Input Massal Masa Lampau [${activeKategoriAsesmen}] — Tanggal: ${selectedLampauDate}`;
-    }
-    
-    // Pastikan fungsi render form tersedia sebelum berpindah view
-    if (typeof renderTabelFormMultiMapel === 'function') {
-        renderTabelFormMultiMapel();
-    }
-    
+    document.getElementById('label-multimapel-date').innerText = `Input Massal Masa Lampau [${activeKategoriAsesmen}] — Tanggal: ${selectedLampauDate}`;
+    renderTabelFormMultiMapel();
     switchView('view-form-rekap-multimapel');
 }
+        function renderTabelFormMultiMapel() {
+    const headerTr = document.getElementById('header-multimapel-table');
+    const tbody = document.getElementById('tabel-multimapel-body');
+    if (!headerTr || !tbody) return;
 
+    // 1. Render Header Kolom Mata Pelajaran Berdasarkan Jadwal Hari Tersebut
+    let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
+    selectedMultiMapelList.forEach((mapel, mIdx) => {
+        hHtml += `
+            <th class="p-4 text-center border-r">
+                <div class="font-bold text-slate-800 mb-1">${mapel}</div>
+                <div class="flex items-center justify-center gap-1">
+                    <input type="number" min="0" max="100" placeholder="Nilai" id="input_massal_val_${mIdx}" class="w-16 bg-white border border-slate-300 rounded px-1.5 py-1 text-center text-xs font-bold text-slate-800">
+                    <button onclick="terapkanNilaiMassalMapel(${mIdx}, '${mapel}')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-2.5 py-1 rounded text-[10px] shadow-sm">Terapkan</button>
+                </div>
+            </th>
+        `;
+    });
+    headerTr.innerHTML = hHtml;
+
+    // 2. Render Baris Nama Siswa dan Kolom Input Nilainya
+    tbody.innerHTML = '';
+    daftarSiswa.forEach((nama, sIdx) => {
+        let tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        let tds = `<td class="p-4 font-semibold text-slate-500 border-r">${sIdx + 1}</td><td class="p-4 font-medium text-slate-900 border-r">${nama}</td>`;
+
+        selectedMultiMapelList.forEach((mapel, mIdx) => {
+            let targetHistory = getHistoryObj(activeKategoriAsesmen);
+            let existingScore = '';
+            if (targetHistory[nama] && targetHistory[nama][mapel]) {
+                let found = targetHistory[nama][mapel].find(h => h.date === selectedLampauDate);
+                if (found) existingScore = found.score;
+            }
+
+            tds += `
+                <td class="p-4 text-center border-r">
+                    <input type="number" min="0" max="100" value="${existingScore !== '' ? existingScore : ''}" 
+                           id="cell_massal_${sIdx}_${mIdx}" data-siswa="${nama}" data-mapel="${mapel}" 
+                           class="w-20 bg-slate-50 border border-slate-300 rounded-lg p-2 text-center text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500" placeholder="0-100">
+                </td>
+            `;
+        });
+
+        tr.innerHTML = tds;
+        tbody.appendChild(tr);
+    });
+}
+
+function terapkanNilaiMassalMapel(mIdx, mapel) {
+    const inputVal = document.getElementById(`input_massal_val_${mIdx}`);
+    if (!inputVal || inputVal.value === '') {
+        alert(`Masukkan angka nilai terlebih dahulu pada kolom ${mapel}.`);
+        return;
+    }
+    const val = parseFloat(inputVal.value);
+    
+    daftarSiswa.forEach((_, sIdx) => {
+        const cell = document.getElementById(`cell_massal_${sIdx}_${mIdx}`);
+        if (cell) cell.value = val;
+    });
+}
+
+function simpanMultiMapelLampau() {
+    const targetHistory = getHistoryObj(activeKategoriAsesmen);
+    
+    daftarSiswa.forEach((nama, sIdx) => {
+        selectedMultiMapelList.forEach((mapel, mIdx) => {
+            const cell = document.getElementById(`cell_massal_${sIdx}_${mIdx}`);
+            if (cell && cell.value !== '') {
+                let scoreVal = parseFloat(cell.value) || 0;
+                
+                if (!targetHistory[nama]) targetHistory[nama] = {};
+                if (!targetHistory[nama][mapel]) targetHistory[nama][mapel] = [];
+                
+                let existing = targetHistory[nama][mapel].find(h => h.date === selectedLampauDate);
+                let detailText = `[Input Massal ${activeKategoriAsesmen}] Rekap Masa Lampau`;
+                
+                if (existing) {
+                    existing.score = scoreVal;
+                    existing.detail = detailText;
+                } else {
+                    targetHistory[nama][mapel].push({ date: selectedLampauDate, score: scoreVal, detail: detailText });
+                }
+            }
+        });
+    });
+
+    simpanKeLocalStorage();
+    alert(`Rekapitulasi massal tanggal ${selectedLampauDate} berhasil disimpan secara permanen!`);
+    initRekapNilai();
+    switchView('view-rekap-nilai');
+}
 
         function hitungNilaiRaporMapel(namaSiswa, mapel) {
             let avgF = hitungRataRataMapel(namaSiswa, mapel, 'Formatif');
