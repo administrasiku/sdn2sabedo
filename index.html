@@ -2619,6 +2619,65 @@
         tbody.appendChild(tr);
     });
 }
+        function isiCepatNilaiMapel(targetPersenOrNilai) {
+    const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+    if (!nilaiDataAndri[activeMapelAndri] || !nilaiDataAndri[activeMapelAndri][chosenDate]) return;
+    
+    const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
+
+    nilaiDataAndri[activeMapelAndri][chosenDate].forEach((studentData) => {
+        // 1. Isi Pengetahuan
+        if (infoMapel.penList && infoMapel.penList.length > 0) {
+            infoMapel.penList.forEach(j => {
+                let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
+                let targetSoal = maxArr.length > 0 ? maxArr.length : 12;
+                
+                if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
+                    studentData.penScores[j] = new Array(targetSoal).fill(0);
+                }
+                
+                for (let sIdx = 0; sIdx < targetSoal; sIdx++) {
+                    let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
+                    if (targetPersenOrNilai === 100) {
+                        studentData.penScores[j][sIdx] = mVal;
+                    } else {
+                        // 75% dari skor maksimal soal
+                        studentData.penScores[j][sIdx] = Math.round((75 / 100) * mVal * 10) / 10;
+                    }
+                }
+            });
+        }
+
+        // 2. Isi Keterampilan (jika tidak diskip)
+        if (!infoMapel.skipKet && infoMapel.ketList && infoMapel.ketList.length > 0) {
+            infoMapel.ketList.forEach(j => {
+                let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
+                let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                
+                if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
+                    studentData.ketScores[j] = new Array(targetAspek).fill(0);
+                }
+                
+                for (let sIdx = 0; sIdx < targetAspek; sIdx++) {
+                    let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
+                    if (targetPersenOrNilai === 100) {
+                        studentData.ketScores[j][sIdx] = mVal;
+                    } else {
+                        studentData.ketScores[j][sIdx] = Math.round((75 / 100) * mVal * 10) / 10;
+                    }
+                }
+            });
+        }
+
+        // Hitung ulang nilai akhir otomatis
+        const res = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
+        studentData.final = res.final;
+    });
+
+    // Render ulang tabel agar perubahan langsung tampil di layar
+    renderTabelPenilaianSiswaMapel();
+    alert(`Berhasil mengisi cepat seluruh siswa dengan estimasi pencapaian ${targetPersenOrNilai === 100 ? 'Sempurna (100)' : 'Standar Tuntas (75)'}!`);
+        }
         function updatePenilaianMapelManual(idx, jenis, sIdx, val) {
             const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
             let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
