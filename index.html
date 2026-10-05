@@ -1744,17 +1744,102 @@ function handleLoginMapel() {
 
 function handleLoginSiswa() {
     const userInp = document.getElementById('username-siswa');
-    const passInp = document.getElementById('password-siswa');
-    
-    if (!userInp || !passInp) {
-        alert("Form input siswa tidak ditemukan pada halaman.");
-        return;
+function handleLoginGuru() {
+    const userInp = document.getElementById('username-guru');
+    const passInp = document.getElementById('password-guru');
+    const alertBox = document.getElementById('alert-guru');
+
+    if (!userInp || !passInp || !alertBox) return;
+
+    const user = userInp.value.trim().toLowerCase();
+    const pass = passInp.value.trim();
+
+    alertBox.classList.remove('hidden');
+    if (user === 'andri' && pass === '12345') {
+        authRole = 'guru_kelas';
+        sessionStorage.setItem('sdn2_auth_role', 'guru_kelas');
+
+        alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        alertBox.innerText = "Login Berhasil! Memuat ruang kelas...";
+        
+        setTimeout(() => {
+            alertBox.classList.add('hidden');
+            userInp.value = '';
+            passInp.value = '';
+            aturStatusLockdownDashboard();
+            switchView('view-ruang-kelas');
+        }, 400);
+    } else {
+        alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        alertBox.innerText = "Username atau Password Guru Kelas Salah!";
     }
+}
+
+function handleLoginMapel() {
+    const userInp = document.getElementById('username-mapel');
+    const passInp = document.getElementById('password-mapel');
+    const alertBox = document.getElementById('alert-mapel');
+
+    if (!userInp || !passInp || !alertBox) return;
+
+    const user = userInp.value.trim().toLowerCase();
+    const pass = passInp.value.trim();
+
+    alertBox.classList.remove('hidden');
+    let guruData = null;
+    if (user === 'liza01' && pass === 'agama123') {
+        guruData = { nama: "Bu Liza Khairil Imtihan, S.Pd", mapel: "Pendidikan Agama", user: "liza01" };
+    } else if (user === 'zulkifli02' && pass === 'pjok123') {
+        guruData = { nama: "Pak Zulkifli, S.Pd", mapel: "PJOK", user: "zulkifli02" };
+    } else if (user === 'sriulfania03' && pass === 'english123') {
+        guruData = { nama: "Bu Sri Ulfania, S.Pd", mapel: "Bahasa Inggris", user: "sriulfania03" };
+    }
+
+    if (guruData) {
+        authRole = 'guru_mapel';
+        activeGuruMapel = guruData;
+        sessionStorage.setItem('sdn2_auth_role', 'guru_mapel');
+        sessionStorage.setItem('sdn2_active_gurumapel', JSON.stringify(guruData));
+
+        alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        alertBox.innerText = `Login Berhasil! Selamat datang, ${guruData.nama}`;
+        
+        setTimeout(() => {
+            alertBox.classList.add('hidden');
+            userInp.value = '';
+            passInp.value = '';
+            
+            const sapaanEl = document.getElementById('sapaan-guru-mapel');
+            const subLabelEl = document.getElementById('label-mapel-dashboard-sub');
+            if (sapaanEl) sapaanEl.innerText = `Selamat datang, ${guruData.nama}`;
+            if (subLabelEl) subLabelEl.innerText = `Dashboard Guru Mapel: ${guruData.mapel}`;
+            
+            const todayStr = getTodayKey();
+            const tglMapelInp = document.getElementById('input-tanggal-mapel-aktif');
+            const tglArsipInp = document.getElementById('input-rekap-mapel-arsip-tgl');
+            if (tglMapelInp) tglMapelInp.value = todayStr;
+            if (tglArsipInp) tglArsipInp.value = todayStr;
+
+            switchView('view-ruang-kelas-mapel');
+        }, 400);
+    } else {
+        alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        alertBox.innerText = "Username atau Password Guru Mapel Salah!";
+    }
+}
+
+function handleLoginSiswa() {
+    const userInp = document.getElementById('username-siswa');
+    const passInp = document.getElementById('password-siswa');
+    const alertBox = document.getElementById('alert-siswa');
+
+    if (!userInp || !passInp || !alertBox) return;
 
     const user = userInp.value.trim().toLowerCase();
     const pass = passInp.value.trim().toLowerCase();
 
     const found = akunSiswaDB.find(s => s.user.toLowerCase() === user && s.pass.toLowerCase() === pass);
+    alertBox.classList.remove('hidden');
 
     if (found) {
         authRole = 'siswa';
@@ -1762,15 +1847,19 @@ function handleLoginSiswa() {
         sessionStorage.setItem('sdn2_auth_role', 'siswa');
         sessionStorage.setItem('sdn2_siswalogin', found.nama);
 
-        userInp.value = '';
-        passInp.value = '';
+        alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        alertBox.innerText = `Login Berhasil! Halo, ${found.nama}`;
         
-        if (typeof loadPortalSiswa === 'function') {
+        setTimeout(() => {
+            alertBox.classList.add('hidden');
+            userInp.value = '';
+            passInp.value = '';
             loadPortalSiswa(found.nama);
-        }
-        switchView('view-portal-siswa');
+            switchView('view-portal-siswa');
+        }, 400);
     } else {
-        alert("Username atau Password Siswa Salah!");
+        alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        alertBox.innerText = "Username atau Password Siswa Salah!";
     }
 }
 
