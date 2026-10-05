@@ -2404,23 +2404,23 @@
         }
 
         function rebuildDetailSoalMapelPen(jenis) {
-            const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${jenis}"]`);
-            const detailContainer = document.getElementById(`detail_soal_pen_mapel_${jenis}`);
-            if (!jmlInp || !detailContainer) return;
-            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
-            detailContainer.innerHTML = '';
-            
-            for(let i=0; i<jml; i++) {
-                let defaultMax = jenis === 'Pilihan Ganda' ? 1 : 10;
-                let box = document.createElement('div');
-                box.className = "bg-white p-1.5 rounded border text-center";
-                box.innerHTML = `
-                    <span class="block text-[9px] font-bold text-blue-600">S${i+1} Maks:</span>
-                    <input type="number" min="1" max="100" value="${defaultMax}" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-pen-mapel-${jenis}" data-idx="${i}">
-                `;
-                detailContainer.appendChild(box);
-            }
-        }
+    const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${jenis}"]`);
+    const detailContainer = document.getElementById(`detail_soal_pen_mapel_${jenis}`);
+    if (!jmlInp || !detailContainer) return;
+    const jml = Math.max(1, parseInt(jmlInp.value) || 1);
+    detailContainer.innerHTML = '';
+    
+    for(let i=0; i<jml; i++) {
+        let defaultMax = jenis === 'Pilihan Ganda' ? 1 : 10;
+        let box = document.createElement('div');
+        box.className = "bg-white p-1.5 rounded border text-center";
+        box.innerHTML = `
+            <span class="block text-[9px] font-bold text-blue-600">S${i+1} Maks:</span>
+            <input type="number" min="1" max="100" value="${defaultMax}" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-pen-mapel-${jenis}" data-idx="${i}">
+        `;
+        detailContainer.appendChild(box);
+    }
+}
 
         function toggleMapelSetupSoalKet() {
             const container = document.getElementById('container-mapel-soal-ket');
@@ -2446,152 +2446,179 @@
         }
 
         function rebuildDetailSoalMapelKet(jenis) {
-            const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${jenis}"]`);
-            const detailContainer = document.getElementById(`detail_soal_ket_mapel_${jenis}`);
-            if (!jmlInp || !detailContainer) return;
-            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
-            detailContainer.innerHTML = '';
-            
-            for(let i=0; i<jml; i++) {
-                let box = document.createElement('div');
-                box.className = "bg-white p-1.5 rounded border text-center";
-                box.innerHTML = `
-                    <span class="block text-[9px] font-bold text-indigo-600">A${i+1} Maks:</span>
-                    <input type="number" min="1" max="100" value="10" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-ket-mapel-${jenis}" data-idx="${i}">
-                `;
-                detailContainer.appendChild(box);
-            }
-        }
+    const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${jenis}"]`);
+    const detailContainer = document.getElementById(`detail_soal_ket_mapel_${jenis}`);
+    if (!jmlInp || !detailContainer) return;
+    const jml = Math.max(1, parseInt(jmlInp.value) || 1);
+    detailContainer.innerHTML = '';
+    
+    for(let i=0; i<jml; i++) {
+        let box = document.createElement('div');
+        box.className = "bg-white p-1.5 rounded border text-center";
+        box.innerHTML = `
+            <span class="block text-[9px] font-bold text-indigo-600">A${i+1} Maks:</span>
+            <input type="number" min="1" max="100" value="10" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-ket-mapel-${jenis}" data-idx="${i}">
+        `;
+        detailContainer.appendChild(box);
+    }
+}
 
         function lanjutKeLembarPenilaianMapel() {
-            const tpPen = document.getElementById('tp-pen-mapel').value.trim();
-            const checkedPen = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
-            const skipKet = document.getElementById('skip-ket-mapel').checked;
-            const tpKet = document.getElementById('tp-ket-mapel').value.trim();
-            const checkedKet = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
-            const alertBox = document.getElementById('alert-setup-mapel');
+    const tpPen = document.getElementById('tp-pen-mapel').value.trim();
+    const checkedPen = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
+    const skipKet = document.getElementById('skip-ket-mapel').checked;
+    const tpKet = document.getElementById('tp-ket-mapel').value.trim();
+    const checkedKet = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
+    const alertBox = document.getElementById('alert-setup-mapel');
 
-            if (!tpPen || checkedPen.length === 0 || (!skipKet && (!tpKet || checkedKet.length === 0))) {
-                alertBox.classList.remove('hidden');
-                alertBox.innerText = "Peringatan: Lengkapi jenis penilaian dan tujuan pembelajaran pengetahuan & keterampilan!";
-                return;
-            }
-            alertBox.classList.add('hidden');
+    if (!tpPen || checkedPen.length === 0 || (!skipKet && (!tpKet || checkedKet.length === 0))) {
+        alertBox.classList.remove('hidden');
+        alertBox.innerText = "Peringatan: Lengkapi jenis penilaian dan tujuan pembelajaran pengetahuan & keterampilan!";
+        return;
+    }
+    alertBox.classList.add('hidden');
 
-            let penArr = Array.from(checkedPen).map(cb => cb.value);
-            let ketArr = skipKet ? [] : Array.from(checkedKet).map(cb => cb.value);
+    let penArr = Array.from(checkedPen).map(cb => cb.value);
+    let ketArr = skipKet ? [] : Array.from(checkedKet).map(cb => cb.value);
 
-            if (!jenisInfoMapel[activeMapelAndri]) jenisInfoMapel[activeMapelAndri] = {};
-            jenisInfoMapel[activeMapelAndri].penList = penArr;
-            jenisInfoMapel[activeMapelAndri].ketList = ketArr;
-            jenisInfoMapel[activeMapelAndri].skipKet = skipKet;
+    if (!jenisInfoMapel[activeMapelAndri]) jenisInfoMapel[activeMapelAndri] = {};
+    jenisInfoMapel[activeMapelAndri].penList = penArr;
+    jenisInfoMapel[activeMapelAndri].ketList = ketArr;
+    jenisInfoMapel[activeMapelAndri].skipKet = skipKet;
 
-            let maxScoresPen = {};
-            penArr.forEach(j => {
-                maxScoresPen[j] = [];
-                const inputs = document.querySelectorAll(`.max-skor-pen-mapel-${j}`);
-                inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || 10));
-            });
-            jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
-
-            let maxScoresKet = {};
-            if (!skipKet) {
-                ketArr.forEach(j => {
-                    maxScoresKet[j] = [];
-                    const inputs = document.querySelectorAll(`.max-skor-ket-mapel-${j}`);
-                    inputs.forEach(inp => maxScoresKet[j].push(parseFloat(inp.value) || 10));
-                });
-            }
-            jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
-
-            const today = getTodayKey();
-            document.getElementById('input-tanggal-mapel-aktif').value = today;
-            document.getElementById('label-mapel-aktif-mapel').innerText = `Mata Pelajaran: ${activeMapelAndri} (${activeKategoriAsesmen})`;
-            
-            document.getElementById('th-ket-header-mapel').style.display = skipKet ? 'none' : 'table-cell';
-
-            if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
-            if (!nilaiDataAndri[activeMapelAndri][today]) {
-                nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
-            }
-
-            renderTabelPenilaianSiswaMapel();
-            switchView('view-form-penilaian-mapel');
+    let maxScoresPen = {};
+    penArr.forEach(j => {
+        maxScoresPen[j] = [];
+        const inputs = document.querySelectorAll(`.max-skor-pen-mapel-${j}`);
+        if (inputs.length > 0) {
+            inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || (j === 'Pilihan Ganda' ? 1 : 10)));
+        } else {
+            const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${j}"]`);
+            const jml = jmlInp ? parseInt(jmlInp.value) || 12 : 12;
+            maxScoresPen[j] = new Array(jml).fill(j === 'Pilihan Ganda' ? 1 : 10);
         }
+    });
+    jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
 
+    let maxScoresKet = {};
+    if (!skipKet) {
+        ketArr.forEach(j => {
+            maxScoresKet[j] = [];
+            const inputs = document.querySelectorAll(`.max-skor-ket-mapel-${j}`);
+            if (inputs.length > 0) {
+                inputs.forEach(inp => maxScoresKet[j].push(parseFloat(inp.value) || 10));
+            } else {
+                const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${j}"]`);
+                const jml = jmlInp ? parseInt(jmlInp.value) || 3 : 3;
+                maxScoresKet[j] = new Array(jml).fill(10);
+            }
+        });
+    }
+    jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
+
+    const today = getTodayKey();
+    document.getElementById('input-tanggal-mapel-aktif').value = today;
+    document.getElementById('label-mapel-aktif-mapel').innerText = `Mata Pelajaran: ${activeMapelAndri} (${activeKategoriAsesmen})`;
+    document.getElementById('th-ket-header-mapel').style.display = skipKet ? 'none' : 'table-cell';
+
+    if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
+    if (!nilaiDataAndri[activeMapelAndri][today]) {
+        nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+    }
+
+    renderTabelPenilaianSiswaMapel();
+    switchView('view-form-penilaian-mapel');
+}
         function renderTabelPenilaianSiswaMapel() {
-            const tbody = document.getElementById('tabel-penilaian-mapel-body');
-            tbody.innerHTML = '';
-            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
-            const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
+    const tbody = document.getElementById('tabel-penilaian-mapel-body');
+    tbody.innerHTML = '';
+    const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+    const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
 
-            if (!nilaiDataAndri[activeMapelAndri][chosenDate]) {
-                nilaiDataAndri[activeMapelAndri][chosenDate] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+    if (!nilaiDataAndri[activeMapelAndri][chosenDate]) {
+        nilaiDataAndri[activeMapelAndri][chosenDate] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+    }
+
+    daftarSiswa.forEach((nama, idx) => {
+        let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
+
+        let htmlPen = infoMapel.penList.map(j => {
+            let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
+            let targetSoal = maxArr.length > 0 ? maxArr.length : 12; // Menyesuaikan dengan input setup
+            
+            const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${j}"]`);
+            if (jmlInp && parseInt(jmlInp.value)) {
+                targetSoal = parseInt(jmlInp.value);
+                if (maxArr.length !== targetSoal) {
+                    maxArr = new Array(targetSoal).fill(j === 'Pilihan Ganda' ? 1 : 10);
+                    infoMapel.maxScoresPen[j] = maxArr;
+                }
             }
 
-            daftarSiswa.forEach((nama, idx) => {
-                let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
+            if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
+                studentData.penScores[j] = new Array(targetSoal).fill(0);
+            }
+            
+            let inputs = studentData.penScores[j].map((skor, sIdx) => {
+                let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
+                return `
+                    <div class="m-1 inline-block bg-white p-1 rounded border text-center">
+                        <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}(Maks:${mVal})</span>
+                        <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updatePenilaianMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
+                    </div>
+                `;
+            }).join('');
+            return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
+        }).join('');
 
-                let htmlPen = infoMapel.penList.map(j => {
-                    let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
-                    let targetSoal = maxArr.length > 0 ? maxArr.length : 5;
-                    
-                    if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
-                        studentData.penScores[j] = new Array(targetSoal).fill(0);
+        let htmlKet = '';
+        if (!infoMapel.skipKet) {
+            htmlKet = infoMapel.ketList.map(j => {
+                let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
+                let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                
+                const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${j}"]`);
+                if (jmlInp && parseInt(jmlInp.value)) {
+                    targetAspek = parseInt(jmlInp.value);
+                    if (maxArr.length !== targetAspek) {
+                        maxArr = new Array(targetAspek).fill(10);
+                        infoMapel.maxScoresKet[j] = maxArr;
                     }
-                    
-                    let inputs = studentData.penScores[j].map((skor, sIdx) => {
-                        let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
-                        return `
-                            <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                                <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}(Maks:${mVal})</span>
-                                <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updatePenilaianMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
-                            </div>
-                        `;
-                    }).join('');
-                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
-                }).join('');
-
-                let htmlKet = '';
-                if (!infoMapel.skipKet) {
-                    htmlKet = infoMapel.ketList.map(j => {
-                        let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
-                        let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
-                        
-                        if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
-                            studentData.ketScores[j] = new Array(targetAspek).fill(0);
-                        }
-
-                        let inputs = studentData.ketScores[j].map((skor, sIdx) => {
-                            let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
-                            return `
-                                <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                                    <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}(Maks:${mVal})</span>
-                                    <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updateKeterampilanMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
-                                </div>
-                            `;
-                        }).join('');
-                        return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
-                    }).join('');
                 }
 
-                const hasilKalkulasi = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
-                studentData.final = hasilKalkulasi.final;
+                if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
+                    studentData.ketScores[j] = new Array(targetAspek).fill(0);
+                }
 
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
-                    <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
-                    <td class="p-4">${htmlPen}</td>
-                    <td class="p-4" style="display: ${infoMapel.skipKet ? 'none' : 'table-cell'}">${htmlKet}</td>
-                    <td class="p-4 text-center font-extrabold text-blue-600" id="mapel_final_${idx}">
-                        ${studentData.final.toFixed(1)}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+                let inputs = studentData.ketScores[j].map((skor, sIdx) => {
+                    let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
+                    return `
+                        <div class="m-1 inline-block bg-white p-1 rounded border text-center">
+                            <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}(Maks:${mVal})</span>
+                            <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updateKeterampilanMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
+                        </div>
+                    `;
+                }).join('');
+                return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
+            }).join('');
         }
 
+        const hasilKalkulasi = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
+        studentData.final = hasilKalkulasi.final;
+
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
+            <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
+            <td class="p-4">${htmlPen}</td>
+            <td class="p-4" style="display: ${infoMapel.skipKet ? 'none' : 'table-cell'}">${htmlKet}</td>
+            <td class="p-4 text-center font-extrabold text-blue-600" id="mapel_final_${idx}">
+                ${studentData.final.toFixed(1)}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
         function updatePenilaianMapelManual(idx, jenis, sIdx, val) {
             const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
             let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
