@@ -2638,7 +2638,7 @@
     const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], maxScoresPen: {}, ketList: [], maxScoresKet: {}, skipKet: false };
 
     nilaiDataAndri[activeMapelAndri][chosenDate].forEach((studentData) => {
-        // 1. Isi Pengetahuan
+        // 1. Isi Pengetahuan secara presisi sesuai target persentase
         if (infoMapel.penList) {
             infoMapel.penList.forEach(j => {
                 let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
@@ -2650,17 +2650,13 @@
                 
                 for (let sIdx = 0; sIdx < targetSoal; sIdx++) {
                     let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
-                    if (targetNilai === 100) {
-                        studentData.penScores[j][sIdx] = mVal;
-                    } else {
-                        // Standar tuntas 75% dari bobot maksimal soal
-                        studentData.penScores[j][sIdx] = Math.round((75 / 100) * mVal * 10) / 10;
-                    }
+                    // Langsung set proporsional tanpa pembulatan desimal item yang merusak persentase akhir
+                    studentData.penScores[j][sIdx] = (targetNilai / 100) * mVal;
                 }
             });
         }
 
-        // 2. Isi Keterampilan (jika tidak dilewati)
+        // 2. Isi Keterampilan secara presisi (jika tidak dilewati)
         if (!infoMapel.skipKet && infoMapel.ketList) {
             infoMapel.ketList.forEach(j => {
                 let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
@@ -2672,27 +2668,21 @@
                 
                 for (let sIdx = 0; sIdx < targetAspek; sIdx++) {
                     let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
-                    if (targetNilai === 100) {
-                        studentData.ketScores[j][sIdx] = mVal;
-                    } else {
-                        studentData.ketScores[j][sIdx] = Math.round((75 / 100) * mVal * 10) / 10;
-                    }
+                    studentData.ketScores[j][sIdx] = (targetNilai / 100) * mVal;
                 }
             });
         }
 
-        // Hitung ulang nilai akhir siswa
+        // Kalkulasi ulang nilai akhir agar persentasenya akurat 100%
         const hasil = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
         studentData.final = hasil.final;
     });
 
-    // Render ulang tabel agar perubahan langsung terlihat di layar
+    // Render ulang tabel & simpan
     renderTabelPenilaianSiswaMapel();
-    
-    // Simpan otomatis ke penyimpanan lokal
     simpanKeLocalStorage();
     
-    alert(`⚡ Berhasil! Seluruh siswa pada mapel ${activeMapelAndri} telah terisi nilai estimasi ${targetNilai === 100 ? 'Sempurna (100)' : 'Standar Tuntas (75)'}.`);
+    alert(`⚡ Berhasil! Seluruh siswa pada mapel ${activeMapelAndri} telah terisi nilai presisi tepat ${targetNilai} (Berapapun jumlah soal/aspek dijamin akurat).`);
 }
         
         function updatePenilaianMapelManual(idx, jenis, sIdx, val) {
