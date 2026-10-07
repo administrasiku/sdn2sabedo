@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SDN 2 Sabedo - Portal Pendidikan Terpadu</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
@@ -43,7 +44,7 @@
                 </button>
             </div>
         </div>
-        <div class="text-xs text-slate-400">Â© 2026 SDN 2 Sabedo â¢ All Rights Reserved</div>
+        <div class="text-xs text-slate-400">© 2026 SDN 2 Sabedo • All Rights Reserved</div>
     </section>
 
     <!-- 2. LOGIN GURU KELAS -->
@@ -124,51 +125,51 @@
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="bukaModalSinkronCloud()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
-                    <span>ð</span> Muat & Sinkronisasi Cloud
+                    <span>🔑</span> Muat & Sinkronisasi Cloud
                 </button>
                 <button onclick="logoutSesi()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 font-semibold px-4 py-2 rounded-xl text-sm transition">Keluar</button>
             </div>
         </div>
 
         <div id="notice-lockdown" class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-2xl mb-6 text-xs font-medium flex items-center justify-between">
-            <span>ð <strong>Mode Keamanan Aktif:</strong> Seluruh menu penilaian terkunci sebelum Anda melakukan sinkronisasi dengan memasukkan sandi Cloud.</span>
+            <span>🔒 <strong>Mode Keamanan Aktif:</strong> Seluruh menu penilaian terkunci sebelum Anda melakukan sinkronisasi dengan memasukkan sandi Cloud.</span>
             <button onclick="bukaModalSinkronCloud()" class="bg-amber-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-amber-500">Masukkan Sandi Sekarang</button>
         </div>
 
         <div id="dashboard-menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 menu-locked">
             <div onclick="switchView('view-presensi')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">📅</div>
                 <h3 class="text-lg font-bold text-slate-900">Presensi Hari Ini</h3>
                 <p class="text-slate-500 text-sm mt-1">Catat kehadiran siswa secara real-time.</p>
             </div>
             <div onclick="switchView('view-rekap-presensi')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">📊</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Presensi</h3>
                 <p class="text-slate-500 text-sm mt-1">Analisis total hari hadir, sakit, izin, dan alpa siswa.</p>
             </div>
             <div onclick="switchView('view-pilih-kategori-penilaian')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold mb-4">📝</div>
                 <h3 class="text-lg font-bold text-slate-900">Penilaian Akademik</h3>
                 <p class="text-slate-500 text-sm mt-1">Pilih kategori Formatif atau Sumatif.</p>
             </div>
-          <div onclick="switchView('view-rpm-pilih-menu')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-blue-500/30 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
-    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">📋</div>
-    <h3 class="text-lg font-bold text-slate-900">Rencana Pembelajaran (RPM)</h3>
-    <p class="text-slate-500 text-sm mt-1">Buat Modul Ajar / RPM Otomatis berbasis Pembelajaran Mendalam.</p>
-          </div>
+            <div onclick="switchView('view-rpm-pilih-menu')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-indigo-500/30 hover:border-indigo-500 hover:shadow-md cursor-pointer transition">
+    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">📑</div>
+    <h3 class="text-lg font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM)</h3>
+    <p class="text-slate-500 text-sm mt-1">Buat Modul Ajar otomatis berbasis 8 Dimensi Profil & Taksonomi SOLO.</p>
+</div>
             <!-- MENU DPL -->
             <div onclick="switchView('view-dpl-pilih-siswa')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-emerald-500/30 hover:border-emerald-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">ð±</div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">🌱</div>
                 <h3 class="text-lg font-bold text-slate-900">Penilaian DPL (Karakter)</h3>
                 <p class="text-slate-500 text-sm mt-1">Linimasa Tanggal Fleksibel & Hapus History Sesi.</p>
             </div>
             <div onclick="switchView('view-pilih-menu-rekap')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Penilaian</h3>
                 <p class="text-slate-500 text-sm mt-1">Pilih Rekap Formatif atau Rekap Sumatif terpisah.</p>
             </div>
             <div onclick="switchView('view-analisis')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold mb-4">🔍</div>
                 <h3 class="text-lg font-bold text-slate-900">Analisis Nilai & Rapor</h3>
                 <p class="text-slate-500 text-sm mt-1">Rata-rata, draf narasi rapor & remedial otomatis.</p>
             </div>
@@ -179,7 +180,7 @@
     <div id="modal-cloud-auth" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full space-y-4">
             <div class="text-center space-y-1">
-                <div class="text-3xl">ð</div>
+                <div class="text-3xl">🔐</div>
                 <h3 class="text-xl font-bold text-slate-900">Autentikasi Cloud & Sinkronisasi</h3>
                 <p class="text-xs text-slate-500">Masukkan sandi untuk mengunduh data dan membuka akses menu.</p>
             </div>
@@ -207,22 +208,22 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div onclick="switchView('view-presensi')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-indigo-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">📅</div>
                 <h3 class="text-lg font-bold text-slate-900">Presensi Hari Ini</h3>
                 <p class="text-slate-500 text-sm mt-1">Catat kehadiran siswa mandiri.</p>
             </div>
             <div onclick="switchView('view-rekap-presensi')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-indigo-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">📊</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Presensi</h3>
                 <p class="text-slate-500 text-sm mt-1">Tinjau rekap presensi kelas.</p>
             </div>
             <div onclick="bukaSetupPenilaianMapelKhusus()" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-indigo-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold mb-4">📝</div>
                 <h3 class="text-lg font-bold text-slate-900">Penilaian</h3>
                 <p class="text-slate-500 text-sm mt-1">Input nilai mapel yang diampu.</p>
             </div>
             <div onclick="bukaRekapKhususMapel()" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-indigo-500 hover:shadow-md cursor-pointer transition">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">ð</div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">📈</div>
                 <h3 class="text-lg font-bold text-slate-900">Rekap Penilaian</h3>
                 <p class="text-slate-500 text-sm mt-1">Arsip nilai mapel Anda.</p>
             </div>
@@ -236,22 +237,22 @@
                 <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Arsip Nilai</span>
                 <h2 class="text-2xl font-bold text-slate-900">Pilih Halaman Rekap Penilaian</h2>
             </div>
-            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div onclick="bukaHalamanRekap('Formatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
-                <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">ð</div>
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📈</div>
                 <h3 class="text-xl font-extrabold text-slate-900">Rekap Nilai Formatif</h3>
                 <p class="text-slate-500 text-sm mt-2">Kelola, lihat, cetak PDF, dan input massal arsip nilai harian.</p>
-                <span class="inline-block mt-4 text-xs font-bold text-blue-600">Buka Rekap Formatif â</span>
+                <span class="inline-block mt-4 text-xs font-bold text-blue-600">Buka Rekap Formatif →</span>
             </div>
 
             <div onclick="bukaHalamanRekap('Sumatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
-                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">ð</div>
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">📊</div>
                 <h3 class="text-xl font-extrabold text-slate-900">Rekap Nilai Sumatif</h3>
                 <p class="text-slate-500 text-sm mt-2">Kelola, lihat, cetak PDF, dan input massal arsip ujian lingkup materi.</p>
-                <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Buka Rekap Sumatif â</span>
+                <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Buka Rekap Sumatif →</span>
             </div>
         </div>
     </section>
@@ -263,22 +264,22 @@
                 <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Modul Penilaian</span>
                 <h2 class="text-2xl font-bold text-slate-900">Pilih Jenis Asesmen Kurikulum Merdeka</h2>
             </div>
-            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div onclick="pilihKategoriAsesmen('Formatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
-                <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">ð</div>
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📘</div>
                 <h3 class="text-xl font-extrabold text-slate-900">Asesmen Formatif</h3>
                 <p class="text-slate-500 text-sm mt-2">Penilaian proses pembelajaran harian, kuis, latihan soal, dan unjuk kerja berkala.</p>
-                <span class="inline-block mt-4 text-xs font-bold text-blue-600">Pilih Formatif â</span>
+                <span class="inline-block mt-4 text-xs font-bold text-blue-600">Pilih Formatif →</span>
             </div>
 
             <div onclick="pilihKategoriAsesmen('Sumatif')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
-                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">ð</div>
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">📙</div>
                 <h3 class="text-xl font-extrabold text-slate-900">Asesmen Sumatif</h3>
                 <p class="text-slate-500 text-sm mt-2">Penilaian lingkup materi, Sumatif Tengah Semester (STS), atau Sumatif Akhir Semester (SAS).</p>
-                <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Pilih Sumatif â</span>
+                <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Pilih Sumatif →</span>
             </div>
         </div>
     </section>
@@ -291,7 +292,7 @@
                 <h2 class="text-xl font-bold text-slate-900">Penilaian Dimensi Profil Lulusan (DPL)</h2>
                 <p class="text-xs text-slate-500">Pilih siswa untuk mencatat perkembangan karakter berdasarkan Periode & Tanggal spesifik.</p>
             </div>
-            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -305,7 +306,7 @@
                     </select>
                 </div>
             </div>
-            <button onclick="switchView('view-dpl-rekap')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm self-end">ð Lihat Rekap Kelas & Keunggulan Siswa</button>
+            <button onclick="switchView('view-dpl-rekap')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm self-end">📈 Lihat Rekap Kelas & Keunggulan Siswa</button>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="grid-dpl-siswa-container"></div>
@@ -318,12 +319,12 @@
                 <span id="label-dpl-siswa-aktif" class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Nama Siswa</span>
                 <h2 class="text-xl font-bold text-slate-900">Rubrik Asesmen DPL (Linimasa Berkelanjutan)</h2>
             </div>
-            <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Pilih Siswa Lain</button>
+            <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Pilih Siswa Lain</button>
         </div>
 
         <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl mb-6 flex items-center justify-between flex-wrap gap-4">
             <div>
-                <h4 class="text-xs font-bold text-amber-900 uppercase">ð Tanggal Evaluasi Asesmen:</h4>
+                <h4 class="text-xs font-bold text-amber-900 uppercase">📅 Tanggal Evaluasi Asesmen:</h4>
                 <p class="text-[11px] text-amber-700">Sistem otomatis membawa data level sesi sebelumnya sebagai acuan. Cukup ubah jika ada peningkatan!</p>
             </div>
             <input type="date" id="input-dpl-tanggal-spesifik" onchange="gantiTanggalSpesifikDpl()" class="bg-white border border-amber-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-800">
@@ -343,7 +344,7 @@
                 <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Arsip & Analisis Karakter</span>
                 <h2 class="text-xl font-bold text-slate-900">Rekapitulasi & Keunggulan Peserta Didik</h2>
             </div>
-            <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex items-center gap-4">
@@ -356,7 +357,7 @@
         </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 space-y-4">
-            <h3 class="text-sm font-bold text-slate-900 uppercase">ð Grafik Statistik Predikat DPL Seluruh Kelas</h3>
+            <h3 class="text-sm font-bold text-slate-900 uppercase">📊 Grafik Statistik Predikat DPL Seluruh Kelas</h3>
             <div id="container-grafik-dpl" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
@@ -366,7 +367,7 @@
                     <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
                         <th class="p-4 border-r">No</th>
                         <th class="p-4 border-r">Nama Siswa</th>
-                        <th class="p-4 text-center border-r">Dimensi Keunggulan Utama ð</th>
+                        <th class="p-4 text-center border-r">Dimensi Keunggulan Utama 🏆</th>
                         <th class="p-4 text-center">Aksi (Lihat Detail & Hapus History vs Ubah)</th>
                     </tr>
                 </thead>
@@ -382,14 +383,14 @@
                 <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Pratinjau Rapor Karakter & Daftar History Linimasa</span>
                 <h2 id="title-dpl-detail-siswa" class="text-xl font-bold text-slate-900">Detail Laporan DPL</h2>
             </div>
-            <button onclick="switchView('view-dpl-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali ke Rekap</button>
+            <button onclick="switchView('view-dpl-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali ke Rekap</button>
         </div>
 
         <div id="container-dpl-history-cards" class="space-y-4 mb-6"></div>
         <div id="container-dpl-detail-content" class="space-y-6 mb-6"></div>
 
         <div class="flex justify-end gap-3">
-            <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl shadow-md transition">ð¨ï¸ Cetak Lembar Karakter</button>
+            <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl shadow-md transition">🖨️ Cetak Lembar Karakter</button>
         </div>
     </section>
 
@@ -400,7 +401,7 @@
                 <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider" id="label-setup-mapel-title">Setup Penilaian</span>
                 <h2 class="text-xl font-bold text-slate-900">Setup Penilaian Pengetahuan & Keterampilan</h2>
             </div>
-            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div id="alert-setup-mapel" class="hidden mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30"></div>
@@ -460,7 +461,7 @@
             </div>
 
             <div class="flex justify-end pt-4">
-                <button onclick="lanjutKeLembarPenilaianMapel()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Mulai Penilaian Siswa â</button>
+                <button onclick="lanjutKeLembarPenilaianMapel()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Mulai Penilaian Siswa →</button>
             </div>
         </div>
     </section>
@@ -477,7 +478,7 @@
                     <button onclick="pindahKeHariIniMapel()" class="text-xs bg-emerald-50 text-emerald-600 px-3 py-1 rounded-lg font-bold border border-emerald-200 hover:bg-emerald-100">Hari Ini</button>
                 </div>
             </div>
-            <button onclick="switchView('view-setup-pengetahuan-mapel')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Setup</button>
+            <button onclick="switchView('view-setup-pengetahuan-mapel')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Setup</button>
         </div>
 
         <div class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex flex-wrap gap-4 items-center justify-between">
@@ -486,8 +487,8 @@
                 <input type="date" id="input-tanggal-mapel-aktif" onchange="gantiTanggalMapelAktif(this.value)" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-700 font-bold">
             </div>
             <div class="flex gap-2">
-                <button onclick="isiCepatNilaiMapel(100)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">â¡ Isi Sempurna (100)</button>
-                <button onclick="isiCepatNilaiMapel(75)" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">â¡ Isi Standar Tuntas (75)</button>
+                <button onclick="isiCepatNilaiMapel(100)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">⚡ Isi Sempurna (100)</button>
+                <button onclick="isiCepatNilaiMapel(75)" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">⚡ Isi Standar Tuntas (75)</button>
             </div>
         </div>
 
@@ -534,7 +535,7 @@
                 <span id="label-rekap-khusus-mapel-title" class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Rekap Nilai Mapel</span>
                 <h2 class="text-xl font-bold text-slate-900">Arsip Penilaian Mata Pelajaran</h2>
             </div>
-            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center gap-4">
@@ -571,11 +572,11 @@
                 <span id="label-multimapel-date" class="text-xs font-bold text-blue-600 uppercase tracking-wider">Tanggal</span>
                 <h2 class="text-xl font-bold text-slate-900">Form Rekapitulasi Nilai Masa Lampau & Penilaian Massal</h2>
             </div>
-            <button onclick="bukaHalamanRekap(activeKategoriAsesmen)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="bukaHalamanRekap(activeKategoriAsesmen)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-xl text-xs font-medium mb-6 space-y-1">
-            <p>ð¡ <strong>Panduan Pengisian Massal:</strong> Ketik angka nilai (misal 85) di kotak kecil atas kolom mapel lalu klik tombol <strong>"Terapkan"</strong>. Seluruh siswa pada kolom tersebut langsung terisi otomatis tanpa jeda dan tanpa pop-up notifikasi.</p>
+            <p>💡 <strong>Panduan Pengisian Massal:</strong> Ketik angka nilai (misal 85) di kotak kecil atas kolom mapel lalu klik tombol <strong>"Terapkan"</strong>. Seluruh siswa pada kolom tersebut langsung terisi otomatis tanpa jeda dan tanpa pop-up notifikasi.</p>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto mb-6">
@@ -599,7 +600,7 @@
                 <h2 class="text-xl font-bold text-slate-900">Presensi Siswa</h2>
                 <p id="live-datetime" class="text-sm text-slate-500 mt-0.5">Memuat waktu real-time...</p>
             </div>
-            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="flex gap-3 mb-4">
@@ -632,7 +633,7 @@
                 <h2 class="text-xl font-bold text-slate-900">Rekap Presensi & Analisis Kehadiran</h2>
                 <p id="rekap-presensi-today-info" class="text-sm text-slate-500">Tanggal Hari Ini: -</p>
             </div>
-            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="kembaliKeDashboardAktif()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center gap-4">
@@ -671,7 +672,7 @@
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-xl font-bold text-slate-900">Analisis Akumulasi Hari Kehadiran Siswa</h3>
-                <button onclick="document.getElementById('modal-analisis-kehadiran').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">â</button>
+                <button onclick="document.getElementById('modal-analisis-kehadiran').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -698,7 +699,7 @@
                 <span id="label-tanggal-rekap" class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Tanggal</span>
                 <h2 class="text-xl font-bold text-slate-900">Form Rekap Ulang Masa Lampau</h2>
             </div>
-            <button onclick="saveAndSwitch('view-form-rekap-lampau', 'view-rekap-presensi')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="saveAndSwitch('view-form-rekap-lampau', 'view-rekap-presensi')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div class="flex gap-3 mb-4">
@@ -731,7 +732,7 @@
                 <span id="label-kategori-aktif" class="text-xs font-bold text-amber-600 uppercase tracking-wider">Kategori Asesmen</span>
                 <h2 class="text-xl font-bold text-slate-900">Pilih Mata Pelajaran</h2>
             </div>
-            <button onclick="switchView('view-pilih-kategori-penilaian')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Ganti Kategori</button>
+            <button onclick="switchView('view-pilih-kategori-penilaian')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Ganti Kategori</button>
         </div>
 
         <div id="pilihan-mapel-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -744,7 +745,7 @@
                 <span id="label-mapel-pengetahuan" class="text-xs font-bold text-blue-600 uppercase tracking-wider">Mata Pelajaran</span>
                 <h2 class="text-xl font-bold text-slate-900">Setup Penilaian Pengetahuan</h2>
             </div>
-            <button onclick="saveAndSwitch('view-setup-pengetahuan', 'view-penilaian')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="saveAndSwitch('view-setup-pengetahuan', 'view-penilaian')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div id="alert-setup-pengetahuan" class="hidden mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30"></div>
@@ -759,7 +760,7 @@
 
             <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div>
-                    <h4 class="text-xs font-bold text-indigo-900 uppercase">â¡ Fitur Pengaturan Seragam Massal</h4>
+                    <h4 class="text-xs font-bold text-indigo-900 uppercase">⚡ Fitur Pengaturan Seragam Massal</h4>
                     <p class="text-xs text-indigo-700">Atur bobot seragam seluruh soal dalam sekejap (bisa diedit satuan di bawah).</p>
                 </div>
                 <div class="flex items-center gap-2">
@@ -787,7 +788,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="lanjutKeSetupKeterampilan()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Lanjut ke Keterampilan â</button>
+            <button onclick="lanjutKeSetupKeterampilan()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Lanjut ke Keterampilan →</button>
         </div>
     </section>
 
@@ -798,7 +799,7 @@
                 <span id="label-mapel-keterampilan" class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Mata Pelajaran</span>
                 <h2 class="text-xl font-bold text-slate-900">Setup Penilaian Keterampilan</h2>
             </div>
-            <button onclick="saveAndSwitch('view-setup-keterampilan', 'view-setup-pengetahuan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="saveAndSwitch('view-setup-keterampilan', 'view-setup-pengetahuan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div id="alert-setup-keterampilan" class="hidden mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30"></div>
@@ -825,7 +826,7 @@
 
                 <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-3">
                     <div>
-                        <h4 class="text-xs font-bold text-indigo-900 uppercase">â¡ Fitur Pengaturan Seragam Keterampilan</h4>
+                        <h4 class="text-xs font-bold text-indigo-900 uppercase">⚡ Fitur Pengaturan Seragam Keterampilan</h4>
                         <p class="text-xs text-indigo-700">Atur bobot seragam seluruh aspek dalam sekejap.</p>
                     </div>
                     <div class="flex items-center gap-2">
@@ -854,7 +855,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="lanjutKeLembarPenilaianAndri()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Lanjut ke Lembar Penilaian Siswa â</button>
+            <button onclick="lanjutKeLembarPenilaianAndri()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Lanjut ke Lembar Penilaian Siswa →</button>
         </div>
     </section>
 
@@ -866,13 +867,13 @@
                 <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Pengetahuan Siswa</h2>
             </div>
             <div class="flex gap-2">
-                <button onclick="switchView('view-setup-keterampilan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
-                <button onclick="lanjutKePenilaianKeterampilan()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">Lanjut Berikutnya â</button>
+                <button onclick="switchView('view-setup-keterampilan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+                <button onclick="lanjutKePenilaianKeterampilan()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">Lanjut Berikutnya →</button>
             </div>
         </div>
 
         <div class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex items-center justify-between flex-wrap gap-3">
-            <span class="text-xs font-bold text-slate-600 uppercase">â¡ Pengisian Cepat Massal Pengetahuan:</span>
+            <span class="text-xs font-bold text-slate-600 uppercase">⚡ Pengisian Cepat Massal Pengetahuan:</span>
             <div class="flex gap-2 flex-wrap">
                 <button onclick="isiCepatNilaiAndri(100)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">Isi Semua Sempurna (100)</button>
                 <button onclick="isiCepatNilaiAndri(75)" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">Isi Semua Standar Tuntas (75)</button>
@@ -893,7 +894,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="lanjutKePenilaianKeterampilan()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Lanjut Berikutnya â</button>
+            <button onclick="lanjutKePenilaianKeterampilan()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Lanjut Berikutnya →</button>
         </div>
     </section>
 
@@ -904,11 +905,11 @@
                 <span id="label-mapel-eksekusi-ket" class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Mata Pelajaran</span>
                 <h2 class="text-xl font-bold text-slate-900">Lembar Penilaian Keterampilan Siswa</h2>
             </div>
-            <button onclick="switchView('view-form-penilaian-pengetahuan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali ke Pengetahuan</button>
+            <button onclick="switchView('view-form-penilaian-pengetahuan')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali ke Pengetahuan</button>
         </div>
 
         <div class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex items-center justify-between flex-wrap gap-3">
-            <span class="text-xs font-bold text-slate-600 uppercase">â¡ Pengisian Cepat Massal Keterampilan:</span>
+            <span class="text-xs font-bold text-slate-600 uppercase">⚡ Pengisian Cepat Massal Keterampilan:</span>
             <div class="flex gap-2 flex-wrap">
                 <button onclick="isiCepatKeterampilanAndri(100)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">Isi Semua Sempurna (100%)</button>
                 <button onclick="isiCepatKeterampilanAndri(75)" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-2 rounded-xl text-xs shadow-sm">Isi Semua Standar Tuntas (75%)</button>
@@ -942,20 +943,20 @@
                 <p id="rekap-realtime-clock" class="text-sm text-slate-500">Memuat waktu real-time...</p>
             </div>
             <div class="flex gap-2 flex-wrap">
-                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">ð¨ï¸ Cetak / PDF Arsip</button>
-                <button onclick="switchView('view-pilih-menu-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Ganti Kategori</button>
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / PDF Arsip</button>
+                <button onclick="switchView('view-pilih-menu-rekap')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Ganti Kategori</button>
             </div>
         </div>
 
         <div class="hidden print:block text-center mb-6 border-b-2 border-black pb-4">
             <h3 class="text-lg font-bold uppercase">PEMERINTAH KABUPATEN KAB/KOTA</h3>
             <h2 class="text-xl font-extrabold uppercase">SDN 2 SABEDO</h2>
-            <p class="text-xs">Desa Sabedo, Kecamatan, Kabupaten â Provinsi</p>
+            <p class="text-xs">Desa Sabedo, Kecamatan, Kabupaten — Provinsi</p>
             <h1 id="print-kop-title" class="text-md font-bold mt-3 underline">ARSIP REKAPITULASI NILAI SISWA</h1>
         </div>
 
         <div id="banner-rekap-date-notice" class="hidden bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl text-xs font-medium mb-4 flex justify-between items-center no-print">
-            <span id="banner-notice-text">â ï¸ Anda sedang melihat rekap untuk tanggal masa lampau.</span>
+            <span id="banner-notice-text">⚠️ Anda sedang melihat rekap untuk tanggal masa lampau.</span>
             <button onclick="setRekapHariIni()" class="bg-amber-600 text-white px-3 py-1 rounded-lg font-bold hover:bg-amber-500">Kembali ke Hari Ini</button>
         </div>
 
@@ -967,7 +968,7 @@
             <div class="self-end flex gap-2">
                 <button onclick="bukaRekapMapelSingle()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Input Massal / Rekap Sekarang</button>
                 <button onclick="setRekapHariIni()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">Hari Ini</button>
-                <button onclick="unduhRekapCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">ð¥ Unduh ke Excel/CSV</button>
+                <button onclick="unduhRekapCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">📥 Unduh ke Excel/CSV</button>
             </div>
         </div>
 
@@ -1002,10 +1003,10 @@
                 <p class="text-sm text-slate-500">Formula resmi: 60% Sumatif + 40% Formatif. Dilengkapi generator draf deskripsi kualitatif rapor.</p>
             </div>
             <div class="flex gap-2 flex-wrap">
-                <button onclick="bukaModalNarasiRapor()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">â¨ Draf Narasi Rapor</button>
-                <button onclick="bukaModalRemedialOtomatis()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">â¡ Draf Remedial</button>
-                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">ð¨ï¸ï¸ Cetak Rapor</button>
-                <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+                <button onclick="bukaModalNarasiRapor()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">✨ Draf Narasi Rapor</button>
+                <button onclick="bukaModalRemedialOtomatis()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">⚡ Draf Remedial</button>
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️️ Cetak Rapor</button>
+                <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
             </div>
         </div>
 
@@ -1068,8 +1069,8 @@
     <div id="modal-narasi-rapor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-900">â¨ Draf Otomatis Narasi Deskripsi Rapor Kurikulum Merdeka</h3>
-                <button onclick="document.getElementById('modal-narasi-rapor').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">â</button>
+                <h3 class="text-xl font-bold text-slate-900">✨ Draf Otomatis Narasi Deskripsi Rapor Kurikulum Merdeka</h3>
+                <button onclick="document.getElementById('modal-narasi-rapor').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
             <p class="text-xs text-slate-500">Draf narasi kualitatif otomatis berdasarkan pencapaian rata-rata siswa pada seluruh mata pelajaran.</p>
             <div id="container-narasi-list" class="space-y-3 text-sm"></div>
@@ -1083,8 +1084,8 @@
     <div id="modal-remedial-otomatis" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-xl font-bold text-slate-900">â¡ Draf Otomatis Program Remedial & Pengayaan</h3>
-                <button onclick="document.getElementById('modal-remedial-otomatis').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">â</button>
+                <h3 class="text-xl font-bold text-slate-900">⚡ Draf Otomatis Program Remedial & Pengayaan</h3>
+                <button onclick="document.getElementById('modal-remedial-otomatis').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
             <p class="text-xs text-slate-500">Sistem memindai siswa yang belum tuntas (< 75) di setiap mapel untuk diberikan bimbingan khusus.</p>
             <div id="container-remedial-list" class="space-y-3 text-sm"></div>
@@ -1120,7 +1121,7 @@
                         <h3 class="text-lg font-bold text-slate-900">Daftar Nilai Mata Pelajaran</h3>
                         <p class="text-xs text-slate-500">Rapor dihitung dari 60% Sumatif & 40% Formatif. Ketuk mapel untuk riwayat.</p>
                     </div>
-                    <span class="text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full border border-blue-100">Bisa Diklik ð</span>
+                    <span class="text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full border border-blue-100">Bisa Diklik 👆</span>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -1147,14 +1148,14 @@
 
                 <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl p-6 text-slate-800">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xl">ð¡</span>
+                        <span class="text-xl">💡</span>
                         <h4 class="text-sm font-bold text-indigo-900">Pesan Semangat</h4>
                     </div>
                     <p class="text-xs text-slate-600 leading-relaxed" id="catatan-motivasi-siswa">
                         "Rajinlah belajar dan aktif di kelas. Setiap usaha yang kamu berikan hari ini akan membuahkan hasil membanggakan di masa depan!"
                     </p>
                     <div class="mt-4 pt-3 border-t border-indigo-100 text-[11px] text-slate-400">
-                        SDN 2 Sabedo â¢ Berikan warna pada masa depan
+                        SDN 2 Sabedo • Berikan warna pada masa depan
                     </div>
                 </div>
             </div>
@@ -1168,7 +1169,7 @@
                 <span id="history-mapel-title" class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Mata Pelajaran</span>
                 <h2 class="text-xl font-bold text-slate-900">Riwayat Penilaian Siswa</h2>
             </div>
-            <button onclick="kembaliDariHistory()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">â Kembali</button>
+            <button onclick="kembaliDariHistory()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
         </div>
 
         <div id="container-history-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
@@ -1177,6 +1178,220 @@
 
     <!-- Skrip Aplikasi -->
     <script>
+        let currentRpmData = null;
+let savedRpmStorage = JSON.parse(localStorage.getItem('sdn2_rpm_storage')) || [];
+
+function generateRpmOtomatis() {
+    const mapel = document.getElementById('rpm-mapel').value;
+    const topik = document.getElementById('rpm-topik').value.trim();
+    const penyusun = document.getElementById('rpm-penyusun').value.trim();
+    const nipPenyusun = document.getElementById('rpm-nip-penyusun').value.trim();
+    const kepsek = document.getElementById('rpm-kepsek').value.trim();
+    const nipKepsek = document.getElementById('rpm-nip-kepsek').value.trim();
+    const media = document.getElementById('rpm-media').value.trim() || "Benda konkret & Media Visual";
+    const solo = document.getElementById('rpm-solo-kko').value;
+
+    if (!topik) {
+        alert("Mohon isi topik pembelajaran terlebih dahulu.");
+        document.getElementById('rpm-topik').focus();
+        return;
+    }
+
+    let dimensiArr = [];
+    document.querySelectorAll('input[name="rpm-dimensi"]:checked').forEach(cb => dimensiArr.push(cb.value));
+    if (dimensiArr.length === 0) dimensiArr.push("Penalaran Kritis");
+
+    // Otomatis merumuskan Tujuan Pembelajaran & KKTP berdasarkan Topik, Media, dan SOLO
+    const tpText = `Melalui penggunaan ${media} dengan pendekatan Taksonomi SOLO (${solo}), siswa Kelas IV dapat mengidentifikasi, menganalisis, dan menyimpulkan konsep ${topik} secara bermakna dan kontekstual.`;
+    const kktpText = `1. Siswa mampu menyebutkan fakta dasar terkait ${topik}.\n2. Siswa mampu menghubungkan konsep ${topik} dengan kejadian nyata dalam kehidupan sehari-hari.\n3. Siswa mampu menyajikan laporan sederhana atau praktik terkait ${topik}.`;
+
+    // Pengalaman Belajar Mindful, Meaningful, Joyful (Memahami, Mengaplikasikan, Merefleksi)
+    let pengalamanBelajar = [
+        {
+            tahap: "1. Memahami (Mindful & Kontekstual)",
+            aktivitas: `Guru membuka pembelajaran dengan doa dan kesadaran diri (Mindful). Siswa mengamati ${media} yang disajikan guru terkait ${topik}, lalu mencatat informasi penting serta mengajukan pertanyaan kritis.`
+        },
+        {
+            tahap: "2. Mengaplikasikan (Meaningful & Kolaboratif)",
+            aktivitas: `Siswa dibagi ke dalam kelompok kecil untuk melakukan diskusi/praktik langsung menggunakan ${media}. Siswa memecahkan masalah terkait ${topik} dan saling bertukar gagasan secara aktif.`
+        },
+        {
+            tahap: "3. Merefleksi (Joyful & Bermakna)",
+            aktivitas: `Siswa bersama guru melakukan refleksi perasaan dan pemahaman hari ini dengan suasana gembira (Joyful). Siswa menyimpulkan poin penting pembelajaran ${topik}.`
+        }
+    ];
+
+    // Asesmen Formatif & Sumatif
+    const asesmenFormatif = `Observasi keaktifan siswa selama diskusi kelompok menggunakan rubrik keterlibatan dan kolaborasi.`;
+    const asesmenSumatif = `Tes tertulis / unjuk kerja unjuk pemahaman konsep ${topik} sesuai indikator KKTP.`;
+
+    // Pengayaan & Remedial
+    const pengayaan = `Diberikan kepada siswa yang telah mencapai KKTP dengan penugasan analitis tingkat lanjut terkait penerapan ${topik} di lingkungan sekitar.`;
+    const remedial = `Diberikan bimbingan ulang secara personal atau kelompok kecil menggunakan pendekatan visual/konkret bagi siswa yang belum mencapai KKTP.`;
+
+    currentRpmData = {
+        id: Date.now(),
+        mapel, topik, penyusun, nipPenyusun, kepsek, nipKepsek, media, solo,
+        dimensi: dimensiArr.join(', '),
+        tp: tpText,
+        kktp: kktpText,
+        pengalamanBelajar,
+        asesmenFormatif,
+        asesmenSumatif,
+        pengayaan,
+        remedial
+    };
+
+    renderHasilRpmToView();
+    switchView('view-rpm-hasil');
+}
+
+function renderHasilRpmToView() {
+    if (!currentRpmData) return;
+
+    document.getElementById('rpm-res-mapel-topik').innerText = `Mata Pelajaran: ${currentRpmData.mapel} | Topik: ${currentRpmData.topik}`;
+    document.getElementById('rpm-res-penyusun').innerText = currentRpmData.penyusun;
+    document.getElementById('rpm-res-nip').innerText = currentRpmData.nipPenyusun;
+    document.getElementById('rpm-res-media').innerText = currentRpmData.media;
+    document.getElementById('rpm-res-solo').innerText = currentRpmData.solo;
+    document.getElementById('rpm-res-dimensi').innerText = currentRpmData.dimensi;
+
+    document.getElementById('rpm-res-kepsek').innerText = currentRpmData.kepsek;
+    document.getElementById('rpm-res-nip-kepsek').innerText = currentRpmData.nipKepsek;
+    document.getElementById('rpm-res-tanda-penyusun').innerText = currentRpmData.penyusun;
+    document.getElementById('rpm-res-nip- tdp') ? document.getElementById('rpm-res-nip- tdp').innerText = currentRpmData.nipPenyusun : null;
+
+    const now = new Date();
+    document.getElementById('rpm-res-tanggal-sekarang').innerText = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    let tpHtml = `
+        <p><strong>Tujuan Pembelajaran:</strong> ${currentRpmData.tp}</p>
+        <p class="mt-1"><strong>Kriteria Ketercapaian Tujuan Pembelajaran (KKTP):</strong></p>
+        <pre class="whitespace-pre-wrap font-sans text-xs text-slate-700">${currentRpmData.kktp}</pre>
+    `;
+    document.getElementById('rpm-res-tp').innerHTML = tpHtml;
+
+    renderEditableAktivitas();
+
+    let asesHtml = `
+        <p><strong>Asesmen Formatif (Proses):</strong> ${currentRpmData.asesmenFormatif}</p>
+        <p class="mt-1"><strong>Asesmen Sumatif (Akhir Lingkup Materi):</strong> ${currentRpmData.asesmenSumatif}</p>
+    `;
+    document.getElementById('rpm-res-asesmen').innerHTML = asesHtml;
+
+    let remHtml = `
+        <p><strong>Program Pengayaan:</strong> ${currentRpmData.pengayaan}</p>
+        <p class="mt-1"><strong>Program Remedial:</strong> ${currentRpmData.remedial}</p>
+    `;
+    document.getElementById('rpm-res-remedial').innerHTML = remHtml;
+}
+
+function renderEditableAktivitas() {
+    const container = document.getElementById('container-pengalaman-belajar-editable');
+    if (!container || !currentRpmData) return;
+    container.innerHTML = '';
+
+    currentRpmData.pengalamanBelajar.forEach((item, idx) => {
+        let div = document.createElement('div');
+        div.className = "p-3.5 bg-slate-50 border rounded-xl space-y-2 relative group";
+        div.innerHTML = `
+            <div class="flex justify-between items-center">
+                <input type="text" value="${item.tahap}" oninput="updateTahapAktivitas(${idx}, this.value)" class="font-bold text-xs bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 w-full">
+                <div class="no-print flex gap-1">
+                    <button onclick="hapusAktivitas(${idx})" class="text-rose-600 hover:bg-rose-50 px-2 py-0.5 rounded text-xs font-bold" title="Hapus aktivitas">🗑️</button>
+                </div>
+            </div>
+            <textarea rows="2" oninput="updateAktivitasText(${idx}, this.value)" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs text-slate-700 focus:outline-none focus:border-indigo-500">${item.aktivitas}</textarea>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function updateTahapAktivitas(idx, val) {
+    if (currentRpmData && currentRpmData.pengalamanBelajar[idx]) {
+        currentRpmData.pengalamanBelajar[idx].tahap = val;
+    }
+}
+
+function updateAktivitasText(idx, val) {
+    if (currentRpmData && currentRpmData.pengalamanBelajar[idx]) {
+        currentRpmData.pengalamanBelajar[idx].aktivitas = val;
+    }
+}
+
+function tambahAktivitasBaru() {
+    if (!currentRpmData) return;
+    currentRpmData.pengalamanBelajar.push({
+        tahap: `Aktivitas Tambahan (${currentRpmData.pengalamanBelajar.length + 1})`,
+        aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
+    });
+    renderEditableAktivitas();
+}
+
+function hapusAktivitas(idx) {
+    if (!currentRpmData || currentRpmData.pengalamanBelajar.length <= 1) {
+        alert("Minimal harus ada 1 pengalaman belajar.");
+        return;
+    }
+    currentRpmData.pengalamanBelajar.splice(idx, 1);
+    renderEditableAktivitas();
+}
+
+function simpanRpmPermanen() {
+    if (!currentRpmData) return;
+    let index = savedRpmStorage.findIndex(r => r.id === currentRpmData.id);
+    if (index >= 0) {
+        savedRpmStorage[index] = currentRpmData;
+    } else {
+        savedRpmStorage.push(currentRpmData);
+    }
+    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
+    alert("Dokumen Rencana Pembelajaran Mendalam (RPM) berhasil disimpan secara permanen!");
+}
+
+function renderRekapRpmList() {
+    const tbody = document.getElementById('tabel-rekap-rpm-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    if (savedRpmStorage.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">Belum ada arsip RPM yang disimpan.</td></tr>`;
+        switchView('view-rpm-rekap');
+        return;
+    }
+
+    savedRpmStorage.forEach((rpm, idx) => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
+            <td class="p-4 font-medium text-slate-900 border-r">${rpm.mapel}</td>
+            <td class="p-4 font-bold text-indigo-700 border-r">${rpm.topik}</td>
+            <td class="p-4 text-xs text-slate-600 border-r">${rpm.penyusun}</td>
+            <td class="p-4 text-center flex justify-center gap-2">
+                <button onclick="bukaArsipRpm(${rpm.id})" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">Buka / Cetak</button>
+                <button onclick="hapusArsipRpm(${rpm.id})" class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-100 transition">Hapus</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    switchView('view-rpm-rekap');
+}
+
+function bukaArsipRpm(id) {
+    let found = savedRpmStorage.find(r => r.id === id);
+    if (found) {
+        currentRpmData = found;
+        renderHasilRpmToView();
+        switchView('view-rpm-hasil');
+    }
+}
+
+function hapusArsipRpm(id) {
+    if (!confirm("Apakah Anda yakin ingin menghapus arsip RPM ini?")) return;
+    savedRpmStorage = savedRpmStorage.filter(r => r.id !== id);
+    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
+    renderRekapRpmList();
+}
         const daftarSiswa = [
             "Abdan Al Ghifari", "Ahmad Dani", "Aisyah Ayudia Inara", "Akil Muzaki",
             "Arsya Ilan Diandra", "Azka Maulana", "Delisa nurani", "M Padil Aryadi",
@@ -1305,6 +1520,57 @@
         let selectedMultiMapelList = [];
         let historyAsalView = "portal"; 
         let activeDplSiswa = "";
+        // --- INISIALISASI SUPABASE & CLOUD SYNC ---
+const SUPABASE_URL = 'https://iecebbjqjfzjnbdlxnih.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_-WRfySOS91oR4CHa32AoxQ_eWekUJXG'; 
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function simpanKeSupabase() {
+    const payloadData = {
+        presensi: presensiData,
+        nilaidata: nilaiDataAndri,
+        history_formatif: historyNilaiFormatif,
+        history_sumatif: historyNilaiSumatif,
+        dpldata: dplDataStorage,
+        ranking: rankingGlobal,
+        isrank: isRankingDisplayed,
+        jenismapel: jenisInfoMapel,
+        rpm_storage: savedRpmStorage
+    };
+
+    const { error } = await _supabase
+        .from('app_storage')
+        .upsert({ key: 'data_sekolah_utama', value: payloadData });
+
+    if (error) {
+        console.error('Gagal menyimpan ke cloud:', error.message);
+    } else {
+        console.log('Data berhasil disinkronkan ke cloud Supabase!');
+    }
+}
+
+async function muatDariSupabase() {
+    const { data, error } = await _supabase
+        .from('app_storage')
+        .select('value')
+        .eq('key', 'data_sekolah_utama')
+        .single();
+
+    if (data && data.value) {
+        const cloud = data.value;
+        presensiData = cloud.presensi || {};
+        nilaiDataAndri = cloud.nilaidata || {};
+        historyNilaiFormatif = cloud.history_formatif || {};
+        historyNilaiSumatif = cloud.history_sumatif || {};
+        dplDataStorage = cloud.dpldata || {};
+        rankingGlobal = cloud.ranking || {};
+        isRankingDisplayed = cloud.isrank || false;
+        jenisInfoMapel = cloud.jenismapel || {};
+        savedRpmStorage = cloud.rpm_storage || [];
+        
+        console.log('Data berhasil dimuat dari cloud Supabase!');
+    }
+}
 
         function simpanKeLocalStorage() {
             localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
@@ -1315,6 +1581,7 @@
             localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
             localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
             localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
+            simpanKeSupabase();
         }
 
         function getHistoryObj(kategori) {
@@ -1399,48 +1666,51 @@
         }
 
         window.onload = function() {
-            const todayStr = getTodayKey();
-            const elDisp = document.getElementById('display-tanggal-hari-ini');
-            const elInpRekap = document.getElementById('input-rekap-tanggal');
-            const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
-            const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
-            const elRekapToday = document.getElementById('rekap-presensi-today-info');
+    // Muat data dari Supabase terlebih dahulu secara asinkron
+    muatDariSupabase().then(() => {
+        const todayStr = getTodayKey();
+        const elDisp = document.getElementById('display-tanggal-hari-ini');
+        const elInpRekap = document.getElementById('input-rekap-tanggal');
+        const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
+        const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
+        const elRekapToday = document.getElementById('rekap-presensi-today-info');
 
-            if (elDisp) elDisp.value = todayStr;
-            if (elInpRekap) elInpRekap.value = todayStr;
-            if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
-            if (elInpArsip) elInpArsip.value = todayStr;
-            if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
-            
-            const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
-            if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
+        if (elDisp) elDisp.value = todayStr;
+        if (elInpRekap) elInpRekap.value = todayStr;
+        if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
+        if (elInpArsip) elInpArsip.value = todayStr;
+        if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
+        
+        const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
+        if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
 
-            updateJamRealTime();
-            setInterval(updateJamRealTime, 1000);
+        updateJamRealTime();
+        setInterval(updateJamRealTime, 1000);
 
-            initPresensiHariIni();
-            initMapelPenilaian();
-            initAnalisis();
-            initDplPilihSiswa();
+        initPresensiHariIni();
+        initMapelPenilaian();
+        initAnalisis();
+        initDplPilihSiswa();
 
-            if (!authRole) {
-                switchView('view-landing');
+        if (!authRole) {
+            switchView('view-landing');
+        } else {
+            if (authRole === 'guru_kelas') {
+                aturStatusLockdownDashboard();
+                switchView('view-ruang-kelas');
+            } else if (authRole === 'guru_mapel' && activeGuruMapel) {
+                document.getElementById('sapaan-guru-mapel').innerText = `Selamat datang, ${activeGuruMapel.nama}`;
+                document.getElementById('label-mapel-dashboard-sub').innerText = `Dashboard Guru Mapel: ${activeGuruMapel.mapel}`;
+                switchView('view-ruang-kelas-mapel');
+            } else if (authRole === 'siswa' && siswaLoggedIn) {
+                loadPortalSiswa(siswaLoggedIn);
+                switchView('view-portal-siswa');
             } else {
-                if (authRole === 'guru_kelas') {
-                    aturStatusLockdownDashboard();
-                    switchView('view-ruang-kelas');
-                } else if (authRole === 'guru_mapel' && activeGuruMapel) {
-                    document.getElementById('sapaan-guru-mapel').innerText = `Selamat datang, ${activeGuruMapel.nama}`;
-                    document.getElementById('label-mapel-dashboard-sub').innerText = `Dashboard Guru Mapel: ${activeGuruMapel.mapel}`;
-                    switchView('view-ruang-kelas-mapel');
-                } else if (authRole === 'siswa' && siswaLoggedIn) {
-                    loadPortalSiswa(siswaLoggedIn);
-                    switchView('view-portal-siswa');
-                } else {
-                    switchView('view-landing');
-                }
+                switchView('view-landing');
             }
-        };
+        }
+    });
+};
 
         function aturStatusLockdownDashboard() {
             const menuContainer = document.getElementById('dashboard-menu-container');
@@ -1493,7 +1763,7 @@
             const el = document.getElementById('live-datetime');
             const elRekap = document.getElementById('rekap-realtime-clock');
             
-            const timeString = `${tanggalStr} â Pukul ${jamStr} WITA`;
+            const timeString = `${tanggalStr} — Pukul ${jamStr} WITA`;
             if (el) el.innerText = timeString;
             if (elRekap) elRekap.innerText = timeString;
         }
@@ -1506,7 +1776,7 @@
             }
 
             if (viewId !== 'view-ruang-kelas' && authRole === 'guru_kelas' && !isCloudUnlocked && !publikViews.includes(viewId)) {
-                alert("â ï¸ Akses ditolak! Harap masukkan sandi Cloud terlebih dahulu di halaman utama Guru Kelas.");
+                alert("⚠️ Akses ditolak! Harap masukkan sandi Cloud terlebih dahulu di halaman utama Guru Kelas.");
                 switchView('view-ruang-kelas');
                 return;
             }
@@ -1684,7 +1954,7 @@
                 let btnsHtml = statuses.map(st => {
                     let active = currentStatus === st;
                     let colorClass = active ? getActiveStatusColor(st) : "bg-slate-100 text-slate-600 hover:bg-slate-200";
-                    return `<button onclick="updatePresensiStatus('${dateKey}', ${idx}, '${st}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${colorClass}">${st} ${active ? 'â' : ''}</button>`;
+                    return `<button onclick="updatePresensiStatus('${dateKey}', ${idx}, '${st}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${colorClass}">${st} ${active ? '✓' : ''}</button>`;
                 }).join(' ');
 
                 tr.innerHTML = `
@@ -1738,7 +2008,7 @@
 
             const dateObj = new Date(selectedLampauDate);
             if (!isNaN(dateObj.getDay()) && dateObj.getDay() === 0) {
-                if (!confirm("â ï¸ï¸ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap presensi pada tanggal ini?")) {
+                if (!confirm("⚠️️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap presensi pada tanggal ini?")) {
                     return;
                 }
             }
@@ -1772,7 +2042,7 @@
                 let btnsHtml = statuses.map(st => {
                     let active = currentStatus === st;
                     let colorClass = active ? getActiveStatusColor(st) : "bg-slate-100 text-slate-600 hover:bg-slate-200";
-                    return `<button onclick="updateTempLampauStatus(${idx}, '${st}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${colorClass}">${st} ${active ? 'â' : ''}</button>`;
+                    return `<button onclick="updateTempLampauStatus(${idx}, '${st}')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${colorClass}">${st} ${active ? '✓' : ''}</button>`;
                 }).join(' ');
 
                 tr.innerHTML = `
@@ -1874,9 +2144,9 @@
                 card.innerHTML = `
                     <div>
                         <h4 class="font-bold text-slate-900">${nama}</h4>
-                        <span class="text-[11px] text-emerald-600 font-semibold">Klik untuk menilai karakter â</span>
+                        <span class="text-[11px] text-emerald-600 font-semibold">Klik untuk menilai karakter →</span>
                     </div>
-                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">ð±</div>
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">🌱</div>
                 `;
                 container.appendChild(card);
             });
@@ -1949,9 +2219,9 @@
                         if (prevGrade) {
                             prevGradeInfo = `Sesi lalu (${prevDate}): Level ${prevGrade}`;
                             if (prevGrade === 'B' && (currentGrade === 'C' || currentGrade === 'M')) {
-                                badgeProgresHtml = `<span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">â¬ï¸ Peningkatan (${prevGrade} â ${currentGrade})</span>`;
+                                badgeProgresHtml = `<span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">⬆️ Peningkatan (${prevGrade} → ${currentGrade})</span>`;
                             } else if (prevGrade === 'C' && currentGrade === 'M') {
-                                badgeProgresHtml = `<span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">â¬ï¸ Peningkatan (${prevGrade} â ${currentGrade})</span>`;
+                                badgeProgresHtml = `<span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">⬆️ Peningkatan (${prevGrade} → ${currentGrade})</span>`;
                             }
                         }
                     }
@@ -1962,7 +2232,7 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-xs font-bold text-slate-800">${sIdx + 1}. ${subItem.nama}</span>
                                 </div>
-                                <span class="text-[10px] text-slate-400 italic block">ð ${prevGradeInfo}</span>
+                                <span class="text-[10px] text-slate-400 italic block">📌 ${prevGradeInfo}</span>
                                 <div class="flex gap-2">
                                     <button onclick="setDplGrade('${dim.dimensi}', '${subItem.nama}', 'B', ${dIdx}, ${sIdx})" id="btn_${dIdx}_${sIdx}_B" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${currentGrade === 'B' ? 'bg-amber-600 text-white shadow-sm' : 'bg-slate-200 text-slate-700'}">B</button>
                                     <button onclick="setDplGrade('${dim.dimensi}', '${subItem.nama}', 'C', ${dIdx}, ${sIdx})" id="btn_${dIdx}_${sIdx}_C" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${currentGrade === 'C' ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200 text-slate-700'}">C</button>
@@ -2026,7 +2296,7 @@
                 let prevGrade = typeof prevSub === 'object' ? prevSub.grade : prevSub;
                 if (prevGrade) {
                     if ((prevGrade === 'B' && (grade === 'C' || grade === 'M')) || (prevGrade === 'C' && grade === 'M')) {
-                        badgeContainer.innerHTML = `<span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">â¬ï¸ Peningkatan (${prevGrade} â ${grade})</span>`;
+                        badgeContainer.innerHTML = `<span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">⬆️ Peningkatan (${prevGrade} → ${grade})</span>`;
                     } else {
                         badgeContainer.innerHTML = '';
                     }
@@ -2133,7 +2403,7 @@
                 let avgLast = countLast > 0 ? sumLast / countLast : 0;
 
                 if (avgLast > avgFirst) {
-                    trenStr = "ð Peningkatan Positif";
+                    trenStr = "📈 Peningkatan Positif";
                 }
             }
 
@@ -2206,14 +2476,14 @@
                 let studentHistories = dplDataStorage[nama] || {};
                 let analisis = hitungAnalisisKarakterSiswa(studentHistories, periode);
 
-                let badgeTren = analisis.tren.includes("Peningkatan") ? '<span class="block text-[10px] text-emerald-600 font-bold mt-0.5">ð Ada Peningkatan</span>' : '';
+                let badgeTren = analisis.tren.includes("Peningkatan") ? '<span class="block text-[10px] text-emerald-600 font-bold mt-0.5">📈 Ada Peningkatan</span>' : '';
 
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
                     <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
                     <td class="p-4 text-center border-r font-extrabold text-emerald-700 bg-emerald-50/50">
-                        â­ ${analisis.keunggulan}
+                        ⭐ ${analisis.keunggulan}
                         ${badgeTren}
                     </td>
                     <td class="p-4 text-center flex justify-center gap-2">
@@ -2259,7 +2529,7 @@
                     card.className = "bg-white p-4 rounded-2xl shadow-2xs border border-slate-200 flex justify-between items-center hover:border-indigo-400 transition";
                     card.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">ð</div>
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">📅</div>
                             <div>
                                 <h4 class="font-bold text-slate-900 text-sm">Evaluasi Tanggal: ${tgl}</h4>
                                 <span class="text-xs text-slate-500">Periode Utama: ${periode}</span>
@@ -2267,7 +2537,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="tampilkanDetailSesiTanggal('${namaSiswa}', '${periode}', '${tgl}')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition">Buka Sesi Ini</button>
-                            <button onclick="hapusSesiTanggalDpl('${namaSiswa}', '${periode}', '${tgl}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-3.5 py-2 rounded-xl text-xs transition border border-rose-200" title="Hapus sesi tanggal ini">ðï¸ Hapus</button>
+                            <button onclick="hapusSesiTanggalDpl('${namaSiswa}', '${periode}', '${tgl}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-3.5 py-2 rounded-xl text-xs transition border border-rose-200" title="Hapus sesi tanggal ini">🗑️ Hapus</button>
                         </div>
                     `;
                     containerCards.appendChild(card);
@@ -2331,7 +2601,7 @@
         }
 
         function hapusSesiTanggalDpl(namaSiswa, periode, tgl) {
-            if (!confirm(`â ï¸ Apakah Anda yakin ingin menghapus arsip penilaian DPL untuk tanggal ${tgl} (${periode})? Tindakan ini tidak dapat dibatalkan.`)) {
+            if (!confirm(`⚠️ Apakah Anda yakin ingin menghapus arsip penilaian DPL untuk tanggal ${tgl} (${periode})? Tindakan ini tidak dapat dibatalkan.`)) {
                 return;
             }
 
@@ -2687,7 +2957,7 @@
     renderTabelPenilaianSiswaMapel();
     simpanKeLocalStorage();
     
-    alert(`â¡ Berhasil! Seluruh siswa pada mapel ${activeMapelAndri} telah terisi nilai presisi tepat ${targetNilai} (Berapapun jumlah soal/aspek dijamin akurat).`);
+    alert(`⚡ Berhasil! Seluruh siswa pada mapel ${activeMapelAndri} telah terisi nilai presisi tepat ${targetNilai} (Berapapun jumlah soal/aspek dijamin akurat).`);
 }
         
         function updatePenilaianMapelManual(idx, jenis, sIdx, val) {
@@ -2826,7 +3096,7 @@
                 card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition-all";
                 card.onclick = () => bukaSetupPengetahuan(mapel);
                 card.innerHTML = `
-                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold mb-4">ð</div>
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold mb-4">📖</div>
                     <h3 class="text-lg font-bold text-slate-900">${mapel}</h3>
                     <p class="text-slate-500 text-sm mt-1">Input nilai ${activeKategoriAsesmen} untuk mapel ${mapel}.</p>
                 `;
@@ -3265,7 +3535,7 @@
 
             if (chosenDate !== today) {
                 if (bannerNotice) bannerNotice.classList.remove('hidden');
-                if (bannerText) bannerText.innerText = `â ï¸ Anda sedang melihat rekap (${activeKategoriAsesmen}) untuk tanggal ${chosenDate}.`;
+                if (bannerText) bannerText.innerText = `⚠️ Anda sedang melihat rekap (${activeKategoriAsesmen}) untuk tanggal ${chosenDate}.`;
             } else {
                 if (bannerNotice) bannerNotice.classList.add('hidden');
             }
@@ -3359,7 +3629,7 @@
     const dayOfWeek = dateObj.getDay();
 
     if (dayOfWeek === 0) {
-        if (!confirm("â ï¸ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap nilai pada tanggal ini?")) {
+        if (!confirm("⚠️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap nilai pada tanggal ini?")) {
             return;
         }
     }
@@ -3373,7 +3643,7 @@
 
     const labelDate = document.getElementById('label-multimapel-date');
     if (labelDate) {
-        labelDate.innerText = `Input Massal Masa Lampau [${activeKategoriAsesmen}] â Tanggal: ${selectedLampauDate}`;
+        labelDate.innerText = `Input Massal Masa Lampau [${activeKategoriAsesmen}] — Tanggal: ${selectedLampauDate}`;
     }
     
     // Pastikan fungsi render form tersedia sebelum berpindah view
@@ -3500,7 +3770,7 @@ function simpanMultiMapelLampau() {
                 let tr = document.createElement('tr');
                 let rankSign = "";
                 if (isRankingDisplayed && rankingGlobal[nama]) {
-                    rankSign = rankingGlobal[nama] <= 3 ? ` â­ (Rank ${rankingGlobal[nama]})` : ` (Rank ${rankingGlobal[nama]})`;
+                    rankSign = rankingGlobal[nama] <= 3 ? ` ⭐ (Rank ${rankingGlobal[nama]})` : ` (Rank ${rankingGlobal[nama]})`;
                 }
 
                 let tds = `<td class="p-4 font-semibold text-slate-500">${daftarSiswa.indexOf(nama) + 1}</td><td class="p-4 font-medium text-slate-900">${nama} ${rankSign}</td>`;
@@ -3599,7 +3869,7 @@ function simpanMultiMapelLampau() {
             });
 
             if (!adaRemedial) {
-                container.innerHTML = `<div class="p-6 text-center text-slate-500 font-medium">ð Luar biasa! Seluruh siswa telah tuntas mencapai Kriteria Ketercapaian (â¥ 75) di semua mata pelajaran. Tidak ada siswa yang memerlukan remedial saat ini.</div>`;
+                container.innerHTML = `<div class="p-6 text-center text-slate-500 font-medium">🎉 Luar biasa! Seluruh siswa telah tuntas mencapai Kriteria Ketercapaian (≥ 75) di semua mata pelajaran. Tidak ada siswa yang memerlukan remedial saat ini.</div>`;
             }
 
             document.getElementById('modal-remedial-otomatis').classList.add('hidden');
@@ -3613,20 +3883,20 @@ function simpanMultiMapelLampau() {
 
             let historyHtml = `<div class="space-y-4 mb-2">`;
             
-            historyHtml += `<div><strong class="text-xs text-blue-600 uppercase tracking-wider block mb-1">ð Riwayat Formatif (40%):</strong>`;
+            historyHtml += `<div><strong class="text-xs text-blue-600 uppercase tracking-wider block mb-1">📘 Riwayat Formatif (40%):</strong>`;
             if(recsF.length > 0) {
                 recsF.forEach(r => {
-                    historyHtml += `<div class="bg-white p-2.5 rounded-xl border flex justify-between items-center text-xs mb-1"><span>ð ${r.date} (${r.detail})</span><span class="font-bold text-blue-600">${parseFloat(r.score).toFixed(1)}</span></div>`;
+                    historyHtml += `<div class="bg-white p-2.5 rounded-xl border flex justify-between items-center text-xs mb-1"><span>📅 ${r.date} (${r.detail})</span><span class="font-bold text-blue-600">${parseFloat(r.score).toFixed(1)}</span></div>`;
                 });
             } else {
                 historyHtml += `<p class="text-xs text-slate-400 italic">Belum ada arsip formatif.</p>`;
             }
             historyHtml += `</div>`;
 
-            historyHtml += `<div><strong class="text-xs text-indigo-600 uppercase tracking-wider block mb-1">ð Riwayat Sumatif (60%):</strong>`;
+            historyHtml += `<div><strong class="text-xs text-indigo-600 uppercase tracking-wider block mb-1">📙 Riwayat Sumatif (60%):</strong>`;
             if(recsS.length > 0) {
                 recsS.forEach(r => {
-                    historyHtml += `<div class="bg-white p-2.5 rounded-xl border flex justify-between items-center text-xs mb-1"><span>ð ${r.date} (${r.detail})</span><span class="font-bold text-indigo-600">${parseFloat(r.score).toFixed(1)}</span></div>`;
+                    historyHtml += `<div class="bg-white p-2.5 rounded-xl border flex justify-between items-center text-xs mb-1"><span>📅 ${r.date} (${r.detail})</span><span class="font-bold text-indigo-600">${parseFloat(r.score).toFixed(1)}</span></div>`;
                 });
             } else {
                 historyHtml += `<p class="text-xs text-slate-400 italic">Belum ada arsip sumatif.</p>`;
@@ -3675,7 +3945,7 @@ function simpanMultiMapelLampau() {
             tbody.innerHTML = '';
             calculated.forEach((item, index) => {
                 let rank = index + 1;
-                let star = rank <= 3 ? " â­â­â­" : "";
+                let star = rank <= 3 ? " ⭐⭐⭐" : "";
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-3 font-extrabold text-blue-600"># ${rank} ${star}</td>
@@ -3699,7 +3969,7 @@ function simpanMultiMapelLampau() {
         }
 
         function loadPortalSiswa(namaSiswa) {
-            document.getElementById('nama-siswa-login').innerText = `Halo, ${namaSiswa}! ð`;
+            document.getElementById('nama-siswa-login').innerText = `Halo, ${namaSiswa}! 👋`;
             
             const dayOfWeek = new Date().getDay(); 
             const hariNamaArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -3733,11 +4003,11 @@ function simpanMultiMapelLampau() {
 
                 let badgeRapor = '';
                 if (raporM === 0) {
-                    badgeRapor = `<span class="bg-slate-100 text-slate-500 text-xs font-semibold px-2 py-1 rounded border">0.0 â¢ Belum dinilai</span>`;
+                    badgeRapor = `<span class="bg-slate-100 text-slate-500 text-xs font-semibold px-2 py-1 rounded border">0.0 • Belum dinilai</span>`;
                 } else if (raporM >= 75) {
-                    badgeRapor = `<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2 py-1 rounded border border-emerald-200">${raporM.toFixed(1)} â¢ Tuntas â­</span>`;
+                    badgeRapor = `<span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2 py-1 rounded border border-emerald-200">${raporM.toFixed(1)} • Tuntas ⭐</span>`;
                 } else {
-                    badgeRapor = `<span class="bg-amber-50 text-amber-700 text-xs font-bold px-2 py-1 rounded border border-amber-200">${raporM.toFixed(1)} â¢ Bimbingan âï¸</span>`;
+                    badgeRapor = `<span class="bg-amber-50 text-amber-700 text-xs font-bold px-2 py-1 rounded border border-amber-200">${raporM.toFixed(1)} • Bimbingan ✏️</span>`;
                 }
 
                 let tr = document.createElement('tr');
@@ -3750,7 +4020,7 @@ function simpanMultiMapelLampau() {
                 tr.innerHTML = `
                     <td class="p-3.5">
                         <div class="font-bold text-slate-800 group-hover:text-blue-600 transition flex items-center gap-1.5">
-                            <span>ð</span> ${mapel}
+                            <span>📘</span> ${mapel}
                         </div>
                         <span class="text-[11px] text-slate-400 font-medium">${recordsF.length} Formatif | ${recordsS.length} Sumatif</span>
                     </td>
@@ -3762,7 +4032,7 @@ function simpanMultiMapelLampau() {
                     </td>
                     <td class="p-3.5 text-right">
                         <span class="inline-flex items-center text-xs font-bold text-blue-600 group-hover:translate-x-1 transition duration-150">
-                            Riwayat â
+                            Riwayat →
                         </span>
                     </td>
                 `;
@@ -3772,7 +4042,7 @@ function simpanMultiMapelLampau() {
             let rankDisplay = "-";
             if (isRankingDisplayed && rankingGlobal[namaSiswa]) {
                 let r = rankingGlobal[namaSiswa];
-                let star = r <= 3 ? " â­" : "";
+                let star = r <= 3 ? " ⭐" : "";
                 rankDisplay = `# ${r} ${star}`;
             }
             document.getElementById('badge-ranking').innerText = rankDisplay;
@@ -3804,7 +4074,7 @@ function simpanMultiMapelLampau() {
                 containerSummary.innerHTML = '';
                 container.innerHTML = `
                     <div class="bg-white p-10 rounded-2xl border border-dashed border-slate-300 text-center space-y-2">
-                        <span class="text-3xl">ð</span>
+                        <span class="text-3xl">📝</span>
                         <h4 class="font-bold text-slate-700">Belum Ada Riwayat Penilaian</h4>
                         <p class="text-xs text-slate-400">Guru belum mencatat penilaian pada mata pelajaran ${mapel}.</p>
                     </div>
@@ -3824,7 +4094,7 @@ function simpanMultiMapelLampau() {
                         <div class="text-2xl font-extrabold text-indigo-600 mt-2">${avgS > 0 ? avgS.toFixed(1) : '-'}</div>
                     </div>
                     <div class="bg-white p-5 rounded-2xl border shadow-sm flex flex-col justify-between">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nilai Rapor Akhir â­</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nilai Rapor Akhir ⭐</span>
                         <div class="text-2xl font-extrabold text-emerald-600 mt-2">${raporVal > 0 ? raporVal.toFixed(1) : '-'}</div>
                     </div>
                 `;
@@ -3838,7 +4108,7 @@ function simpanMultiMapelLampau() {
                         <div>
                             <div class="flex items-center gap-2">
                                 ${badgeTipe}
-                                <span class="text-xs font-bold text-slate-500">ð ${rec.date}</span>
+                                <span class="text-xs font-bold text-slate-500">📅 ${rec.date}</span>
                             </div>
                             <p class="text-xs text-slate-600 mt-2 font-medium">${rec.detail || 'Penilaian Mata Pelajaran'}</p>
                         </div>
@@ -3852,445 +4122,214 @@ function simpanMultiMapelLampau() {
             }
             switchView('view-history-siswa');
         }
-      let currentGeneratedRpmData = null;
-let rpmStorageList = JSON.parse(localStorage.getItem('sdn2_rpm_storage')) || [];
-
-function generateRpmOtomatis() {
-    const mapel = document.getElementById('rpm-input-mapel').value;
-    const topik = document.getElementById('rpm-input-topik').value.trim();
-    const sekolah = document.getElementById('rpm-input-sekolah').value;
-    const tahun = document.getElementById('rpm-input-tahun').value;
-    const penyusun = document.getElementById('rpm-input-penyusun').value;
-    const nippenyusun = document.getElementById('rpm-input-nippenyusun').value;
-    const kepsek = document.getElementById('rpm-input-kepsek').value;
-    const nipkepsek = document.getElementById('rpm-input-nipkepsek').value;
-    const media = document.getElementById('rpm-input-media').value || "Media visual & lingkungan sekitar kelas";
-    const solo = document.getElementById('rpm-input-solo').value;
-
-    const dimensiChecked = document.querySelectorAll('input[name="rpm-dimensi"]:checked');
-    let dimensiArr = Array.from(dimensiChecked).map(cb => cb.value);
-    if (dimensiArr.length === 0) dimensiArr = ["Keimanan dan Ketakwaan kepada Tuhan YME", "Penalaran Kritis"];
-
-    if (!topik) {
-        alert("Silakan masukkan Topik Pembelajaran terlebih dahulu!");
-        document.getElementById('rpm-input-topik').focus();
-        return;
-    }
-
-    let tpText = `Melalui pengamatan ${media} pada topik ${topik}, siswa mampu memahami konsep dasar, menganalisis fungsi/peran secara runtut, serta menyajikan laporan sederhana dengan tepat sesuai tingkat capaian Fase B.`;
-
-    let pengalamanBelajar = [
-        {
-            tahap: "Memahami (Eksplorasi Konsep)",
-            aktivitas: `Siswa menyimak paparan guru dan mengamati ${media} terkait materi ${topik}. Guru memantik penalaran kritis dengan mengajukan pertanyaan esensial mengenai fakta dasar di lingkungan sekitar.`
-        },
-        {
-            tahap: "Mengaplikasikan (Praktik Nyata & Kolaborasi)",
-            aktivitas: `Siswa dibagi ke dalam kelompok kecil untuk melakukan penugasan terstruktur atau eksperimen sederhana menggunakan ${media}, menerapkan pengetahuan ${topik} kedalam studi kasus kehidupan nyata.`
-        },
-        {
-            tahap: "Merefleksi (Penguatan Nilai & Makna)",
-            aktivitas: `Siswa bersama guru melakukan refleksi harian (Mindful), merenungkan nilai manfaat materi ${topik} bagi diri sendiri dan lingkungan, serta menyimpulkan poin penting pembelajaran.`
-        }
-    ];
-
-    currentGeneratedRpmData = {
-        id: 'rpm_' + Date.now(),
-        mapel, topik, sekolah, tahun, penyusun, nippenyusun, kepsek, nipkepsek, media, solo,
-        dimensi: dimensiArr.join(', '),
-        tp: tpText,
-        pengalaman: pengalamanBelajar,
-        asesmen: {
-            formatif: `Penilaian proses keaktifan saat diskusi kelompok dan ketepatan penalaran kritis selama eksplorasi ${media}.`,
-            sumatif: `Tes tertulis / unjuk kerja akhir materi ${topik} sesuai taksonomi ${solo}.`,
-            kktp: `Siswa dikategorikan tuntas apabila mampu menjawab minimal 75% indikator ketercapaian atau menunjukkan pemahaman pada level Relasional/Multistruktural.`
-        },
-        remedial: `Diberikan bimbingan personal dan penjelasan ulang dengan media konkret bagi siswa yang belum mencapai skor tuntas (< 75).`,
-        pengayaan: `Diberikan tantangan analisis tingkat lanjut atau penugasan eksplorasi mandiri bagi siswa yang telah tuntas.`
-    };
-
-    renderPratinjauRpm(currentGeneratedRpmData);
-    switchView('view-rpm-hasil');
-}
-
-function renderPratinjauRpm(data) {
-    document.getElementById('rpm-view-mapel').innerText = `MATA PELAJARAN: ${data.mapel.toUpperCase()}`;
-    document.getElementById('rpm-view-sekolah').innerText = data.sekolah;
-    document.getElementById('rpm-view-penyusun').innerText = data.penyusun;
-    document.getElementById('rpm-view-mapeltext').innerText = data.mapel;
-    document.getElementById('rpm-view-nippenyusun').innerText = data.nippenyusun || '-';
-    document.getElementById('rpm-view-tahun').innerText = data.tahun;
-    document.getElementById('rpm-view-topik').innerText = data.topik;
-    document.getElementById('rpm-view-dimensi').innerText = data.dimensi;
-    document.getElementById('rpm-view-tp').innerText = data.tp;
-    document.getElementById('rpm-view-solo').innerText = data.solo;
-    document.getElementById('rpm-view-media').innerText = data.media;
-
-    document.getElementById('rpm-view-kepsek').innerText = data.kepsek || '(Nama Kepala Sekolah)';
-    document.getElementById('rpm-view-nipkepsek').innerText = data.nipkepsek || '............................';
-    document.getElementById('rpm-view-penyusuttandatangan').innerText = data.penyusun;
-    document.getElementById('rpm-view-nippenyusuttandatangan').innerText = data.nippenyusun || '............................';
-
-    const now = new Date();
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    document.getElementById('rpm-view-tanggalcetak').innerText = now.toLocaleDateString('id-ID', options);
-
-    renderContainerPengalaman(data.pengalaman);
-
-    const asesmenBox = document.getElementById('rpm-view-asesmen');
-    asesmenBox.innerHTML = `
-        <p><strong>Asesmen Formatif:</strong> ${data.asesmen.formatif}</p>
-        <p><strong>Asesmen Sumatif:</strong> ${data.asesmen.sumatif}</p>
-        <p><strong>Kriteria Ketercapaian Tujuan Pembelajaran (KKTP):</strong> ${data.asesmen.kktp}</p>
-    `;
-
-    const remedBox = document.getElementById('rpm-view-remedial');
-    remedBox.innerHTML = `
-        <p><strong>Program Remedial:</strong> ${data.remedial}</p>
-        <p><strong>Program Pengayaan:</strong> ${data.pengayaan}</p>
-    `;
-}
-
-function renderContainerPengalaman(pengalamanArr) {
-    const container = document.getElementById('rpm-view-pengalaman-container');
-    container.innerHTML = '';
-
-    pengalamanArr.forEach((item, idx) => {
-        let box = document.createElement('div');
-        box.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs space-y-1 relative group";
-        box.innerHTML = `
-            <div class="flex justify-between items-center font-bold text-slate-900">
-                <span>Tahap ${idx + 1}: ${item.tahap}</span>
-                <div class="no-print flex gap-2">
-                    <button onclick="ubahAktivitasPengalaman(${idx})" class="text-blue-600 hover:underline">Ubah</button>
-                    <button onclick="hapusAktivitasPengalaman(${idx})" class="text-rose-600 hover:underline">Hapus</button>
-                </div>
-            </div>
-            <p class="text-slate-700 leading-relaxed">${item.aktivitas}</p>
-        `;
-        container.appendChild(box);
-    });
-}
-
-function tambahAktivitasPengalamanBaru() {
-    let tahapBaru = prompt("Masukkan Tahap Pengalaman Belajar (Contoh: Mengaplikasikan / Kolaborasi Tambahan):", "Eksplorasi Lanjutan");
-    if (!tahapBaru) return;
-    let aktivitasBaru = prompt("Masukkan deskripsi aktivitas guru dan siswa:", "Siswa mempresentasikan hasil kerja kelompok di depan kelas.");
-    if (!aktivitasBaru) return;
-
-    currentGeneratedRpmData.pengalaman.push({ tahap: tahapBaru, aktivitas: aktivitasBaru });
-    renderContainerPengalaman(currentGeneratedRpmData.pengalaman);
-}
-
-function ubahAktivitasPengalaman(idx) {
-    let item = currentGeneratedRpmData.pengalaman[idx];
-    let newText = prompt("Ubah deskripsi aktivitas:", item.aktivitas);
-    if (newText !== null) {
-        currentGeneratedRpmData.pengalaman[idx].aktivitas = newText;
-        renderContainerPengalaman(currentGeneratedRpmData.pengalaman);
-    }
-}
-
-function hapusAktivitasPengalaman(idx) {
-    if (confirm("Hapus aktivitas ini dari pengalaman belajar?")) {
-        currentGeneratedRpmData.pengalaman.splice(idx, 1);
-        renderContainerPengalaman(currentGeneratedRpmData.pengalaman);
-    }
-}
-
-function simpanArsipRpm() {
-    if (!currentGeneratedRpmData) return;
-    let existingIdx = rpmStorageList.findIndex(r => r.id === currentGeneratedRpmData.id);
-    if (existingIdx >= 0) {
-        rpmStorageList[existingIdx] = currentGeneratedRpmData;
-    } else {
-        rpmStorageList.push(currentGeneratedRpmData);
-    }
-    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(rpmStorageList));
-    alert("Rencana Pembelajaran Mendalam (RPM) berhasil disimpan ke arsip perangkat!");
-}
-
-function renderRekapRpmList() {
-    const container = document.getElementById('container-rpm-rekap-list');
-    container.innerHTML = '';
-
-    if (rpmStorageList.length === 0) {
-        container.innerHTML = `<div class="p-8 bg-white rounded-2xl border text-center text-slate-400">Belum ada arsip RPM yang tersimpan. Silakan buat baru.</div>`;
-        switchView('view-rpm-rekap');
-        return;
-    }
-
-    rpmStorageList.forEach((rpm) => {
-        let card = document.createElement('div');
-        card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center hover:border-indigo-400 transition";
-        card.innerHTML = `
-            <div>
-                <span class="text-xs font-bold text-blue-600 uppercase">${rpm.mapel}</span>
-                <h4 class="font-extrabold text-slate-900 text-base">${rpm.topik}</h4>
-                <p class="text-xs text-slate-500">Penyusun: ${rpm.penyusun} • Tahun: ${rpm.tahun}</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <button onclick='bukaArsipRpm("${rpm.id}")' class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">Buka & Cetak</button>
-                <button onclick='hapusArsipRpm("${rpm.id}")' class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-3 py-2 rounded-xl text-xs transition border border-rose-200">🗑️</button>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-
-    switchView('view-rpm-rekap');
-}
-
-function bukaArsipRpm(id) {
-    let found = rpmStorageList.find(r => r.id === id);
-    if (found) {
-        currentGeneratedRpmData = found;
-        renderPratinjauRpm(found);
-        switchView('view-rpm-hasil');
-    }
-}
-
-function hapusArsipRpm(id) {
-    if (confirm("Hapus arsip RPM ini secara permanen?")) {
-        rpmStorageList = rpmStorageList.filter(r => r.id !== id);
-        localStorage.setItem('sdn2_rpm_storage', JSON.stringify(rpmStorageList));
-        renderRekapRpmList();
-    }
-}
     </script>
-  <!-- 15.1 HUB MENU RPM (BUAT & REKAP) -->
+        <!-- VIEW 1: PILIH MENU RPM -->
 <section id="view-rpm-pilih-menu" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
     <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-8">
         <div>
-            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Modul Kurikulum Merdeka</span>
-            <h2 class="text-2xl font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM)</h2>
+            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Modul Ajar Otomatis</span>
+            <h2 class="text-2xl font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM) Kelas IV</h2>
         </div>
         <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div onclick="switchView('view-rpm-form-buat')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
-            <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">✨</div>
-            <h3 class="text-xl font-extrabold text-slate-900">Buat Modul Ajar / RPM</h3>
-            <p class="text-slate-500 text-sm mt-2">Buat Rencana Pembelajaran Mendalam otomatis berdasarkan topik & media ajar pilihan.</p>
-            <span class="inline-block mt-4 text-xs font-bold text-blue-600">Mulai Buat RPM →</span>
+        <div onclick="switchView('view-rpm-form-buat')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">✨</div>
+            <h3 class="text-xl font-extrabold text-slate-900">Buat Modul Ajar (RPM)</h3>
+            <p class="text-slate-500 text-sm mt-2">Buat modul ajar otomatis berdasarkan CP Fase B, 8 Dimensi, & Taksonomi SOLO.</p>
+            <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Mulai Buat RPM →</span>
         </div>
-        <div onclick="renderRekapRpmList()" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">📂</div>
-            <h3 class="text-xl font-extrabold text-slate-900">Rekap Modul Ajar (Arsip)</h3>
-            <p class="text-slate-500 text-sm mt-2">Tinjau, ubah, atau cetak PDF arsip RPM yang telah disimpan sebelumnya.</p>
-            <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Buka Arsip RPM →</span>
+
+        <div onclick="renderRekapRpmList()" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
+            <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📂</div>
+            <h3 class="text-xl font-extrabold text-slate-900">Rekap Modul Ajar</h3>
+            <p class="text-slate-500 text-sm mt-2">Kelola, tinjau kembali, atau unduh arsip RPM yang telah disimpan.</p>
+            <span class="inline-block mt-4 text-xs font-bold text-blue-600">Buka Arsip RPM →</span>
         </div>
     </div>
 </section>
 
-<!-- 15.2 FORM INPUT PARAMETER RPM -->
+<!-- VIEW 2: FORM SETUP RPM -->
 <section id="view-rpm-form-buat" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
     <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
         <div>
-            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Generator Otomatis</span>
-            <h2 class="text-xl font-bold text-slate-900">Parameter Rencana Pembelajaran Mendalam (RPM)</h2>
+            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Form Pembuatan</span>
+            <h2 class="text-xl font-bold text-slate-900">Setup Rencana Pembelajaran Mendalam (RPM)</h2>
         </div>
         <button onclick="switchView('view-rpm-pilih-menu')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
     </div>
 
-    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-5 mb-6">
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-5">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mata Pelajaran</label>
-                <select id="rpm-input-mapel" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-                    <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
-                    <option value="Matematika">Matematika</option>
-                    <option value="IPAS">IPAS (Ilmu Pengetahuan Alam & Sosial)</option>
-                    <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-                    <option value="Seni Rupa">Seni Rupa</option>
-                    <option value="Mulok">Mulok</option>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Pilih Mata Pelajaran</label>
+                <select id="rpm-mapel" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                    <option>Pendidikan Pancasila</option>
+                    <option>Matematika</option>
+                    <option>IPAS</option>
+                    <option>Bahasa Indonesia</option>
+                    <option>Seni Rupa</option>
+                    <option>Mulok</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Fase / Kelas</label>
-                <input type="text" value="Fase B / Kelas IV" readonly class="w-full bg-slate-100 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-600">
-            </div>
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Topik Pembelajaran</label>
-            <input type="text" id="rpm-input-topik" placeholder="Contoh: Bagian Tubuh Tumbuhan dan Fungsinya" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800 focus:border-blue-500">
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Satuan Pendidikan</label>
-                <input type="text" id="rpm-input-sekolah" value="SDN 2 Sabedo" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tahun Ajaran</label>
-                <input type="text" id="rpm-input-tahun" value="2025/2026" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Topik Pembelajaran</label>
+                <input type="text" id="rpm-topik" placeholder="Contoh: Wujud Zat dan Perubahannya" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Penyusun (Guru)</label>
-                <input type="text" id="rpm-input-penyusun" value="Andri Julian Perdana, S.Pd" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Guru / Penyusun</label>
+                <input type="text" id="rpm-penyusun" value="Andri Julian Perdana, S.Pd" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">NIP Penyusun</label>
-                <input type="text" id="rpm-input-nippenyusun" placeholder="Masukkan NIP Guru..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">NIP Guru Penyusun</label>
+                <input type="text" id="rpm-nip-penyusun" value="19990101 202201 1 001" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Kepala Sekolah</label>
-                <input type="text" id="rpm-input-kepsek" placeholder="Masukkan Nama Kepala Sekolah..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Kepala Sekolah</label>
+                <input type="text" id="rpm-kepsek" value="Kepala SDN 2 Sabedo, S.Pd" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">NIP Kepala Sekolah</label>
-                <input type="text" id="rpm-input-nipkepsek" placeholder="Masukkan NIP Kepala Sekolah..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">NIP Kepala Sekolah</label>
+                <input type="text" id="rpm-nip-kepsek" value="19750101 199803 1 005" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Media Ajar Utama</label>
+                <input type="text" id="rpm-media" placeholder="Contoh: Benda konkret di sekitar & Video Pembelajaran" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Taksonomi SOLO & Kko</label>
+                <select id="rpm-solo-kko" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                    <option>Relasional (Menganalisis, Membedakan, Menghubungkan)</option>
+                    <option>Multistruktural (Menjelaskan, Mengidentifikasi, Menghitung)</option>
+                    <option>Unistruktural (Menyebutkan, Menuliskan, Menggambar)</option>
+                    <option>Abstrak Diperluas (Mendesain, Menyimpulkan, Menciptakan)</option>
+                </select>
             </div>
         </div>
 
         <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Media & Sumber Ajar</label>
-            <input type="text" id="rpm-input-media" placeholder="Contoh: Video Animasi Pembelajaran, Tanaman Hidup di Lingkungan Sekolah" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">8 Dimensi Profil Lulusan (Pilih Salah Satu atau Lebih)</label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-700">
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Keimanan dan Ketakwaan kepada Tuhan YME" class="w-4 h-4 text-blue-600"> Keimanan dan Ketakwaan kepada Tuhan YME</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Kewargaan" class="w-4 h-4 text-blue-600"> Kewargaan</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Penalaran Kritis" class="w-4 h-4 text-blue-600"> Penalaran Kritis</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Kreativitas" class="w-4 h-4 text-blue-600"> Kreativitas</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Kolaborasi" class="w-4 h-4 text-blue-600"> Kolaborasi</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Kemandirian" class="w-4 h-4 text-blue-600"> Kemandirian</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Kesehatan" class="w-4 h-4 text-blue-600"> Kesehatan</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer"><input type="checkbox" name="rpm-dimensi" value="Komunikasi" class="w-4 h-4 text-blue-600"> Komunikasi</label>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">8 Dimensi Profil Lulusan (Pilih Salah Satu atau Lebih)</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Keimanan dan Ketakwaan" class="w-4 h-4 text-indigo-600" checked> Keimanan & Ketakwaan</label>
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kewargaan" class="w-4 h-4 text-indigo-600"> Kewargaan</label>
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Penalaran Kritis" class="w-4 h-4 text-indigo-600" checked> Penalaran Kritis</label>
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kreativitas" class="w-4 h-4 text-indigo-600"> Kreativitas</label>
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kolaborasi" class="w-4 h-4 text-indigo-600" checked> Kolaborasi</label>
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kemandirian" class="w-4 h-4 text-indigo-600"> Kemandirian</label>
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kesehatan" class="w-4 h-4 text-indigo-600"> Kesehatan</label>
+                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Komunikasi" class="w-4 h-4 text-indigo-600" checked> Komunikasi</label>
             </div>
         </div>
 
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Target Taksonomi SOLO & KKO</label>
-            <select id="rpm-input-solo" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-                <option value="Unistruktural (Mengidentifikasi, Menyebutkan)">Unistruktural (Mengidentifikasi, Menyebutkan)</option>
-                <option value="Multistruktural (Menjelaskan, Mengklasifikasikan)">Multistruktural (Menjelaskan, Mengklasifikasikan)</option>
-                <option value="Relasional (Menganalisis, Menghubungkan)">Relasional (Menganalisis, Menghubungkan)</option>
-                <option value="Abstrak Diperluas (Merancang, Mengevaluasi)">Abstrak Diperluas (Merancang, Mengevaluasi)</option>
-            </select>
+        <div class="flex justify-end pt-4">
+            <button onclick="generateRpmOtomatis()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition text-sm">✨ Buat Rencana Pembelajaran Mendalam (RPM)</button>
         </div>
-    </div>
-
-    <div class="flex justify-end">
-        <button onclick="generateRpmOtomatis()" class="bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-8 py-3.5 rounded-xl shadow-lg transition text-base">✨ Buat Rencana Pembelajaran Otomatis</button>
     </div>
 </section>
 
-<!-- 15.3 HALAMAN HASIL RPM & EDITOR AKTIVITAS -->
+<!-- VIEW 3: HASIL RPM & EDITOR AKTIVITAS -->
 <section id="view-rpm-hasil" class="view-section p-6 md:p-10 max-w-5xl mx-auto w-full">
     <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6 no-print">
         <div>
-            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Hasil Generator Pintar</span>
-            <h2 class="text-xl font-bold text-slate-900">Pratinjau Rencana Pembelajaran Mendalam (RPM)</h2>
+            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Hasil Modul Ajar</span>
+            <h2 class="text-xl font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM)</h2>
         </div>
         <div class="flex gap-2">
-            <button onclick="simpanArsipRpm()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">💾 Simpan RPM</button>
-            <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / PDF</button>
-            <button onclick="switchView('view-rpm-form-buat')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Buat Baru</button>
+            <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / Download PDF</button>
+            <button onclick="simpanRpmPermanen()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">💾 Simpan RPM</button>
+            <button onclick="switchView('view-rpm-form-buat')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Edit Setup</button>
         </div>
     </div>
 
-    <!-- KERTAS CETAK / PRATINJAU PROFESIONAL -->
-    <div id="print-area-rpm" class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 space-y-6 text-slate-800 text-sm">
-        
-        <!-- HEADER KOP -->
+    <!-- KERTAS DOKUMEN RPM PROFESIONAL -->
+    <div id="print-area-rpm" class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 space-y-6 text-slate-800 text-sm leading-relaxed">
         <div class="text-center border-b-2 border-slate-800 pb-4 space-y-1">
-            <h1 class="text-xl font-extrabold uppercase tracking-tight">RENCANA PEMBELAJARAN MENDALAM (RPM)</h1>
-            <p id="rpm-view-mapel" class="text-base font-bold text-blue-700"></p>
+            <h1 class="text-xl font-extrabold uppercase tracking-wide">RENCANA PEMBELAJARAN MENDALAM (RPM)</h1>
+            <p id="rpm-res-mapel-topik" class="text-sm font-bold text-slate-700">Mata Pelajaran: - | Topik: -</p>
+            <p class="text-xs text-slate-500">Satuan Pendidikan: SDN 2 Sabedo | Kelas IV (Fase B) | Tahun Ajaran 2025/2026</p>
         </div>
 
-        <!-- INFO IDENTITAS -->
-        <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
-            <div><strong>Satuan Pendidikan:</strong> <span id="rpm-view-sekolah">-</span></div>
-            <div><strong>Penyusun:</strong> <span id="rpm-view-penyusun">-</span></div>
-            <div><strong>Mata Pelajaran:</strong> <span id="rpm-view-mapeltext">-</span></div>
-            <div><strong>NIP Penyusun:</strong> <span id="rpm-view-nippenyusun">-</span></div>
-            <div><strong>Fase / Kelas:</strong> Fase B / Kelas IV</div>
-            <div><strong>Tahun Ajaran:</strong> <span id="rpm-view-tahun">-</span></div>
-            <div class="col-span-2 pt-1 border-t border-slate-200 mt-1"><strong>Topik Utama:</strong> <span id="rpm-view-topik" class="font-bold text-slate-900">-</span></div>
+        <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl text-xs border">
+            <div><strong>Penyusun:</strong> <span id="rpm-res-penyusun">-</span> (<span id="rpm-res-nip">-</span>)</div>
+            <div><strong>Media Ajar:</strong> <span id="rpm-res-media">-</span></div>
+            <div><strong>Taksonomi SOLO:</strong> <span id="rpm-res-solo">-</span></div>
+            <div><strong>Dimensi Terpilih:</strong> <span id="rpm-res-dimensi">-</span></div>
         </div>
 
-        <!-- 8 DIMENSI & SUASANA BELAJAR -->
         <div class="space-y-2">
-            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">I. Fondasi & Karakter (8 Dimensi Profil Lulusan & Suasana Mindful-Meaningful-Joyful)</h3>
-            <p><strong>Dimensi Terpilih:</strong> <span id="rpm-view-dimensi" class="text-slate-700">-</span></p>
-            <p class="text-xs text-slate-600 leading-relaxed"><strong>Suasana Belajar:</strong> Proses pembelajaran dirancang dengan pendekatan <em>Mindful</em> (fokus penuh kesadaran diri), <em>Meaningful</em> (materi dikaitkan langsung dengan pengalaman nyata kehidupan sehari-hari), dan <em>Joyful</em> (suasana kelas interaktif, menyenangkan, serta memotivasi intrinsik murid).</p>
+            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">I. Tujuan Pembelajaran & KKTP</h3>
+            <div id="rpm-res-tp" class="p-3 bg-indigo-50/50 border rounded-xl text-xs space-y-1"></div>
         </div>
 
-        <!-- TUJUAN PEMBELAJARAN -->
         <div class="space-y-2">
-            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">II. Tujuan Pembelajaran & Taksonomi SOLO</h3>
-            <div id="rpm-view-tp" class="p-3 bg-blue-50/50 border border-blue-100 rounded-xl text-slate-800 font-medium"></div>
-            <p class="text-xs text-slate-600"><strong>Target Taksonomi SOLO:</strong> <span id="rpm-view-solo"></span></p>
+            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">II. Pengalaman Belajar Mendalam (Mindful, Meaningful, Joyful)</h3>
+            <div id="container-pengalaman-belajar-editable" class="space-y-3"></div>
+            <button onclick="tambahAktivitasBaru()" class="no-print bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-bold px-3 py-1.5 rounded-lg text-xs transition border border-indigo-200">+ Tambah Aktivitas Guru</button>
         </div>
 
-        <!-- PENGALAMAN BELAJAR -->
-        <div class="space-y-3">
-            <div class="flex justify-between items-center border-b pb-1">
-                <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider">III. Pengalaman Belajar (Internalisasi Nilai)</h3>
-                <button onclick="tambahAktivitasPengalamanBaru()" class="no-print bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold px-3 py-1 rounded-lg text-xs transition">+ Tambah Aktivitas</button>
+        <div class="space-y-2">
+            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">III. Asesmen Pembelajaran (Formatif & Sumatif)</h3>
+            <div id="rpm-res-asesmen" class="p-3 bg-slate-50 border rounded-xl text-xs space-y-2"></div>
+        </div>
+
+        <div class="space-y-2">
+            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">IV. Program Pengayaan & Remedial</h3>
+            <div id="rpm-res-remedial" class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl text-xs space-y-2"></div>
+        </div>
+
+        <div class="pt-8 flex justify-between items-center text-xs">
+            <div class="text-center space-y-12">
+                <p>Mengetahui,<br>Kepala SDN 2 Sabedo</p>
+                <div>
+                    <strong id="rpm-res-kepsek" class="underline">Kepala Sekolah, S.Pd</strong>
+                    <p>NIP. <span id="rpm-res-nip-kepsek">-</span></p>
+                </div>
             </div>
-            <div id="rpm-view-pengalaman-container" class="space-y-3"></div>
-        </div>
-
-        <!-- MEDIA & SUMBER -->
-        <div class="space-y-1">
-            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">IV. Media & Sumber Belajar</h3>
-            <p id="rpm-view-media" class="text-slate-700"></p>
-        </div>
-
-        <!-- ASESMEN, KKTP -->
-        <div class="space-y-2">
-            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">V. Asesmen, Kriteria Ketercapaian (KKTP) & Penscoreran</h3>
-            <div id="rpm-view-asesmen" class="space-y-2 text-xs"></div>
-        </div>
-
-        <!-- REMEDIAL & PENGAYAAN -->
-        <div class="space-y-2">
-            <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">VI. Program Remedial & Pengayaan</h3>
-            <div id="rpm-view-remedial" class="space-y-2 text-xs"></div>
-        </div>
-
-        <!-- TANDA TANGAN LEMBAR PENGESAHAN -->
-        <div class="grid grid-cols-2 pt-12 text-center text-xs">
-            <div>
-                <p>Mengetahui,</p>
-                <p>Kepala Sekolah</p>
-                <br><br><br>
-                <p class="font-bold underline" id="rpm-view-kepsek">-</p>
-                <p>NIP. <span id="rpm-view-nipkepsek">-</span></p>
-            </div>
-            <div>
-                <p>Sabedo, <span id="rpm-view-tanggalcetak"></span></p>
-                <p>Guru Kelas IV</p>
-                <br><br><br>
-                <p class="font-bold underline" id="rpm-view-penyusuttandatangan">-</p>
-                <p>NIP. <span id="rpm-view-nippenyusuttandatangan">-</span></p>
+            <div class="text-center space-y-12">
+                <p>Sabedo, <span id="rpm-res-tanggal-sekarang">-</span><br>Guru Kelas IV</p>
+                <div>
+                    <strong id="rpm-res-tanda-penyusun" class="underline">Andri Julian Perdana, S.Pd</strong>
+                    <p>NIP. <span id="rpm-res-nip- tdp">-</span></p>
+                </div>
             </div>
         </div>
-
     </div>
 </section>
 
-<!-- 15.4 DAFTAR ARSIP REKAP RPM -->
-<section id="view-rpm-rekap" class="view-section p-6 md:p-10 max-w-5xl mx-auto w-full">
+<!-- VIEW 4: REKAP ARSIP RPM -->
+<section id="view-rpm-rekap" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
     <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
         <div>
-            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Arsip Dokumen</span>
-            <h2 class="text-xl font-bold text-slate-900">Daftar Rencana Pembelajaran Tersimpan</h2>
+            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Arsip Dokumen</span>
+            <h2 class="text-xl font-bold text-slate-900">Rekap Rencana Pembelajaran Mendalam (RPM)</h2>
         </div>
         <button onclick="switchView('view-rpm-pilih-menu')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
     </div>
-    <div id="container-rpm-rekap-list" class="space-y-4"></div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[700px]">
+            <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                    <th class="p-4 border-r">No</th>
+                    <th class="p-4 border-r">Mata Pelajaran</th>
+                    <th class="p-4 border-r">Topik Pembelajaran</th>
+                    <th class="p-4 border-r">Penyusun</th>
+                    <th class="p-4 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tabel-rekap-rpm-body" class="divide-y divide-slate-100 text-sm"></tbody>
+        </table>
+    </div>
 </section>
 </body>
 </html>
