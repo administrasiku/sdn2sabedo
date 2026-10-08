@@ -3263,17 +3263,14 @@ async function muatDariSupabase() {
                     
                     for (let sIdx = 0; sIdx < targetSoal; sIdx++) {
                         let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
-                        if (targetNilai === 100) {
-                            studentData.penScores[j][sIdx] = mVal;
-                        } else {
-                            studentData.penScores[j][sIdx] = Math.round((75 / 100) * mVal * 10) / 10;
-                        }
+                        // Mengisi proporsi pas agar persentase akhirnya tepat sesuai targetNilai
+                        studentData.penScores[j][sIdx] = (targetNilai / 100) * mVal;
                     }
                 });
             });
 
             renderTabelFormPenilaianPengetahuan();
-            alert(`Berhasil mengisi cepat seluruh siswa dengan estimasi nilai ${targetNilai}!`);
+            alert(`Berhasil mengisi cepat seluruh siswa dengan nilai pas ${targetNilai}!`);
         }
 
         function isiCepatKeterampilanAndri(targetPersen) {
@@ -3293,17 +3290,13 @@ async function muatDariSupabase() {
                     
                     for (let sIdx = 0; sIdx < targetAspek; sIdx++) {
                         let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
-                        if (targetPersen === 100) {
-                            studentData.ketScores[j][sIdx] = mVal;
-                        } else {
-                            studentData.ketScores[j][sIdx] = Math.round((75 / 100) * mVal * 10) / 10;
-                        }
+                        studentData.ketScores[j][sIdx] = (targetPersen / 100) * mVal;
                     }
                 });
             });
 
             renderTabelFormPenilaianKeterampilan();
-            alert(`Berhasil mengisi cepat seluruh aspek keterampilan siswa dengan estimasi ${targetPersen}%!`);
+            alert(`Berhasil mengisi cepat seluruh aspek keterampilan siswa dengan nilai pas ${targetPersen}%!`);
         }
 
         function lanjutKeSetupKeterampilan() {
