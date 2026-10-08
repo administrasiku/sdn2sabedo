@@ -1295,9 +1295,9 @@ function renderEditableAktivitas() {
         let div = document.createElement('div');
         div.className = "p-4 bg-slate-50 border rounded-xl space-y-3 relative group";
         div.innerHTML = `
-            <div class="flex justify-between items-center gap-2">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <input type="text" id="tahap_input_${idx}" value="${item.tahap}" disabled class="font-bold text-xs bg-transparent border-b border-transparent w-full text-slate-800">
-                <div class="no-print flex gap-1.5 items-center shrink-0">
+                <div class="no-print flex gap-1.5 items-center shrink-0 w-full sm:w-auto justify-end flex-wrap">
                     <button id="btn_edit_${idx}" onclick="toggleEditAktivitas(${idx})" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1 rounded-lg text-xs font-bold transition">✏️ Ubah</button>
                     <button onclick="tambahAktivitasDiBawah(${idx})" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-3 py-1 rounded-lg text-xs font-bold transition" title="Tambah aktivitas baru di bawah ini">+ Tambah di Bawah</button>
                     <button onclick="hapusAktivitas(${idx})" class="bg-rose-50 text-rose-700 hover:bg-rose-100 px-2.5 py-1 rounded-lg text-xs font-bold transition" title="Hapus aktivitas">🗑️</button>
@@ -1338,10 +1338,27 @@ function toggleEditAktivitas(idx) {
 
 function tambahAktivitasDiBawah(idx) {
     if (!currentRpmData) return;
-    currentRpmData.pengalamanBelajar.splice(idx + 1, 0, {
-        tahap: `Aktivitas Lanjutan (${currentRpmData.pengalamanBelajar.length + 1})`,
-        aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
-    });
+    
+    if (idx === undefined || idx < 0) {
+        currentRpmData.pengalamanBelajar.push({
+            tahap: `Aktivitas Lanjutan (${currentRpmData.pengalamanBelajar.length + 1})`,
+            aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
+        });
+    } else {
+        currentRpmData.pengalamanBelajar.splice(idx + 1, 0, {
+            tahap: `Aktivitas Lanjutan (${currentRpmData.pengalamanBelajar.length + 1})`,
+            aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
+        });
+    }
+    renderEditableAktivitas();
+}
+
+function hapusAktivitas(idx) {
+    if (!currentRpmData || currentRpmData.pengalamanBelajar.length <= 1) {
+        alert("Minimal harus ada 1 pengalaman belajar.");
+        return;
+    }
+    currentRpmData.pengalamanBelajar.splice(idx, 1);
     renderEditableAktivitas();
 }
 
