@@ -1607,16 +1607,18 @@ async function muatDariSupabase() {
 }
 
         function simpanKeLocalStorage() {
-            localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
-            localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
-            localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
-            localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
-            localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
-            localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
-            localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
-            localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
-            simpanKeSupabase();
-        }
+    localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
+    localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
+    localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
+    localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
+    localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
+    localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
+    localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
+    localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
+    
+    // PASTIKAN BARIS INI ADA AGAR DATA TERKIRIM KE CLOUD SUPABASE
+    simpanKeSupabase();
+}
 
         function getHistoryObj(kategori) {
             return kategori === 'Sumatif' ? historyNilaiSumatif : historyNilaiFormatif;
@@ -1700,7 +1702,7 @@ async function muatDariSupabase() {
         }
 
         window.onload = function() {
-    // Muat data dari Supabase terlebih dahulu secara asinkron
+    // 1. TARIK DATA DARI SUPABASE TERLEBIH DAHULU KE PERANGKAT INI
     muatDariSupabase().then(() => {
         const todayStr = getTodayKey();
         const elDisp = document.getElementById('display-tanggal-hari-ini');
