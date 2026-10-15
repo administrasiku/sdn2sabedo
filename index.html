@@ -1513,76 +1513,67 @@
 
         // ================= SUPABASE CLOUD SYNC OTOMATIS =================
         const SUPABASE_URL = 'https://iecebbjqjfzjnbdlxnih.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_-WRfySOS91oR4CHa32AoxQ_eWekUJXG'; 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_KEY = 'sb_publishable_-WRfySOS91oR4CHa32AoxQ_eWekUJXG'; 
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function simpanKeSupabase() {
-            const payloadData = {
-                presensi: presensiData,
-                nilaidata: nilaiDataAndri,
-                history_formatif: historyNilaiFormatif,
-                history_sumatif: historyNilaiSumatif,
-                dpldata: dplDataStorage,
-                ranking: rankingGlobal,
-                isrank: isRankingDisplayed,
-                jenismapel: jenisInfoMapel,
-                rpm_storage: savedRpmStorage
-            };
+// Jadikan async dan kembalikan status berhasil/gagal
+async function simpanKeSupabase() {
+    const payloadData = {
+        presensi: presensiData,
+        nilaidata: nilaiDataAndri,
+        history_formatif: historyNilaiFormatif,
+        history_sumatif: historyNilaiSumatif,
+        dpldata: dplDataStorage,
+        ranking: rankingGlobal,
+        isrank: isRankingDisplayed,
+        jenismapel: jenisInfoMapel,
+        rpm_storage: savedRpmStorage
+    };
 
-            try {
-                const { error } = await _supabase
-                    .from('app_storage')
-                    .upsert({ key: 'data_sekolah_utama', value: payloadData });
+    try {
+        const { error } = await _supabase
+            .from('app_storage')
+            .upsert({ key: 'data_sekolah_utama', value: payloadData }, { onConflict: 'key' });
 
-                if (error) {
-                    console.error('Gagal sinkron ke Supabase:', error.message);
-                } else {
-                    console.log('Sinkronisasi cloud berhasil otomatis!');
-                }
-            } catch (err) {
-                console.error('Koneksi Supabase bermasalah:', err);
-            }
+        if (error) {
+            console.error('Gagal sinkron ke Supabase:', error.message);
+            return false;
+        } else {
+            console.log('Sinkronisasi cloud Supabase berhasil!');
+            return true;
+        }
+    } catch (err) {
+        console.error('Koneksi Supabase bermasalah:', err);
+        return false;
+    }
+}
+
+async function muatDariSupabase() {
+    try {
+        const { data, error } = await _supabase
+            .from('app_storage')
+            .select('value')
+            .eq('key', 'data_sekolah_utama')
+            .maybeSingle(); // Gunakan maybeSingle agar tidak melempar error jika baris belum ada
+
+        if (error) {
+            console.error('Gagal memuat data dari cloud:', error.message);
+            return false;
         }
 
-        async function muatDariSupabase() {
-            try {
-                const { data, error } = await _supabase
-                    .from('app_storage')
-                    .select('value')
-                    .eq('key', 'data_sekolah_utama')
-                    .single();
-
-                if (data && data.value) {
-                    const cloud = data.value;
-                    presensiData = cloud.presensi || {};
-                    nilaiDataAndri = cloud.nilaidata || {};
-                    historyNilaiFormatif = cloud.history_formatif || {};
-                    historyNilaiSumatif = cloud.history_sumatif || {};
-                    dplDataStorage = cloud.dpldata || {};
-                    rankingGlobal = cloud.ranking || {};
-                    isRankingDisplayed = cloud.isrank || false;
-                    jenisInfoMapel = cloud.jenismapel || {};
-                    savedRpmStorage = cloud.rpm_storage || [];
-                    
-                    // Update cache lokal perangkat
-                    localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
-                    localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
-                    localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
-                    localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
-                    localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
-                    localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
-                    localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
-                    localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
-                    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
-
-                    console.log('Data dari cloud Supabase berhasil ditarik sempurna!');
-                }
-            } catch (err) {
-                console.warn('Gagal memuat dari Supabase, menggunakan data lokal perangkat:', err);
-            }
-        }
-
-        function simpanKeLocalStorage() {
+        if (data && data.value) {
+            const cloud = data.value;
+            presensiData = cloud.presensi || {};
+            nilaiDataAndri = cloud.nilaidata || {};
+            historyNilaiFormatif = cloud.history_formatif || {};
+            historyNilaiSumatif = cloud.history_sumatif || {};
+            dplDataStorage = cloud.dpldata || {};
+            rankingGlobal = cloud.ranking || {};
+            isRankingDisplayed = cloud.isrank || false;
+            jenisInfoMapel = cloud.jenismapel || {};
+            savedRpmStorage = cloud.rpm_storage || [];
+            
+            // Simpan salinan ke localStorage lokal
             localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
             localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
             localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
@@ -1592,10 +1583,43 @@
             localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
             localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
             localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
-            
-            // Otomatis kirim ke cloud tanpa perlu klik tombol
-            simpanKeSupabase();
+
+            console.log('Data dari cloud Supabase berhasil ditarik sempurna!');
+            return true;
         }
+    } catch (err) {
+        console.warn('Gagal memuat dari Supabase, menggunakan data lokal perangkat:', err);
+        return false;
+    }
+}
+
+// Simpan lokal + tunggu sinkronisasi cloud
+async function simpanKeLocalStorage() {
+    localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
+    localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
+    localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
+    localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
+    localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
+    localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
+    localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
+    localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
+    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
+    
+    return await simpanKeSupabase();
+}
+
+// Perbaiki fungsi simpanPresensi agar menunggu Supabase selesai
+async function simpanPresensi(isAuto = false) {
+    const statusSukses = await simpanKeLocalStorage();
+    if (!isAuto) {
+        if (statusSukses) {
+            alert("✅ Presensi berhasil disimpan dan tersinkron ke cloud Supabase!");
+        } else {
+            alert("⚠️ Tersimpan di perangkat ini, namun gagal terkirim ke Cloud. Pastikan koneksi internet stabil.");
+        }
+    }
+    renderTabelRekapPresensi(getTodayKey());
+}
 
         // ================= INISIALISASI & NAVIGASI =================
         window.onload = function() {
