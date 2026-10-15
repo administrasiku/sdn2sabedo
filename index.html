@@ -1601,95 +1601,6 @@ async function simpanKeLocalStorage() {
     localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
     localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
     localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
-// ================= SUPABASE CLOUD SYNC =================
-const SUPABASE_URL = 'https://iecebbjqjfzjnbdlxnih.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllY2ViYmpxamZ6am5iZGx4bmloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMzE0MjEsImV4cCI6MjEwNjkwNzQyMX0.TNEIOEnKjB1qXp7fLig7dgul8FSp9I23juUgrmsCAHo'; 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-async function simpanKeSupabase() {
-    const payloadData = {
-        presensi: presensiData,
-        nilaidata: nilaiDataAndri,
-        history_formatif: historyNilaiFormatif,
-        history_sumatif: historyNilaiSumatif,
-        dpldata: dplDataStorage,
-        ranking: rankingGlobal,
-        isrank: isRankingDisplayed,
-        jenismapel: jenisInfoMapel,
-        rpm_storage: savedRpmStorage
-    };
-
-    try {
-        const { error } = await _supabase
-            .from('app_storage')
-            .upsert({ key: 'data_sekolah_utama', value: payloadData }, { onConflict: 'key' });
-
-        if (error) {
-            console.error('Gagal sinkron ke Supabase:', error.message);
-            alert('⚠️ Gagal simpan ke Cloud: ' + error.message);
-            return false;
-        } else {
-            console.log('Sinkronisasi cloud Supabase berhasil!');
-            return true;
-        }
-    } catch (err) {
-        console.error('Koneksi Supabase bermasalah:', err);
-        return false;
-    }
-}
-
-async function muatDariSupabase() {
-    try {
-        const { data, error } = await _supabase
-            .from('app_storage')
-            .select('value')
-            .eq('key', 'data_sekolah_utama')
-            .maybeSingle();
-
-        if (error) {
-            console.error('Gagal memuat data dari cloud:', error.message);
-            return false;
-        }
-
-        if (data && data.value) {
-            const cloud = data.value;
-            presensiData = cloud.presensi || {};
-            nilaiDataAndri = cloud.nilaidata || {};
-            historyNilaiFormatif = cloud.history_formatif || {};
-            historyNilaiSumatif = cloud.history_sumatif || {};
-            dplDataStorage = cloud.dpldata || {};
-            rankingGlobal = cloud.ranking || {};
-            isRankingDisplayed = cloud.isrank || false;
-            jenisInfoMapel = cloud.jenismapel || {};
-            savedRpmStorage = cloud.rpm_storage || [];
-            
-            localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
-            localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
-            localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
-            localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
-            localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
-            localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
-            localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
-            localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
-            localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
-
-            console.log('Data dari cloud Supabase berhasil ditarik sempurna!');
-            return true;
-        }
-        return false;
-    } catch (err) {
-        console.warn('Gagal memuat dari Supabase:', err);
-        return false;
-    }
-}
-
-async function simpanKeLocalStorage() {
-    localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
-    localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
-    localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
-    localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
-    localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
-    localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
     localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
     localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
     localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
@@ -1697,65 +1608,63 @@ async function simpanKeLocalStorage() {
     return await simpanKeSupabase();
 }
 
+// Perbaiki fungsi simpanPresensi agar menunggu Supabase selesai
 async function simpanPresensi(isAuto = false) {
     const statusSukses = await simpanKeLocalStorage();
     if (!isAuto) {
         if (statusSukses) {
             alert("✅ Presensi berhasil disimpan dan tersinkron ke cloud Supabase!");
         } else {
-            alert("⚠️ Tersimpan di perangkat ini, namun gagal terkirim ke Cloud.");
+            alert("⚠️ Tersimpan di perangkat ini, namun gagal terkirim ke Cloud. Pastikan koneksi internet stabil.");
         }
     }
     renderTabelRekapPresensi(getTodayKey());
 }
 
-// ================= INISIALISASI HALAMAN =================
-window.onload = async function() {
-    // 1. TUNGGU SELESAI tarik data dari Cloud sebelum render layar
-    await muatDariSupabase();
+        // ================= INISIALISASI & NAVIGASI =================
+        window.onload = function() {
+            muatDariSupabase().then(() => {
+                const todayStr = getTodayKey();
+                const elDisp = document.getElementById('display-tanggal-hari-ini');
+                const elInpRekap = document.getElementById('input-rekap-tanggal');
+                const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
+                const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
+                const elRekapToday = document.getElementById('rekap-presensi-today-info');
+                const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
 
-    const todayStr = getTodayKey();
-    const elDisp = document.getElementById('display-tanggal-hari-ini');
-    const elInpRekap = document.getElementById('input-rekap-tanggal');
-    const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
-    const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
-    const elRekapToday = document.getElementById('rekap-presensi-today-info');
-    const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
+                if (elDisp) elDisp.value = todayStr;
+                if (elInpRekap) elInpRekap.value = todayStr;
+                if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
+                if (elInpArsip) elInpArsip.value = todayStr;
+                if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
+                if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
 
-    if (elDisp) elDisp.value = todayStr;
-    if (elInpRekap) elInpRekap.value = todayStr;
-    if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
-    if (elInpArsip) elInpArsip.value = todayStr;
-    if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
-    if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
+                updateJamRealTime();
+                setInterval(updateJamRealTime, 1000);
 
-    updateJamRealTime();
-    setInterval(updateJamRealTime, 1000);
+                initPresensiHariIni();
+                initMapelPenilaian();
+                initAnalisis();
+                initDplPilihSiswa();
 
-    // 2. Render tampilan setelah variabel terisi data Supabase
-    initPresensiHariIni();
-    initMapelPenilaian();
-    initAnalisis();
-    initDplPilihSiswa();
-
-    if (!authRole) {
-        switchView('view-landing');
-    } else {
-        if (authRole === 'guru_kelas') {
-            switchView('view-ruang-kelas');
-        } else if (authRole === 'guru_mapel' && activeGuruMapel) {
-            document.getElementById('sapaan-guru-mapel').innerText = `Selamat datang, ${activeGuruMapel.nama}`;
-            document.getElementById('label-mapel-dashboard-sub').innerText = `Dashboard Guru Mapel: ${activeGuruMapel.mapel}`;
-            switchView('view-ruang-kelas-mapel');
-        } else if (authRole === 'siswa' && siswaLoggedIn) {
-            loadPortalSiswa(siswaLoggedIn);
-            switchView('view-portal-siswa');
-        } else {
-            switchView('view-landing');
-        }
-    }
-};
-
+                if (!authRole) {
+                    switchView('view-landing');
+                } else {
+                    if (authRole === 'guru_kelas') {
+                        switchView('view-ruang-kelas');
+                    } else if (authRole === 'guru_mapel' && activeGuruMapel) {
+                        document.getElementById('sapaan-guru-mapel').innerText = `Selamat datang, ${activeGuruMapel.nama}`;
+                        document.getElementById('label-mapel-dashboard-sub').innerText = `Dashboard Guru Mapel: ${activeGuruMapel.mapel}`;
+                        switchView('view-ruang-kelas-mapel');
+                    } else if (authRole === 'siswa' && siswaLoggedIn) {
+                        loadPortalSiswa(siswaLoggedIn);
+                        switchView('view-portal-siswa');
+                    } else {
+                        switchView('view-landing');
+                    }
+                }
+            });
+        };
 
         function updateJamRealTime() {
             const now = new Date();
