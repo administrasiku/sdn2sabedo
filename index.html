@@ -11,7 +11,6 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
         .view-section { display: none; min-height: 100vh; }
         .view-section.active { display: flex; flex-direction: column; }
-        .menu-locked { opacity: 0.4; pointer-events: none; filter: grayscale(40%); }
         @media print {
             body { background: white; }
             no-print, button, .no-print { display: none !important; }
@@ -116,7 +115,7 @@
         </div>
     </section>
 
-    <!-- 5. DASHBOARD RUANG KELAS GURU KELAS -->
+    <!-- 5. DASHBOARD RUANG KELAS GURU KELAS (LANGSUNG AKTIF / TANPA GEMBOK) -->
     <section id="view-ruang-kelas" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 mb-6 gap-4">
             <div>
@@ -124,19 +123,14 @@
                 <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">Ruang Kelas Utama</h2>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="bukaModalSinkronCloud()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
-                    <span>🔑</span> Muat & Sinkronisasi Cloud
-                </button>
+                <div id="cloud-status-indicator" class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sinkronisasi Cloud Aktif
+                </div>
                 <button onclick="logoutSesi()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 font-semibold px-4 py-2 rounded-xl text-sm transition">Keluar</button>
             </div>
         </div>
 
-        <div id="notice-lockdown" class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-2xl mb-6 text-xs font-medium flex items-center justify-between">
-            <span>🔒 <strong>Mode Keamanan Aktif:</strong> Seluruh menu penilaian terkunci sebelum Anda melakukan sinkronisasi dengan memasukkan sandi Cloud.</span>
-            <button onclick="bukaModalSinkronCloud()" class="bg-amber-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-amber-500">Masukkan Sandi Sekarang</button>
-        </div>
-
-        <div id="dashboard-menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 menu-locked">
+        <div id="dashboard-menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div onclick="switchView('view-presensi')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-4">📅</div>
                 <h3 class="text-lg font-bold text-slate-900">Presensi Hari Ini</h3>
@@ -153,11 +147,10 @@
                 <p class="text-slate-500 text-sm mt-1">Pilih kategori Formatif atau Sumatif.</p>
             </div>
             <div onclick="switchView('view-rpm-pilih-menu')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-indigo-500/30 hover:border-indigo-500 hover:shadow-md cursor-pointer transition">
-    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">📑</div>
-    <h3 class="text-lg font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM)</h3>
-    <p class="text-slate-500 text-sm mt-1">Buat Modul Ajar otomatis berbasis 8 Dimensi Profil & Taksonomi SOLO.</p>
-</div>
-            <!-- MENU DPL -->
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold mb-4">📑</div>
+                <h3 class="text-lg font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM)</h3>
+                <p class="text-slate-500 text-sm mt-1">Buat Modul Ajar otomatis berbasis 8 Dimensi Profil & Taksonomi SOLO.</p>
+            </div>
             <div onclick="switchView('view-dpl-pilih-siswa')" class="bg-white p-6 rounded-2xl shadow-sm border border-2 border-emerald-500/30 hover:border-emerald-500 hover:shadow-md cursor-pointer transition">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold mb-4">🌱</div>
                 <h3 class="text-lg font-bold text-slate-900">Penilaian DPL (Karakter)</h3>
@@ -175,26 +168,6 @@
             </div>
         </div>
     </section>
-
-    <!-- 5.1 MODAL / PROMPT PASSWORD CLOUD (SANDI: 67890) -->
-    <div id="modal-cloud-auth" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full space-y-4">
-            <div class="text-center space-y-1">
-                <div class="text-3xl">🔐</div>
-                <h3 class="text-xl font-bold text-slate-900">Autentikasi Cloud & Sinkronisasi</h3>
-                <p class="text-xs text-slate-500">Masukkan sandi untuk mengunduh data dan membuka akses menu.</p>
-            </div>
-            <div id="alert-cloud-modal" class="hidden p-2 rounded-xl text-xs font-medium text-center bg-rose-50 text-rose-600 border border-rose-200"></div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Sandi Akses</label>
-                <input type="password" id="input-cloud-password" autocomplete="off" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-emerald-500">
-            </div>
-            <div class="flex justify-end gap-3 pt-2">
-                <button onclick="document.getElementById('modal-cloud-auth').classList.add('hidden')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-sm transition">Batal</button>
-                <button onclick="prosesVerifikasiSandiCloud()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-sm">Verifikasi & Muat Data</button>
-            </div>
-        </div>
-    </div>
 
     <!-- 5.2 DASHBOARD RUANG KELAS GURU MAPEL -->
     <section id="view-ruang-kelas-mapel" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
@@ -508,7 +481,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="simpanNilaiMapelGuru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Lokal</button>
+            <button onclick="simpanNilaiMapelGuru()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi</button>
         </div>
     </section>
 
@@ -930,7 +903,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button onclick="simpanFinalNilaiAndri()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi Lokal</button>
+            <button onclick="simpanFinalNilaiAndri()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-3 rounded-xl shadow-md transition">Simpan & Sinkronisasi</button>
         </div>
     </section>
 
@@ -1005,7 +978,7 @@
             <div class="flex gap-2 flex-wrap">
                 <button onclick="bukaModalNarasiRapor()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">✨ Draf Narasi Rapor</button>
                 <button onclick="bukaModalRemedialOtomatis()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">⚡ Draf Remedial</button>
-                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️️ Cetak Rapor</button>
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨 Cetak Rapor</button>
                 <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
             </div>
         </div>
@@ -1176,256 +1149,237 @@
         <div id="container-history-card" class="space-y-4"></div>
     </section>
 
-    <!-- Skrip Aplikasi -->
-    <script>
-        let currentRpmData = null;
-let savedRpmStorage = JSON.parse(localStorage.getItem('sdn2_rpm_storage')) || [];
+    <!-- MODUL RPM 1: PILIH MENU RPM -->
+    <section id="view-rpm-pilih-menu" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-8">
+            <div>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Modul Ajar Otomatis</span>
+                <h2 class="text-2xl font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM) Kelas IV</h2>
+            </div>
+            <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
 
-function generateRpmOtomatis() {
-    const mapel = document.getElementById('rpm-mapel').value;
-    const topik = document.getElementById('rpm-topik').value.trim();
-    const penyusun = document.getElementById('rpm-penyusun').value.trim();
-    const nipPenyusun = document.getElementById('rpm-nip-penyusun').value.trim();
-    const kepsek = document.getElementById('rpm-kepsek').value.trim();
-    const nipKepsek = document.getElementById('rpm-nip-kepsek').value.trim();
-    const media = document.getElementById('rpm-media').value.trim() || "Benda konkret & Media Visual";
-    const solo = document.getElementById('rpm-solo-kko').value;
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div onclick="switchView('view-rpm-form-buat')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">✨</div>
+                <h3 class="text-xl font-extrabold text-slate-900">Buat Modul Ajar (RPM)</h3>
+                <p class="text-slate-500 text-sm mt-2">Buat modul ajar otomatis berdasarkan CP Fase B, 8 Dimensi, & Taksonomi SOLO.</p>
+                <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Mulai Buat RPM →</span>
+            </div>
 
-    if (!topik) {
-        alert("Mohon isi topik pembelajaran terlebih dahulu.");
-        document.getElementById('rpm-topik').focus();
-        return;
-    }
+            <div onclick="renderRekapRpmList()" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📂</div>
+                <h3 class="text-xl font-extrabold text-slate-900">Rekap Modul Ajar</h3>
+                <p class="text-slate-500 text-sm mt-2">Kelola, tinjau kembali, atau unduh arsip RPM yang telah disimpan.</p>
+                <span class="inline-block mt-4 text-xs font-bold text-blue-600">Buka Arsip RPM →</span>
+            </div>
+        </div>
+    </section>
 
-    let dimensiArr = [];
-    document.querySelectorAll('input[name="rpm-dimensi"]:checked').forEach(cb => dimensiArr.push(cb.value));
-    if (dimensiArr.length === 0) dimensiArr.push("Penalaran Kritis");
+    <!-- MODUL RPM 2: FORM SETUP RPM -->
+    <section id="view-rpm-form-buat" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+            <div>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Form Pembuatan</span>
+                <h2 class="text-xl font-bold text-slate-900">Setup Rencana Pembelajaran Mendalam (RPM)</h2>
+            </div>
+            <button onclick="switchView('view-rpm-pilih-menu')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
 
-    // Otomatis merumuskan Tujuan Pembelajaran & KKTP berdasarkan Topik, Media, dan SOLO
-    const tpText = `Melalui penggunaan ${media} dengan pendekatan Taksonomi SOLO (${solo}), siswa Kelas IV dapat mengidentifikasi, menganalisis, dan menyimpulkan konsep ${topik} secara bermakna dan kontekstual.`;
-    const kktpText = `1. Siswa mampu menyebutkan fakta dasar terkait ${topik}.\n2. Siswa mampu menghubungkan konsep ${topik} dengan kejadian nyata dalam kehidupan sehari-hari.\n3. Siswa mampu menyajikan laporan sederhana atau praktik terkait ${topik}.`;
-
-    // Pengalaman Belajar Mindful, Meaningful, Joyful (Memahami, Mengaplikasikan, Merefleksi)
-    let pengalamanBelajar = [
-        {
-            tahap: "1. Memahami (Mindful & Kontekstual)",
-            aktivitas: `Guru membuka pembelajaran dengan doa dan kesadaran diri (Mindful). Siswa mengamati ${media} yang disajikan guru terkait ${topik}, lalu mencatat informasi penting serta mengajukan pertanyaan kritis.`
-        },
-        {
-            tahap: "2. Mengaplikasikan (Meaningful & Kolaboratif)",
-            aktivitas: `Siswa dibagi ke dalam kelompok kecil untuk melakukan diskusi/praktik langsung menggunakan ${media}. Siswa memecahkan masalah terkait ${topik} dan saling bertukar gagasan secara aktif.`
-        },
-        {
-            tahap: "3. Merefleksi (Joyful & Bermakna)",
-            aktivitas: `Siswa bersama guru melakukan refleksi perasaan dan pemahaman hari ini dengan suasana gembira (Joyful). Siswa menyimpulkan poin penting pembelajaran ${topik}.`
-        }
-    ];
-
-    // Asesmen Formatif & Sumatif
-    const asesmenFormatif = `Observasi keaktifan siswa selama diskusi kelompok menggunakan rubrik keterlibatan dan kolaborasi.`;
-    const asesmenSumatif = `Tes tertulis / unjuk kerja unjuk pemahaman konsep ${topik} sesuai indikator KKTP.`;
-
-    // Pengayaan & Remedial
-    const pengayaan = `Diberikan kepada siswa yang telah mencapai KKTP dengan penugasan analitis tingkat lanjut terkait penerapan ${topik} di lingkungan sekitar.`;
-    const remedial = `Diberikan bimbingan ulang secara personal atau kelompok kecil menggunakan pendekatan visual/konkret bagi siswa yang belum mencapai KKTP.`;
-
-    currentRpmData = {
-        id: Date.now(),
-        mapel, topik, penyusun, nipPenyusun, kepsek, nipKepsek, media, solo,
-        dimensi: dimensiArr.join(', '),
-        tp: tpText,
-        kktp: kktpText,
-        pengalamanBelajar,
-        asesmenFormatif,
-        asesmenSumatif,
-        pengayaan,
-        remedial
-    };
-
-    renderHasilRpmToView();
-    switchView('view-rpm-hasil');
-}
-
-function renderHasilRpmToView() {
-    if (!currentRpmData) return;
-
-    document.getElementById('rpm-res-mapel-topik').innerText = `Mata Pelajaran: ${currentRpmData.mapel} | Topik: ${currentRpmData.topik}`;
-    document.getElementById('rpm-res-penyusun').innerText = currentRpmData.penyusun;
-    document.getElementById('rpm-res-nip').innerText = currentRpmData.nipPenyusun;
-    document.getElementById('rpm-res-media').innerText = currentRpmData.media;
-    document.getElementById('rpm-res-solo').innerText = currentRpmData.solo;
-    document.getElementById('rpm-res-dimensi').innerText = currentRpmData.dimensi;
-
-    document.getElementById('rpm-res-kepsek').innerText = currentRpmData.kepsek;
-    document.getElementById('rpm-res-nip-kepsek').innerText = currentRpmData.nipKepsek;
-    document.getElementById('rpm-res-tanda-penyusun').innerText = currentRpmData.penyusun;
-    document.getElementById('rpm-res-nip- tdp') ? document.getElementById('rpm-res-nip- tdp').innerText = currentRpmData.nipPenyusun : null;
-
-    const now = new Date();
-    document.getElementById('rpm-res-tanggal-sekarang').innerText = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-    let tpHtml = `
-        <p><strong>Tujuan Pembelajaran:</strong> ${currentRpmData.tp}</p>
-        <p class="mt-1"><strong>Kriteria Ketercapaian Tujuan Pembelajaran (KKTP):</strong></p>
-        <pre class="whitespace-pre-wrap font-sans text-xs text-slate-700">${currentRpmData.kktp}</pre>
-    `;
-    document.getElementById('rpm-res-tp').innerHTML = tpHtml;
-
-    renderEditableAktivitas();
-
-    let asesHtml = `
-        <p><strong>Asesmen Formatif (Proses):</strong> ${currentRpmData.asesmenFormatif}</p>
-        <p class="mt-1"><strong>Asesmen Sumatif (Akhir Lingkup Materi):</strong> ${currentRpmData.asesmenSumatif}</p>
-    `;
-    document.getElementById('rpm-res-asesmen').innerHTML = asesHtml;
-
-    let remHtml = `
-        <p><strong>Program Pengayaan:</strong> ${currentRpmData.pengayaan}</p>
-        <p class="mt-1"><strong>Program Remedial:</strong> ${currentRpmData.remedial}</p>
-    `;
-    document.getElementById('rpm-res-remedial').innerHTML = remHtml;
-}
-
-function renderEditableAktivitas() {
-    const container = document.getElementById('container-pengalaman-belajar-editable');
-    if (!container || !currentRpmData) return;
-    container.innerHTML = '';
-
-    currentRpmData.pengalamanBelajar.forEach((item, idx) => {
-        let div = document.createElement('div');
-        div.className = "p-4 bg-slate-50 border rounded-xl space-y-3 relative group";
-        div.innerHTML = `
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                <input type="text" id="tahap_input_${idx}" value="${item.tahap}" disabled class="font-bold text-xs bg-transparent border-b border-transparent w-full text-slate-800">
-                <div class="no-print flex gap-1.5 items-center shrink-0 w-full sm:w-auto justify-end flex-wrap">
-                    <button id="btn_edit_${idx}" onclick="toggleEditAktivitas(${idx})" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1 rounded-lg text-xs font-bold transition">✏️ Ubah</button>
-                    <button onclick="tambahAktivitasDiBawah(${idx})" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-3 py-1 rounded-lg text-xs font-bold transition" title="Tambah aktivitas baru di bawah ini">+ Tambah di Bawah</button>
-                    <button onclick="hapusAktivitas(${idx})" class="bg-rose-50 text-rose-700 hover:bg-rose-100 px-2.5 py-1 rounded-lg text-xs font-bold transition" title="Hapus aktivitas">🗑️</button>
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Pilih Mata Pelajaran</label>
+                    <select id="rpm-mapel" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                        <option>Pendidikan Pancasila</option>
+                        <option>Matematika</option>
+                        <option>IPAS</option>
+                        <option>Bahasa Indonesia</option>
+                        <option>Seni Rupa</option>
+                        <option>Mulok</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Topik Pembelajaran</label>
+                    <input type="text" id="rpm-topik" placeholder="Contoh: Wujud Zat dan Perubahannya" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
                 </div>
             </div>
-            <textarea id="textarea_akt_${idx}" rows="2" disabled class="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs text-slate-700 focus:outline-none focus:border-indigo-500 disabled:bg-slate-100/50 disabled:text-slate-600">${item.aktivitas}</textarea>
-        `;
-        container.appendChild(div);
-    });
-}
 
-function toggleEditAktivitas(idx) {
-    const tahapInput = document.getElementById(`tahap_input_${idx}`);
-    const textarea = document.getElementById(`textarea_akt_${idx}`);
-    const btnEdit = document.getElementById(`btn_edit_${idx}`);
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Guru / Penyusun</label>
+                    <input type="text" id="rpm-penyusun" value="Andri Julian Perdana, S.Pd" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">NIP Guru Penyusun</label>
+                    <input type="text" id="rpm-nip-penyusun" value="19990101 202201 1 001" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                </div>
+            </div>
 
-    if (textarea.disabled) {
-        // Aktifkan mode edit
-        tahapInput.disabled = false;
-        tahapInput.classList.add('border-slate-300', 'bg-white');
-        textarea.disabled = false;
-        textarea.focus();
-        btnEdit.innerHTML = "💾 Simpan";
-        btnEdit.className = "bg-emerald-600 text-white hover:bg-emerald-500 px-3 py-1 rounded-lg text-xs font-bold transition shadow-sm";
-    } else {
-        // Simpan dan matikan mode edit
-        currentRpmData.pengalamanBelajar[idx].tahap = tahapInput.value;
-        currentRpmData.pengalamanBelajar[idx].aktivitas = textarea.value;
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Kepala Sekolah</label>
+                    <input type="text" id="rpm-kepsek" value="Kepala SDN 2 Sabedo, S.Pd" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">NIP Kepala Sekolah</label>
+                    <input type="text" id="rpm-nip-kepsek" value="19750101 199803 1 005" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                </div>
+            </div>
 
-        tahapInput.disabled = true;
-        tahapInput.classList.remove('border-slate-300', 'bg-white');
-        textarea.disabled = true;
-        btnEdit.innerHTML = "✏️ Ubah";
-        btnEdit.className = "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1 rounded-lg text-xs font-bold transition";
-        simpanRpmPermanen();
-    }
-}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Media Ajar Utama</label>
+                    <input type="text" id="rpm-media" placeholder="Contoh: Benda konkret di sekitar & Video Pembelajaran" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Taksonomi SOLO & Kko</label>
+                    <select id="rpm-solo-kko" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
+                        <option>Relasional (Menganalisis, Membedakan, Menghubungkan)</option>
+                        <option>Multistruktural (Menjelaskan, Mengidentifikasi, Menghitung)</option>
+                        <option>Unistruktural (Menyebutkan, Menuliskan, Menggambar)</option>
+                        <option>Abstrak Diperluas (Mendesain, Menyimpulkan, Menciptakan)</option>
+                    </select>
+                </div>
+            </div>
 
-function tambahAktivitasDiBawah(idx) {
-    if (!currentRpmData) return;
-    
-    if (idx === undefined || idx < 0) {
-        currentRpmData.pengalamanBelajar.push({
-            tahap: `Aktivitas Lanjutan (${currentRpmData.pengalamanBelajar.length + 1})`,
-            aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
-        });
-    } else {
-        currentRpmData.pengalamanBelajar.splice(idx + 1, 0, {
-            tahap: `Aktivitas Lanjutan (${currentRpmData.pengalamanBelajar.length + 1})`,
-            aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
-        });
-    }
-    renderEditableAktivitas();
-}
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-2">8 Dimensi Profil Lulusan (Pilih Salah Satu atau Lebih)</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Keimanan dan Ketakwaan" class="w-4 h-4 text-indigo-600" checked> Keimanan & Ketakwaan</label>
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kewargaan" class="w-4 h-4 text-indigo-600"> Kewargaan</label>
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Penalaran Kritis" class="w-4 h-4 text-indigo-600" checked> Penalaran Kritis</label>
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kreativitas" class="w-4 h-4 text-indigo-600"> Kreativitas</label>
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kolaborasi" class="w-4 h-4 text-indigo-600" checked> Kolaborasi</label>
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kemandirian" class="w-4 h-4 text-indigo-600"> Kemandirian</label>
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kesehatan" class="w-4 h-4 text-indigo-600"> Kesehatan</label>
+                    <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Komunikasi" class="w-4 h-4 text-indigo-600" checked> Komunikasi</label>
+                </div>
+            </div>
 
-function hapusAktivitas(idx) {
-    if (!currentRpmData || currentRpmData.pengalamanBelajar.length <= 1) {
-        alert("Minimal harus ada 1 pengalaman belajar.");
-        return;
-    }
-    currentRpmData.pengalamanBelajar.splice(idx, 1);
-    renderEditableAktivitas();
-}
+            <div class="flex justify-end pt-4">
+                <button onclick="generateRpmOtomatis()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition text-sm">✨ Buat Rencana Pembelajaran Mendalam (RPM)</button>
+            </div>
+        </div>
+    </section>
 
-function hapusAktivitas(idx) {
-    if (!currentRpmData || currentRpmData.pengalamanBelajar.length <= 1) {
-        alert("Minimal harus ada 1 pengalaman belajar.");
-        return;
-    }
-    currentRpmData.pengalamanBelajar.splice(idx, 1);
-    renderEditableAktivitas();
-}
+    <!-- MODUL RPM 3: HASIL RPM & EDITOR AKTIVITAS -->
+    <section id="view-rpm-hasil" class="view-section p-6 md:p-10 max-w-5xl mx-auto w-full">
+        
+        <!-- BARIS TOMBOL PINTAS NAVIGASI (Penilaian Akademik & DPL) -->
+        <div class="no-print bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 p-3.5 rounded-2xl mb-4 flex items-center justify-between flex-wrap gap-3 shadow-2xs">
+            <div class="flex items-center gap-2">
+                <span class="text-sm">⚡</span>
+                <span class="text-xs font-bold text-indigo-900 uppercase tracking-wider">Tombol Pintas Navigasi Cepat:</span>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="switchView('view-pilih-kategori-penilaian')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5">
+                    <span>📝</span> Buka Penilaian Akademik
+                </button>
+                <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5">
+                    <span>🌱</span> Buka Penilaian Karakter (DPL)
+                </button>
+            </div>
+        </div>
 
-function simpanRpmPermanen() {
-    if (!currentRpmData) return;
-    let index = savedRpmStorage.findIndex(r => r.id === currentRpmData.id);
-    if (index >= 0) {
-        savedRpmStorage[index] = currentRpmData;
-    } else {
-        savedRpmStorage.push(currentRpmData);
-    }
-    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
-    alert("Dokumen Rencana Pembelajaran Mendalam (RPM) berhasil disimpan secara permanen!");
-}
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6 no-print">
+            <div>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Hasil Modul Ajar</span>
+                <h2 class="text-xl font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM)</h2>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / Download PDF</button>
+                <button onclick="simpanRpmPermanen()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">💾 Simpan RPM</button>
+                <button onclick="switchView('view-rpm-form-buat')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Edit Setup</button>
+            </div>
+        </div>
 
-function renderRekapRpmList() {
-    const tbody = document.getElementById('tabel-rekap-rpm-body');
-    if (!tbody) return;
-    tbody.innerHTML = '';
+        <!-- KERTAS DOKUMEN RPM PROFESIONAL -->
+        <div id="print-area-rpm" class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 space-y-6 text-slate-800 text-sm leading-relaxed">
+            <div class="text-center border-b-2 border-slate-800 pb-4 space-y-1">
+                <h1 class="text-xl font-extrabold uppercase tracking-wide">RENCANA PEMBELAJARAN MENDALAM (RPM)</h1>
+                <p id="rpm-res-mapel-topik" class="text-sm font-bold text-slate-700">Mata Pelajaran: - | Topik: -</p>
+                <p class="text-xs text-slate-500">Satuan Pendidikan: SDN 2 Sabedo | Kelas IV (Fase B) | Tahun Ajaran 2026/2027</p>
+            </div>
 
-    if (savedRpmStorage.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">Belum ada arsip RPM yang disimpan.</td></tr>`;
-        switchView('view-rpm-rekap');
-        return;
-    }
+            <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl text-xs border">
+                <div><strong>Penyusun:</strong> <span id="rpm-res-penyusun">-</span> (<span id="rpm-res-nip">-</span>)</div>
+                <div><strong>Media Ajar:</strong> <span id="rpm-res-media">-</span></div>
+                <div><strong>Taksonomi SOLO:</strong> <span id="rpm-res-solo">-</span></div>
+                <div><strong>Dimensi Terpilih:</strong> <span id="rpm-res-dimensi">-</span></div>
+            </div>
 
-    savedRpmStorage.forEach((rpm, idx) => {
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
-            <td class="p-4 font-medium text-slate-900 border-r">${rpm.mapel}</td>
-            <td class="p-4 font-bold text-indigo-700 border-r">${rpm.topik}</td>
-            <td class="p-4 text-xs text-slate-600 border-r">${rpm.penyusun}</td>
-            <td class="p-4 text-center flex justify-center gap-2">
-                <button onclick="bukaArsipRpm(${rpm.id})" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">Buka / Cetak</button>
-                <button onclick="hapusArsipRpm(${rpm.id})" class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-100 transition">Hapus</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-    switchView('view-rpm-rekap');
-}
+            <div class="space-y-2">
+                <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">I. Tujuan Pembelajaran & KKTP</h3>
+                <div id="rpm-res-tp" class="p-3 bg-indigo-50/50 border rounded-xl text-xs space-y-1"></div>
+            </div>
 
-function bukaArsipRpm(id) {
-    let found = savedRpmStorage.find(r => r.id === id);
-    if (found) {
-        currentRpmData = found;
-        renderHasilRpmToView();
-        switchView('view-rpm-hasil');
-    }
-}
+            <div class="space-y-2">
+                <div class="flex justify-between items-center border-b pb-1">
+                    <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider">II. Pengalaman Belajar Mendalam (Mindful, Meaningful, Joyful)</h3>
+                    <button onclick="tambahAktivitasDiBawah(-1)" class="no-print bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-bold px-2.5 py-1 rounded-lg text-xs transition border border-indigo-200">+ Tambah Aktivitas Paling Bawah</button>
+                </div>
+                <div id="container-pengalaman-belajar-editable" class="space-y-3"></div>
+            </div>
 
-function hapusArsipRpm(id) {
-    if (!confirm("Apakah Anda yakin ingin menghapus arsip RPM ini?")) return;
-    savedRpmStorage = savedRpmStorage.filter(r => r.id !== id);
-    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
-    renderRekapRpmList();
-}
+            <div class="space-y-2">
+                <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">III. Asesmen Pembelajaran (Formatif & Sumatif)</h3>
+                <div id="rpm-res-asesmen" class="p-3 bg-slate-50 border rounded-xl text-xs space-y-2"></div>
+            </div>
+
+            <div class="space-y-2">
+                <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">IV. Program Pengayaan & Remedial</h3>
+                <div id="rpm-res-remedial" class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl text-xs space-y-2"></div>
+            </div>
+
+            <div class="pt-8 flex justify-between items-center text-xs">
+                <div class="text-center space-y-12">
+                    <p>Mengetahui,<br>Kepala SDN 2 Sabedo</p>
+                    <div>
+                        <strong id="rpm-res-kepsek" class="underline">JESMIN, S.Pd.I</strong>
+                        <p>NIP. <span id="rpm-res-nip-kepsek">-</span></p>
+                    </div>
+                </div>
+                <div class="text-center space-y-12">
+                    <p>Sabedo, <span id="rpm-res-tanggal-sekarang">-</span><br>Guru Kelas IV</p>
+                    <div>
+                        <strong id="rpm-res-tanda-penyusun" class="underline">Andri Julian Perdana, S.Pd</strong>
+                        <p>NIP. <span id="rpm-res-nip- tdp">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODUL RPM 4: REKAP ARSIP RPM -->
+    <section id="view-rpm-rekap" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
+            <div>
+                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Arsip Dokumen</span>
+                <h2 class="text-xl font-bold text-slate-900">Rekap Rencana Pembelajaran Mendalam (RPM)</h2>
+            </div>
+            <button onclick="switchView('view-rpm-pilih-menu')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
+                        <th class="p-4 border-r">No</th>
+                        <th class="p-4 border-r">Mata Pelajaran</th>
+                        <th class="p-4 border-r">Topik Pembelajaran</th>
+                        <th class="p-4 border-r">Penyusun</th>
+                        <th class="p-4 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-rekap-rpm-body" class="divide-y divide-slate-100 text-sm"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- AWAL SCRIPT LOGIKA APLIKASI -->
+    <script>
+                // ================= DATA MASTER & STORAGE =================
         const daftarSiswa = [
             "Abdan Al Ghifari", "Ahmad Dani", "Aisyah Ayudia Inara", "Akil Muzaki",
             "Arsya Ilan Diandra", "Azka Maulana", "Delisa nurani", "M Padil Aryadi",
@@ -1533,6 +1487,7 @@ function hapusArsipRpm(id) {
             6: ["Mulok", "IPAS"] 
         };
 
+        // State & Penyimpanan Lokal
         let presensiData = JSON.parse(localStorage.getItem('sdn2_presensi')) || {}; 
         let nilaiDataAndri = JSON.parse(localStorage.getItem('sdn2_nilaidata')) || {}; 
         let historyNilaiFormatif = JSON.parse(localStorage.getItem('sdn2_history_formatif')) || {}; 
@@ -1541,11 +1496,12 @@ function hapusArsipRpm(id) {
         let rankingGlobal = JSON.parse(localStorage.getItem('sdn2_ranking')) || {}; 
         let isRankingDisplayed = JSON.parse(localStorage.getItem('sdn2_isrank')) || false;
         let jenisInfoMapel = JSON.parse(localStorage.getItem('sdn2_jenismapel')) || {}; 
+        let savedRpmStorage = JSON.parse(localStorage.getItem('sdn2_rpm_storage')) || [];
+        let currentRpmData = null;
 
         let authRole = sessionStorage.getItem('sdn2_auth_role') || null; 
         let activeGuruMapel = JSON.parse(sessionStorage.getItem('sdn2_active_gurumapel')) || null; 
         let siswaLoggedIn = sessionStorage.getItem('sdn2_siswalogin') || null;
-        let isCloudUnlocked = sessionStorage.getItem('sdn2_cloud_unlocked') === 'true';
 
         let activeKategoriAsesmen = "Formatif"; 
         let activeMapelAndri = "";
@@ -1554,241 +1510,137 @@ function hapusArsipRpm(id) {
         let selectedMultiMapelList = [];
         let historyAsalView = "portal"; 
         let activeDplSiswa = "";
-        // --- INISIALISASI SUPABASE & CLOUD SYNC ---
-const SUPABASE_URL = 'https://iecebbjqjfzjnbdlxnih.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_-WRfySOS91oR4CHa32AoxQ_eWekUJXG'; 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function simpanKeSupabase() {
-    const payloadData = {
-        presensi: presensiData,
-        nilaidata: nilaiDataAndri,
-        history_formatif: historyNilaiFormatif,
-        history_sumatif: historyNilaiSumatif,
-        dpldata: dplDataStorage,
-        ranking: rankingGlobal,
-        isrank: isRankingDisplayed,
-        jenismapel: jenisInfoMapel,
-        rpm_storage: savedRpmStorage
-    };
+        // ================= SUPABASE CLOUD SYNC OTOMATIS =================
+        const SUPABASE_URL = 'https://iecebbjqjfzjnbdlxnih.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_-WRfySOS91oR4CHa32AoxQ_eWekUJXG'; 
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const { error } = await _supabase
-        .from('app_storage')
-        .upsert({ key: 'data_sekolah_utama', value: payloadData });
+        async function simpanKeSupabase() {
+            const payloadData = {
+                presensi: presensiData,
+                nilaidata: nilaiDataAndri,
+                history_formatif: historyNilaiFormatif,
+                history_sumatif: historyNilaiSumatif,
+                dpldata: dplDataStorage,
+                ranking: rankingGlobal,
+                isrank: isRankingDisplayed,
+                jenismapel: jenisInfoMapel,
+                rpm_storage: savedRpmStorage
+            };
 
-    if (error) {
-        console.error('Gagal menyimpan ke cloud:', error.message);
-    } else {
-        console.log('Data berhasil disinkronkan ke cloud Supabase!');
-    }
-}
+            try {
+                const { error } = await _supabase
+                    .from('app_storage')
+                    .upsert({ key: 'data_sekolah_utama', value: payloadData });
 
-async function muatDariSupabase() {
-    const { data, error } = await _supabase
-        .from('app_storage')
-        .select('value')
-        .eq('key', 'data_sekolah_utama')
-        .single();
+                if (error) {
+                    console.error('Gagal sinkron ke Supabase:', error.message);
+                } else {
+                    console.log('Sinkronisasi cloud berhasil otomatis!');
+                }
+            } catch (err) {
+                console.error('Koneksi Supabase bermasalah:', err);
+            }
+        }
 
-    if (data && data.value) {
-        const cloud = data.value;
-        presensiData = cloud.presensi || {};
-        nilaiDataAndri = cloud.nilaidata || {};
-        historyNilaiFormatif = cloud.history_formatif || {};
-        historyNilaiSumatif = cloud.history_sumatif || {};
-        dplDataStorage = cloud.dpldata || {};
-        rankingGlobal = cloud.ranking || {};
-        isRankingDisplayed = cloud.isrank || false;
-        jenisInfoMapel = cloud.jenismapel || {};
-        savedRpmStorage = cloud.rpm_storage || [];
-        
-        console.log('Data berhasil dimuat dari cloud Supabase!');
-    }
-}
+        async function muatDariSupabase() {
+            try {
+                const { data, error } = await _supabase
+                    .from('app_storage')
+                    .select('value')
+                    .eq('key', 'data_sekolah_utama')
+                    .single();
+
+                if (data && data.value) {
+                    const cloud = data.value;
+                    presensiData = cloud.presensi || {};
+                    nilaiDataAndri = cloud.nilaidata || {};
+                    historyNilaiFormatif = cloud.history_formatif || {};
+                    historyNilaiSumatif = cloud.history_sumatif || {};
+                    dplDataStorage = cloud.dpldata || {};
+                    rankingGlobal = cloud.ranking || {};
+                    isRankingDisplayed = cloud.isrank || false;
+                    jenisInfoMapel = cloud.jenismapel || {};
+                    savedRpmStorage = cloud.rpm_storage || [];
+                    
+                    // Update cache lokal perangkat
+                    localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
+                    localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
+                    localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
+                    localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
+                    localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
+                    localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
+                    localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
+                    localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
+                    localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
+
+                    console.log('Data dari cloud Supabase berhasil ditarik sempurna!');
+                }
+            } catch (err) {
+                console.warn('Gagal memuat dari Supabase, menggunakan data lokal perangkat:', err);
+            }
+        }
 
         function simpanKeLocalStorage() {
-    localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
-    localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
-    localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
-    localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
-    localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
-    localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
-    localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
-    localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
-    
-    // PASTIKAN BARIS INI ADA AGAR DATA TERKIRIM KE CLOUD SUPABASE
-    simpanKeSupabase();
-}
-
-        function getHistoryObj(kategori) {
-            return kategori === 'Sumatif' ? historyNilaiSumatif : historyNilaiFormatif;
-        }
-
-        function dapatkanRekamanMapelSiswa(namaSiswa, mapel, kategori = 'Formatif') {
-            const hist = getHistoryObj(kategori);
-            if (hist && hist[namaSiswa] && Array.isArray(hist[namaSiswa][mapel])) {
-                return hist[namaSiswa][mapel];
-            }
-            return [];
-        }
-
-        function hitungRataRataMapel(namaSiswa, mapel, kategori = 'Formatif') {
-            const arr = dapatkanRekamanMapelSiswa(namaSiswa, mapel, kategori);
-            if (arr.length === 0) return 0;
-            const total = arr.reduce((acc, curr) => acc + (parseFloat(curr.score) || 0), 0);
-            return Math.round((total / arr.length) * 10) / 10;
-        }
-
-        function getTodayKey() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function hitungKalkulasiNilaiSiswaFleksibel(studentData, mapelTarget) {
-            const info = jenisInfoMapel[mapelTarget] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
+            localStorage.setItem('sdn2_presensi', JSON.stringify(presensiData));
+            localStorage.setItem('sdn2_nilaidata', JSON.stringify(nilaiDataAndri));
+            localStorage.setItem('sdn2_history_formatif', JSON.stringify(historyNilaiFormatif));
+            localStorage.setItem('sdn2_history_sumatif', JSON.stringify(historyNilaiSumatif));
+            localStorage.setItem('sdn2_dpldata', JSON.stringify(dplDataStorage));
+            localStorage.setItem('sdn2_ranking', JSON.stringify(rankingGlobal));
+            localStorage.setItem('sdn2_isrank', JSON.stringify(isRankingDisplayed));
+            localStorage.setItem('sdn2_jenismapel', JSON.stringify(jenisInfoMapel));
+            localStorage.setItem('sdn2_rpm_storage', JSON.stringify(savedRpmStorage));
             
-            let totalPoinPen = 0, totalMaksPen = 0;
-            const penList = info.penList || [];
-            penList.forEach(jenis => {
-                const scores = (studentData.penScores && studentData.penScores[jenis]) ? studentData.penScores[jenis] : [];
-                const maxArr = (info.maxScoresPen && info.maxScoresPen[jenis]) ? info.maxScoresPen[jenis] : [];
-                
-                for(let i=0; i<scores.length; i++) {
-                    let val = parseFloat(scores[i]) || 0;
-                    let maxVal = parseFloat(maxArr[i]) || (jenis === 'Pilihan Ganda' ? 1 : 10);
-                    totalMaksPen += maxVal;
-                    totalPoinPen += Math.min(Math.max(val, 0), maxVal);
+            // Otomatis kirim ke cloud tanpa perlu klik tombol
+            simpanKeSupabase();
+        }
+
+        // ================= INISIALISASI & NAVIGASI =================
+        window.onload = function() {
+            muatDariSupabase().then(() => {
+                const todayStr = getTodayKey();
+                const elDisp = document.getElementById('display-tanggal-hari-ini');
+                const elInpRekap = document.getElementById('input-rekap-tanggal');
+                const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
+                const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
+                const elRekapToday = document.getElementById('rekap-presensi-today-info');
+                const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
+
+                if (elDisp) elDisp.value = todayStr;
+                if (elInpRekap) elInpRekap.value = todayStr;
+                if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
+                if (elInpArsip) elInpArsip.value = todayStr;
+                if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
+                if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
+
+                updateJamRealTime();
+                setInterval(updateJamRealTime, 1000);
+
+                initPresensiHariIni();
+                initMapelPenilaian();
+                initAnalisis();
+                initDplPilihSiswa();
+
+                if (!authRole) {
+                    switchView('view-landing');
+                } else {
+                    if (authRole === 'guru_kelas') {
+                        switchView('view-ruang-kelas');
+                    } else if (authRole === 'guru_mapel' && activeGuruMapel) {
+                        document.getElementById('sapaan-guru-mapel').innerText = `Selamat datang, ${activeGuruMapel.nama}`;
+                        document.getElementById('label-mapel-dashboard-sub').innerText = `Dashboard Guru Mapel: ${activeGuruMapel.mapel}`;
+                        switchView('view-ruang-kelas-mapel');
+                    } else if (authRole === 'siswa' && siswaLoggedIn) {
+                        loadPortalSiswa(siswaLoggedIn);
+                        switchView('view-portal-siswa');
+                    } else {
+                        switchView('view-landing');
+                    }
                 }
             });
-            const persentasePengetahuan = totalMaksPen > 0 ? (totalPoinPen / totalMaksPen) * 100 : 0;
-
-            let persentaseKeterampilan = 0;
-            let totalMaksKet = 0;
-            if (!info.skipKet) {
-                let totalPoinKet = 0;
-                const ketList = info.ketList || [];
-                ketList.forEach(jenis => {
-                    const scores = (studentData.ketScores && studentData.ketScores[jenis]) ? studentData.ketScores[jenis] : [];
-                    const maxArr = (info.maxScoresKet && info.maxScoresKet[jenis]) ? info.maxScoresKet[jenis] : [];
-
-                    for(let i=0; i<scores.length; i++) {
-                        let val = parseFloat(scores[i]) || 0;
-                        let maxVal = parseFloat(maxArr[i]) || 10;
-                        totalMaksKet += maxVal;
-                        totalPoinKet += Math.min(Math.max(val, 0), maxVal);
-                    }
-                });
-                persentaseKeterampilan = totalMaksKet > 0 ? (totalPoinKet / totalMaksKet) * 100 : 0;
-            }
-
-            let finalScore = 0;
-            if (!info.skipKet && totalMaksKet > 0 && totalMaksPen > 0) {
-                finalScore = (0.7 * persentasePengetahuan) + (0.3 * persentaseKeterampilan);
-            } else if (info.skipKet || totalMaksKet === 0) {
-                finalScore = persentasePengetahuan;
-            } else {
-                finalScore = persentaseKeterampilan;
-            }
-
-            const finalRounded = Math.round(finalScore * 10) / 10;
-            return {
-                penPersen: Math.round(persentasePengetahuan * 10) / 10,
-                ketPersen: Math.round(persentaseKeterampilan * 10) / 10,
-                final: isNaN(finalRounded) ? 0 : finalRounded
-            };
-        }
-
-        window.onload = function() {
-    // 1. TARIK DATA DARI SUPABASE TERLEBIH DAHULU KE PERANGKAT INI
-    muatDariSupabase().then(() => {
-        const todayStr = getTodayKey();
-        const elDisp = document.getElementById('display-tanggal-hari-ini');
-        const elInpRekap = document.getElementById('input-rekap-tanggal');
-        const elInpMapelAktif = document.getElementById('input-tanggal-mapel-aktif');
-        const elInpArsip = document.getElementById('input-rekap-mapel-arsip-tgl');
-        const elRekapToday = document.getElementById('rekap-presensi-today-info');
-
-        if (elDisp) elDisp.value = todayStr;
-        if (elInpRekap) elInpRekap.value = todayStr;
-        if (elInpMapelAktif) elInpMapelAktif.value = todayStr;
-        if (elInpArsip) elInpArsip.value = todayStr;
-        if (elRekapToday) elRekapToday.innerText = `Tanggal Hari Ini: ${todayStr}`;
-        
-        const elInpRekapNilai = document.getElementById('input-rekap-nilai-tanggal');
-        if (elInpRekapNilai) elInpRekapNilai.value = todayStr;
-
-        updateJamRealTime();
-        setInterval(updateJamRealTime, 1000);
-
-        initPresensiHariIni();
-        initMapelPenilaian();
-        initAnalisis();
-        initDplPilihSiswa();
-
-        if (!authRole) {
-            switchView('view-landing');
-        } else {
-            if (authRole === 'guru_kelas') {
-                aturStatusLockdownDashboard();
-                switchView('view-ruang-kelas');
-            } else if (authRole === 'guru_mapel' && activeGuruMapel) {
-                document.getElementById('sapaan-guru-mapel').innerText = `Selamat datang, ${activeGuruMapel.nama}`;
-                document.getElementById('label-mapel-dashboard-sub').innerText = `Dashboard Guru Mapel: ${activeGuruMapel.mapel}`;
-                switchView('view-ruang-kelas-mapel');
-            } else if (authRole === 'siswa' && siswaLoggedIn) {
-                loadPortalSiswa(siswaLoggedIn);
-                switchView('view-portal-siswa');
-            } else {
-                switchView('view-landing');
-            }
-        }
-    });
-};
-
-        function aturStatusLockdownDashboard() {
-            const menuContainer = document.getElementById('dashboard-menu-container');
-            const noticeLock = document.getElementById('notice-lockdown');
-            if (!menuContainer || !noticeLock) return;
-
-            if (isCloudUnlocked) {
-                menuContainer.classList.remove('menu-locked');
-                noticeLock.style.display = 'none';
-            } else {
-                menuContainer.classList.add('menu-locked');
-                noticeLock.style.display = 'flex';
-            }
-        }
-
-        function bukaModalSinkronCloud() {
-            document.getElementById('input-cloud-password').value = '';
-            document.getElementById('alert-cloud-modal').classList.add('hidden');
-            document.getElementById('modal-cloud-auth').classList.remove('hidden');
-        }
-
-        function prosesVerifikasiSandiCloud() {
-            const passVal = document.getElementById('input-cloud-password').value.trim();
-            const alertBox = document.getElementById('alert-cloud-modal');
-            alertBox.classList.remove('hidden');
-
-            if (passVal === "67890") {
-                isCloudUnlocked = true;
-                sessionStorage.setItem('sdn2_cloud_unlocked', 'true');
-                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200";
-                alertBox.innerText = "Sandi benar! Memuat data...";
-
-                setTimeout(() => {
-                    document.getElementById('modal-cloud-auth').classList.add('hidden');
-                    aturStatusLockdownDashboard();
-                    alert("Data berhasil dimuat & seluruh menu dashboard kini aktif!");
-                }, 400);
-            } else {
-                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-rose-50 text-rose-600 border border-rose-200";
-                alertBox.innerText = "Sandi Salah! Silakan coba lagi.";
-            }
-        }
+        };
 
         function updateJamRealTime() {
             const now = new Date();
@@ -1809,12 +1661,6 @@ async function muatDariSupabase() {
 
             if (!publikViews.includes(viewId) && !authRole) {
                 viewId = 'view-landing';
-            }
-
-            if (viewId !== 'view-ruang-kelas' && authRole === 'guru_kelas' && !isCloudUnlocked && !publikViews.includes(viewId)) {
-                alert("⚠️ Akses ditolak! Harap masukkan sandi Cloud terlebih dahulu di halaman utama Guru Kelas.");
-                switchView('view-ruang-kelas');
-                return;
             }
 
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
@@ -1861,14 +1707,13 @@ async function muatDariSupabase() {
             sessionStorage.removeItem('sdn2_auth_role');
             sessionStorage.removeItem('sdn2_active_gurumapel');
             sessionStorage.removeItem('sdn2_siswalogin');
-            sessionStorage.removeItem('sdn2_cloud_unlocked');
             authRole = null;
             activeGuruMapel = null;
             siswaLoggedIn = null;
-            isCloudUnlocked = false;
             switchView('view-landing');
         }
 
+        // ================= PROSES LOGIN =================
         function handleLoginGuru() {
             const user = document.getElementById('username-guru').value.trim().toLowerCase();
             const pass = document.getElementById('password-guru').value.trim();
@@ -1885,9 +1730,8 @@ async function muatDariSupabase() {
                     alertBox.classList.add('hidden');
                     document.getElementById('username-guru').value = '';
                     document.getElementById('password-guru').value = '';
-                    aturStatusLockdownDashboard();
                     switchView('view-ruang-kelas');
-                }, 500);
+                }, 400);
             } else {
                 alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 alertBox.innerText = "Username atau Password Guru Kelas Salah!";
@@ -1928,7 +1772,7 @@ async function muatDariSupabase() {
                     document.getElementById('input-tanggal-mapel-aktif').value = todayStr;
                     document.getElementById('input-rekap-mapel-arsip-tgl').value = todayStr;
                     switchView('view-ruang-kelas-mapel');
-                }, 500);
+                }, 400);
             } else {
                 alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 alertBox.innerText = "Username atau Password Guru Mapel Salah!";
@@ -1957,11 +1801,20 @@ async function muatDariSupabase() {
                     document.getElementById('password-siswa').value = '';
                     loadPortalSiswa(found.nama);
                     switchView('view-portal-siswa');
-                }, 500);
+                }, 400);
             } else {
                 alertBox.className = "mb-4 p-3 rounded-xl text-sm font-medium text-center bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 alertBox.innerText = "Username atau Password Siswa Salah!";
             }
+        }
+
+        // ================= MODUL PRESENSI =================
+        function getTodayKey() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         function initPresensiHariIni() {
@@ -2031,7 +1884,7 @@ async function muatDariSupabase() {
 
         function simpanPresensi(isAuto = false) {
             simpanKeLocalStorage();
-            if (!isAuto) alert("Data presensi berhasil disimpan di perangkat Anda!");
+            if (!isAuto) alert("Data presensi berhasil disimpan & disinkronkan ke cloud!");
             renderTabelRekapPresensi(getTodayKey());
         }
 
@@ -2044,7 +1897,7 @@ async function muatDariSupabase() {
 
             const dateObj = new Date(selectedLampauDate);
             if (!isNaN(dateObj.getDay()) && dateObj.getDay() === 0) {
-                if (!confirm("⚠️️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap presensi pada tanggal ini?")) {
+                if (!confirm("⚠️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Tetap ingin merekap presensi?")) {
                     return;
                 }
             }
@@ -2167,7 +2020,239 @@ async function muatDariSupabase() {
             document.getElementById('modal-analisis-kehadiran').classList.remove('hidden');
         }
 
-        // ================= LOGIC DPL BERKELANJUTAN =================
+        // ================= MODUL RENCANA PEMBELAJARAN MENDALAM (RPM) =================
+        function generateRpmOtomatis() {
+            const mapel = document.getElementById('rpm-mapel').value;
+            const topik = document.getElementById('rpm-topik').value.trim();
+            const penyusun = document.getElementById('rpm-penyusun').value.trim();
+            const nipPenyusun = document.getElementById('rpm-nip-penyusun').value.trim();
+            const kepsek = document.getElementById('rpm-kepsek').value.trim();
+            const nipKepsek = document.getElementById('rpm-nip-kepsek').value.trim();
+            const media = document.getElementById('rpm-media').value.trim() || "Benda konkret & Media Visual";
+            const solo = document.getElementById('rpm-solo-kko').value;
+
+            if (!topik) {
+                alert("Mohon isi topik pembelajaran terlebih dahulu.");
+                document.getElementById('rpm-topik').focus();
+                return;
+            }
+
+            let dimensiArr = [];
+            document.querySelectorAll('input[name="rpm-dimensi"]:checked').forEach(cb => dimensiArr.push(cb.value));
+            if (dimensiArr.length === 0) dimensiArr.push("Penalaran Kritis");
+
+            const tpText = `Melalui penggunaan ${media} dengan pendekatan Taksonomi SOLO (${solo}), siswa Kelas IV dapat mengidentifikasi, menganalisis, dan menyimpulkan konsep ${topik} secara bermakna dan kontekstual.`;
+            const kktpText = `1. Siswa mampu menyebutkan fakta dasar terkait ${topik}.\n2. Siswa mampu menghubungkan konsep ${topik} dengan kejadian nyata dalam kehidupan sehari-hari.\n3. Siswa mampu menyajikan laporan sederhana atau praktik terkait ${topik}.`;
+
+            let pengalamanBelajar = [
+                {
+                    tahap: "1. Memahami (Mindful & Kontekstual)",
+                    aktivitas: `Guru membuka pembelajaran dengan doa dan kesadaran diri (Mindful). Siswa mengamati ${media} yang disajikan guru terkait ${topik}, lalu mencatat informasi penting serta mengajukan pertanyaan kritis.`
+                },
+                {
+                    tahap: "2. Mengaplikasikan (Meaningful & Kolaboratif)",
+                    aktivitas: `Siswa dibagi ke dalam kelompok kecil untuk melakukan diskusi/praktik langsung menggunakan ${media}. Siswa memecahkan masalah terkait ${topik} dan saling bertukar gagasan secara aktif.`
+                },
+                {
+                    tahap: "3. Merefleksi (Joyful & Bermakna)",
+                    aktivitas: `Siswa bersama guru melakukan refleksi perasaan dan pemahaman hari ini dengan suasana gembira (Joyful). Siswa menyimpulkan poin penting pembelajaran ${topik}.`
+                }
+            ];
+
+            const asesmenFormatif = `Observasi keaktifan siswa selama diskusi kelompok menggunakan rubrik keterlibatan dan kolaborasi.`;
+            const asesmenSumatif = `Tes tertulis / unjuk kerja unjuk pemahaman konsep ${topik} sesuai indikator KKTP.`;
+            const pengayaan = `Diberikan kepada siswa yang telah mencapai KKTP dengan penugasan analitis tingkat lanjut terkait penerapan ${topik} di lingkungan sekitar.`;
+            const remedial = `Diberikan bimbingan ulang secara personal atau kelompok kecil menggunakan pendekatan visual/konkret bagi siswa yang belum mencapai KKTP.`;
+
+            currentRpmData = {
+                id: Date.now(),
+                mapel, topik, penyusun, nipPenyusun, kepsek, nipKepsek, media, solo,
+                dimensi: dimensiArr.join(', '),
+                tp: tpText,
+                kktp: kktpText,
+                pengalamanBelajar,
+                asesmenFormatif,
+                asesmenSumatif,
+                pengayaan,
+                remedial
+            };
+
+            renderHasilRpmToView();
+            switchView('view-rpm-hasil');
+        }
+
+        function renderHasilRpmToView() {
+            if (!currentRpmData) return;
+
+            document.getElementById('rpm-res-mapel-topik').innerText = `Mata Pelajaran: ${currentRpmData.mapel} | Topik: ${currentRpmData.topik}`;
+            document.getElementById('rpm-res-penyusun').innerText = currentRpmData.penyusun;
+            document.getElementById('rpm-res-nip').innerText = currentRpmData.nipPenyusun;
+            document.getElementById('rpm-res-media').innerText = currentRpmData.media;
+            document.getElementById('rpm-res-solo').innerText = currentRpmData.solo;
+            document.getElementById('rpm-res-dimensi').innerText = currentRpmData.dimensi;
+
+            document.getElementById('rpm-res-kepsek').innerText = currentRpmData.kepsek;
+            document.getElementById('rpm-res-nip-kepsek').innerText = currentRpmData.nipKepsek;
+            document.getElementById('rpm-res-tanda-penyusun').innerText = currentRpmData.penyusun;
+            if (document.getElementById('rpm-res-nip-tdp')) {
+                document.getElementById('rpm-res-nip-tdp').innerText = currentRpmData.nipPenyusun;
+            }
+
+            const now = new Date();
+            document.getElementById('rpm-res-tanggal-sekarang').innerText = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            let tpHtml = `
+                <p><strong>Tujuan Pembelajaran:</strong> ${currentRpmData.tp}</p>
+                <p class="mt-1"><strong>Kriteria Ketercapaian Tujuan Pembelajaran (KKTP):</strong></p>
+                <pre class="whitespace-pre-wrap font-sans text-xs text-slate-700">${currentRpmData.kktp}</pre>
+            `;
+            document.getElementById('rpm-res-tp').innerHTML = tpHtml;
+
+            renderEditableAktivitas();
+
+            let asesHtml = `
+                <p><strong>Asesmen Formatif (Proses):</strong> ${currentRpmData.asesmenFormatif}</p>
+                <p class="mt-1"><strong>Asesmen Sumatif (Akhir Lingkup Materi):</strong> ${currentRpmData.asesmenSumatif}</p>
+            `;
+            document.getElementById('rpm-res-asesmen').innerHTML = asesHtml;
+
+            let remHtml = `
+                <p><strong>Program Pengayaan:</strong> ${currentRpmData.pengayaan}</p>
+                <p class="mt-1"><strong>Program Remedial:</strong> ${currentRpmData.remedial}</p>
+            `;
+            document.getElementById('rpm-res-remedial').innerHTML = remHtml;
+        }
+
+        function renderEditableAktivitas() {
+            const container = document.getElementById('container-pengalaman-belajar-editable');
+            if (!container || !currentRpmData) return;
+            container.innerHTML = '';
+
+            currentRpmData.pengalamanBelajar.forEach((item, idx) => {
+                let div = document.createElement('div');
+                div.className = "p-4 bg-slate-50 border rounded-xl space-y-3 relative group";
+                div.innerHTML = `
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <input type="text" id="tahap_input_${idx}" value="${item.tahap}" disabled class="font-bold text-xs bg-transparent border-b border-transparent w-full text-slate-800">
+                        <div class="no-print flex gap-1.5 items-center shrink-0 w-full sm:w-auto justify-end flex-wrap">
+                            <button id="btn_edit_${idx}" onclick="toggleEditAktivitas(${idx})" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1 rounded-lg text-xs font-bold transition">✏️ Ubah</button>
+                            <button onclick="tambahAktivitasDiBawah(${idx})" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-3 py-1 rounded-lg text-xs font-bold transition" title="Tambah aktivitas baru di bawah ini">+ Tambah di Bawah</button>
+                            <button onclick="hapusAktivitas(${idx})" class="bg-rose-50 text-rose-700 hover:bg-rose-100 px-2.5 py-1 rounded-lg text-xs font-bold transition" title="Hapus aktivitas">🗑️</button>
+                        </div>
+                    </div>
+                    <textarea id="textarea_akt_${idx}" rows="2" disabled class="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs text-slate-700 focus:outline-none focus:border-indigo-500 disabled:bg-slate-100/50 disabled:text-slate-600">${item.aktivitas}</textarea>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleEditAktivitas(idx) {
+            const tahapInput = document.getElementById(`tahap_input_${idx}`);
+            const textarea = document.getElementById(`textarea_akt_${idx}`);
+            const btnEdit = document.getElementById(`btn_edit_${idx}`);
+
+            if (textarea.disabled) {
+                tahapInput.disabled = false;
+                tahapInput.classList.add('border-slate-300', 'bg-white');
+                textarea.disabled = false;
+                textarea.focus();
+                btnEdit.innerHTML = "💾 Simpan";
+                btnEdit.className = "bg-emerald-600 text-white hover:bg-emerald-500 px-3 py-1 rounded-lg text-xs font-bold transition shadow-sm";
+            } else {
+                currentRpmData.pengalamanBelajar[idx].tahap = tahapInput.value;
+                currentRpmData.pengalamanBelajar[idx].aktivitas = textarea.value;
+
+                tahapInput.disabled = true;
+                tahapInput.classList.remove('border-slate-300', 'bg-white');
+                textarea.disabled = true;
+                btnEdit.innerHTML = "✏️ Ubah";
+                btnEdit.className = "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1 rounded-lg text-xs font-bold transition";
+                simpanRpmPermanen();
+            }
+        }
+
+        function tambahAktivitasDiBawah(idx) {
+            if (!currentRpmData) return;
+            
+            if (idx === undefined || idx < 0) {
+                currentRpmData.pengalamanBelajar.push({
+                    tahap: `Aktivitas Lanjutan (${currentRpmData.pengalamanBelajar.length + 1})`,
+                    aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
+                });
+            } else {
+                currentRpmData.pengalamanBelajar.splice(idx + 1, 0, {
+                    tahap: `Aktivitas Lanjutan (${currentRpmData.pengalamanBelajar.length + 1})`,
+                    aktivitas: "Tuliskan rincian aktivitas guru dan siswa di sini..."
+                });
+            }
+            renderEditableAktivitas();
+        }
+
+        function hapusAktivitas(idx) {
+            if (!currentRpmData || currentRpmData.pengalamanBelajar.length <= 1) {
+                alert("Minimal harus ada 1 pengalaman belajar.");
+                return;
+            }
+            currentRpmData.pengalamanBelajar.splice(idx, 1);
+            renderEditableAktivitas();
+        }
+
+        function simpanRpmPermanen() {
+            if (!currentRpmData) return;
+            let index = savedRpmStorage.findIndex(r => r.id === currentRpmData.id);
+            if (index >= 0) {
+                savedRpmStorage[index] = currentRpmData;
+            } else {
+                savedRpmStorage.push(currentRpmData);
+            }
+            simpanKeLocalStorage();
+            alert("Dokumen Rencana Pembelajaran Mendalam (RPM) berhasil disimpan permanen!");
+        }
+
+        function renderRekapRpmList() {
+            const tbody = document.getElementById('tabel-rekap-rpm-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (savedRpmStorage.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">Belum ada arsip RPM yang disimpan.</td></tr>`;
+                switchView('view-rpm-rekap');
+                return;
+            }
+
+            savedRpmStorage.forEach((rpm, idx) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
+                    <td class="p-4 font-medium text-slate-900 border-r">${rpm.mapel}</td>
+                    <td class="p-4 font-bold text-indigo-700 border-r">${rpm.topik}</td>
+                    <td class="p-4 text-xs text-slate-600 border-r">${rpm.penyusun}</td>
+                    <td class="p-4 text-center flex justify-center gap-2">
+                        <button onclick="bukaArsipRpm(${rpm.id})" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition">Buka / Cetak</button>
+                        <button onclick="hapusArsipRpm(${rpm.id})" class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-100 transition">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            switchView('view-rpm-rekap');
+        }
+
+        function bukaArsipRpm(id) {
+            let found = savedRpmStorage.find(r => r.id === id);
+            if (found) {
+                currentRpmData = found;
+                renderHasilRpmToView();
+                switchView('view-rpm-hasil');
+            }
+        }
+
+        function hapusArsipRpm(id) {
+            if (!confirm("Apakah Anda yakin ingin menghapus arsip RPM ini?")) return;
+            savedRpmStorage = savedRpmStorage.filter(r => r.id !== id);
+            simpanKeLocalStorage();
+            renderRekapRpmList();
+        }
+                // ================= MODUL DPL (KARAKTER) =================
         function initDplPilihSiswa() {
             const container = document.getElementById('grid-dpl-siswa-container');
             if (!container) return;
@@ -2321,24 +2406,6 @@ async function muatDariSupabase() {
                 }
             });
 
-            let studentDates = Object.keys(dplDataStorage[activeDplSiswa][periode] || {}).sort();
-            let prevDate = null;
-            let currentIndex = studentDates.indexOf(tanggalSpesifik);
-            if (currentIndex > 0) prevDate = studentDates[currentIndex - 1];
-
-            let badgeContainer = document.getElementById(`badge_progres_${dIdx}_${sIdx}`);
-            if (badgeContainer && prevDate) {
-                let prevSub = dplDataStorage[activeDplSiswa][periode][prevDate]?.penilaian?.[dimensi]?.[subNama];
-                let prevGrade = typeof prevSub === 'object' ? prevSub.grade : prevSub;
-                if (prevGrade) {
-                    if ((prevGrade === 'B' && (grade === 'C' || grade === 'M')) || (prevGrade === 'C' && grade === 'M')) {
-                        badgeContainer.innerHTML = `<span class="inline-block mt-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">⬆️ Peningkatan (${prevGrade} → ${grade})</span>`;
-                    } else {
-                        badgeContainer.innerHTML = '';
-                    }
-                }
-            }
-
             let rubrikSub = "";
             dplRubrikMaster.forEach(d => {
                 if (d.dimensi === dimensi) {
@@ -2413,7 +2480,6 @@ async function muatDariSupabase() {
             if (dateKeys.length >= 2) {
                 let firstDate = dateKeys[0];
                 let firstPenilaian = periodObj[firstDate].penilaian || {};
-                
                 let sumFirst = 0, countFirst = 0;
                 let sumLast = 0, countLast = 0;
 
@@ -2437,10 +2503,7 @@ async function muatDariSupabase() {
 
                 let avgFirst = countFirst > 0 ? sumFirst / countFirst : 0;
                 let avgLast = countLast > 0 ? sumLast / countLast : 0;
-
-                if (avgLast > avgFirst) {
-                    trenStr = "📈 Peningkatan Positif";
-                }
+                if (avgLast > avgFirst) trenStr = "📈 Peningkatan Positif";
             }
 
             return {
@@ -2451,7 +2514,6 @@ async function muatDariSupabase() {
 
         function renderRekapGrafikDpl() {
             const periode = document.getElementById('filter-rekap-dpl-periode').value || "Juli-Agustus 2026";
-            
             let totalB = 0, totalC = 0, totalM = 0;
             let totalSiswaSudahDinilai = 0;
             const totalSiswaKelas = daftarSiswa.length;
@@ -2459,8 +2521,7 @@ async function muatDariSupabase() {
             daftarSiswa.forEach(nama => {
                 let studentHistories = dplDataStorage[nama] || {};
                 let periodObj = studentHistories[periode] || {};
-                let adaDataSiswa = Object.keys(periodObj).length > 0;
-                if (adaDataSiswa) totalSiswaSudahDinilai++;
+                if (Object.keys(periodObj).length > 0) totalSiswaSudahDinilai++;
 
                 Object.keys(periodObj).forEach(tgl => {
                     let penilaian = periodObj[tgl].penilaian || {};
@@ -2511,7 +2572,6 @@ async function muatDariSupabase() {
             daftarSiswa.forEach((nama, idx) => {
                 let studentHistories = dplDataStorage[nama] || {};
                 let analisis = hitungAnalisisKarakterSiswa(studentHistories, periode);
-
                 let badgeTren = analisis.tren.includes("Peningkatan") ? '<span class="block text-[10px] text-emerald-600 font-bold mt-0.5">📈 Ada Peningkatan</span>' : '';
 
                 let tr = document.createElement('tr');
@@ -2534,7 +2594,6 @@ async function muatDariSupabase() {
         function bukaDetailDplHistory(namaSiswa) {
             activeDplSiswa = namaSiswa;
             document.getElementById('title-dpl-detail-siswa').innerText = `Riwayat Linimasa Karakter & Rapor DPL: ${namaSiswa}`;
-            
             renderDplHistoryCardsView(namaSiswa);
             switchView('view-dpl-detail-readonly');
         }
@@ -2560,7 +2619,6 @@ async function muatDariSupabase() {
 
                 sortedDates.forEach(tgl => {
                     totalSesiCount++;
-
                     let card = document.createElement('div');
                     card.className = "bg-white p-4 rounded-2xl shadow-2xs border border-slate-200 flex justify-between items-center hover:border-indigo-400 transition";
                     card.innerHTML = `
@@ -2637,9 +2695,7 @@ async function muatDariSupabase() {
         }
 
         function hapusSesiTanggalDpl(namaSiswa, periode, tgl) {
-            if (!confirm(`⚠️ Apakah Anda yakin ingin menghapus arsip penilaian DPL untuk tanggal ${tgl} (${periode})? Tindakan ini tidak dapat dibatalkan.`)) {
-                return;
-            }
+            if (!confirm(`⚠️ Apakah Anda yakin ingin menghapus arsip penilaian DPL untuk tanggal ${tgl} (${periode})?`)) return;
 
             if (dplDataStorage[namaSiswa] && dplDataStorage[namaSiswa][periode]) {
                 delete dplDataStorage[namaSiswa][periode][tgl];
@@ -2653,7 +2709,7 @@ async function muatDariSupabase() {
             renderDplHistoryCardsView(namaSiswa);
         }
 
-        // ================= ALUR ASESMEN (FORMATIF / SUMATIF) =================
+        // ================= KATEGORI ASESMEN & MAPEL GURU KELAS =================
         function pilihKategoriAsesmen(kategori) {
             activeKategoriAsesmen = kategori;
             document.getElementById('label-kategori-aktif').innerText = `Kategori Asesmen: ${kategori}`;
@@ -2668,459 +2724,6 @@ async function muatDariSupabase() {
             document.getElementById('label-judul-rekap-halaman').innerText = `Arsip ${kategori}`;
             document.getElementById('print-kop-title').innerText = `ARSIP REKAPITULASI NILAI ${kategori.toUpperCase()} SISWA`;
             switchView('view-rekap-nilai');
-        }
-
-        // ================= GURU MAPEL SETUP & LOGIC =================
-        function bukaSetupPenilaianMapelKhusus() {
-            if (!activeGuruMapel) return;
-            activeMapelAndri = activeGuruMapel.mapel; 
-            activeKategoriAsesmen = "Formatif";
-            document.getElementById('label-setup-mapel-title').innerText = `Setup Penilaian (${activeMapelAndri})`;
-            document.querySelectorAll('input[name="jenis-pen-mapel"]').forEach(cb => cb.checked = false);
-            document.querySelectorAll('input[name="jenis-ket-mapel"]').forEach(cb => cb.checked = false);
-            document.getElementById('skip-ket-mapel').checked = false;
-            document.getElementById('wrapper-section-ket-mapel').style.display = 'block';
-
-            document.getElementById('container-mapel-soal-pen').innerHTML = '';
-            document.getElementById('container-mapel-soal-ket').innerHTML = '';
-            switchView('view-setup-pengetahuan-mapel');
-        }
-
-        function toggleSkipKeterampilanMapel() {
-            const isSkipped = document.getElementById('skip-ket-mapel').checked;
-            document.getElementById('wrapper-section-ket-mapel').style.display = isSkipped ? 'none' : 'block';
-        }
-
-        function toggleMapelSetupSoal() {
-            const container = document.getElementById('container-mapel-soal-pen');
-            container.innerHTML = '';
-            const checked = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
-            
-            checked.forEach(cb => {
-                let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
-                div.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs text-slate-500">Jumlah Soal:</span>
-                            <input type="number" min="1" max="50" value="5" oninput="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
-                        </div>
-                    </div>
-                    <div id="detail_soal_pen_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
-                `;
-                container.appendChild(div);
-                rebuildDetailSoalMapelPen(cb.value);
-            });
-        }
-
-        function rebuildDetailSoalMapelPen(jenis) {
-    const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${jenis}"]`);
-    const detailContainer = document.getElementById(`detail_soal_pen_mapel_${jenis}`);
-    if (!jmlInp || !detailContainer) return;
-    const jml = Math.max(1, parseInt(jmlInp.value) || 1);
-    detailContainer.innerHTML = '';
-    
-    for(let i=0; i<jml; i++) {
-        let defaultMax = jenis === 'Pilihan Ganda' ? 1 : 10;
-        let box = document.createElement('div');
-        box.className = "bg-white p-1.5 rounded border text-center";
-        box.innerHTML = `
-            <span class="block text-[9px] font-bold text-blue-600">S${i+1} Maks:</span>
-            <input type="number" min="1" max="100" value="${defaultMax}" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-pen-mapel-${jenis}" data-idx="${i}">
-        `;
-        detailContainer.appendChild(box);
-    }
-}
-
-        function toggleMapelSetupSoalKet() {
-            const container = document.getElementById('container-mapel-soal-ket');
-            container.innerHTML = '';
-            const checked = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
-            
-            checked.forEach(cb => {
-                let div = document.createElement('div');
-                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
-                div.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs text-slate-500">Jumlah Aspek:</span>
-                            <input type="number" min="1" max="50" value="3" oninput="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
-                        </div>
-                    </div>
-                    <div id="detail_soal_ket_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
-                `;
-                container.appendChild(div);
-                rebuildDetailSoalMapelKet(cb.value);
-            });
-        }
-
-        function rebuildDetailSoalMapelKet(jenis) {
-    const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${jenis}"]`);
-    const detailContainer = document.getElementById(`detail_soal_ket_mapel_${jenis}`);
-    if (!jmlInp || !detailContainer) return;
-    const jml = Math.max(1, parseInt(jmlInp.value) || 1);
-    detailContainer.innerHTML = '';
-    
-    for(let i=0; i<jml; i++) {
-        let box = document.createElement('div');
-        box.className = "bg-white p-1.5 rounded border text-center";
-        box.innerHTML = `
-            <span class="block text-[9px] font-bold text-indigo-600">A${i+1} Maks:</span>
-            <input type="number" min="1" max="100" value="10" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-ket-mapel-${jenis}" data-idx="${i}">
-        `;
-        detailContainer.appendChild(box);
-    }
-}
-
-        function lanjutKeLembarPenilaianMapel() {
-    const tpPen = document.getElementById('tp-pen-mapel').value.trim();
-    const checkedPen = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
-    const skipKet = document.getElementById('skip-ket-mapel').checked;
-    const tpKet = document.getElementById('tp-ket-mapel').value.trim();
-    const checkedKet = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
-    const alertBox = document.getElementById('alert-setup-mapel');
-
-    if (!tpPen || checkedPen.length === 0 || (!skipKet && (!tpKet || checkedKet.length === 0))) {
-        alertBox.classList.remove('hidden');
-        alertBox.innerText = "Peringatan: Lengkapi jenis penilaian dan tujuan pembelajaran pengetahuan & keterampilan!";
-        return;
-    }
-    alertBox.classList.add('hidden');
-
-    let penArr = Array.from(checkedPen).map(cb => cb.value);
-    let ketArr = skipKet ? [] : Array.from(checkedKet).map(cb => cb.value);
-
-    if (!jenisInfoMapel[activeMapelAndri]) jenisInfoMapel[activeMapelAndri] = {};
-    jenisInfoMapel[activeMapelAndri].penList = penArr;
-    jenisInfoMapel[activeMapelAndri].ketList = ketArr;
-    jenisInfoMapel[activeMapelAndri].skipKet = skipKet;
-
-    let maxScoresPen = {};
-    penArr.forEach(j => {
-        maxScoresPen[j] = [];
-        const inputs = document.querySelectorAll(`.max-skor-pen-mapel-${j}`);
-        if (inputs.length > 0) {
-            inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || (j === 'Pilihan Ganda' ? 1 : 10)));
-        } else {
-            const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${j}"]`);
-            const jml = jmlInp ? parseInt(jmlInp.value) || 12 : 12;
-            maxScoresPen[j] = new Array(jml).fill(j === 'Pilihan Ganda' ? 1 : 10);
-        }
-    });
-    jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
-
-    let maxScoresKet = {};
-    if (!skipKet) {
-        ketArr.forEach(j => {
-            maxScoresKet[j] = [];
-            const inputs = document.querySelectorAll(`.max-skor-ket-mapel-${j}`);
-            if (inputs.length > 0) {
-                inputs.forEach(inp => maxScoresKet[j].push(parseFloat(inp.value) || 10));
-            } else {
-                const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${j}"]`);
-                const jml = jmlInp ? parseInt(jmlInp.value) || 3 : 3;
-                maxScoresKet[j] = new Array(jml).fill(10);
-            }
-        });
-    }
-    jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
-
-    const today = getTodayKey();
-    document.getElementById('input-tanggal-mapel-aktif').value = today;
-    document.getElementById('label-mapel-aktif-mapel').innerText = `Mata Pelajaran: ${activeMapelAndri} (${activeKategoriAsesmen})`;
-    document.getElementById('th-ket-header-mapel').style.display = skipKet ? 'none' : 'table-cell';
-
-    if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
-    if (!nilaiDataAndri[activeMapelAndri][today]) {
-        nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
-    }
-
-    renderTabelPenilaianSiswaMapel();
-    switchView('view-form-penilaian-mapel');
-}
-        function renderTabelPenilaianSiswaMapel() {
-    const tbody = document.getElementById('tabel-penilaian-mapel-body');
-    tbody.innerHTML = '';
-    const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
-    const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
-
-    if (!nilaiDataAndri[activeMapelAndri][chosenDate]) {
-        nilaiDataAndri[activeMapelAndri][chosenDate] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
-    }
-
-    daftarSiswa.forEach((nama, idx) => {
-        let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
-
-        let htmlPen = infoMapel.penList.map(j => {
-            let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
-            let targetSoal = maxArr.length > 0 ? maxArr.length : 12; // Menyesuaikan dengan input setup
-            
-            const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${j}"]`);
-            if (jmlInp && parseInt(jmlInp.value)) {
-                targetSoal = parseInt(jmlInp.value);
-                if (maxArr.length !== targetSoal) {
-                    maxArr = new Array(targetSoal).fill(j === 'Pilihan Ganda' ? 1 : 10);
-                    infoMapel.maxScoresPen[j] = maxArr;
-                }
-            }
-
-            if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
-                studentData.penScores[j] = new Array(targetSoal).fill(0);
-            }
-            
-            let inputs = studentData.penScores[j].map((skor, sIdx) => {
-                let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
-                return `
-                    <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                        <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}(Maks:${mVal})</span>
-                        <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updatePenilaianMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
-                    </div>
-                `;
-            }).join('');
-            return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
-        }).join('');
-
-        let htmlKet = '';
-        if (!infoMapel.skipKet) {
-            htmlKet = infoMapel.ketList.map(j => {
-                let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
-                let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
-                
-                const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${j}"]`);
-                if (jmlInp && parseInt(jmlInp.value)) {
-                    targetAspek = parseInt(jmlInp.value);
-                    if (maxArr.length !== targetAspek) {
-                        maxArr = new Array(targetAspek).fill(10);
-                        infoMapel.maxScoresKet[j] = maxArr;
-                    }
-                }
-
-                if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
-                    studentData.ketScores[j] = new Array(targetAspek).fill(0);
-                }
-
-                let inputs = studentData.ketScores[j].map((skor, sIdx) => {
-                    let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
-                    return `
-                        <div class="m-1 inline-block bg-white p-1 rounded border text-center">
-                            <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}(Maks:${mVal})</span>
-                            <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updateKeterampilanMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
-                        </div>
-                    `;
-                }).join('');
-                return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
-            }).join('');
-        }
-
-        const hasilKalkulasi = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
-        studentData.final = hasilKalkulasi.final;
-
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
-            <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
-            <td class="p-4">${htmlPen}</td>
-            <td class="p-4" style="display: ${infoMapel.skipKet ? 'none' : 'table-cell'}">${htmlKet}</td>
-            <td class="p-4 text-center font-extrabold text-blue-600" id="mapel_final_${idx}">
-                ${studentData.final.toFixed(1)}
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-        function isiCepatNilaiMapel(targetNilai) {
-    const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
-    
-    if (!activeMapelAndri) {
-        alert("Pilih mata pelajaran terlebih dahulu.");
-        return;
-    }
-
-    if (!nilaiDataAndri[activeMapelAndri]) {
-        nilaiDataAndri[activeMapelAndri] = {};
-    }
-    
-    if (!nilaiDataAndri[activeMapelAndri][chosenDate]) {
-        nilaiDataAndri[activeMapelAndri][chosenDate] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
-    }
-    
-    const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], maxScoresPen: {}, ketList: [], maxScoresKet: {}, skipKet: false };
-
-    nilaiDataAndri[activeMapelAndri][chosenDate].forEach((studentData) => {
-        // 1. Isi Pengetahuan secara presisi sesuai target persentase
-        if (infoMapel.penList) {
-            infoMapel.penList.forEach(j => {
-                let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
-                let targetSoal = maxArr.length > 0 ? maxArr.length : 12;
-                
-                if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
-                    studentData.penScores[j] = new Array(targetSoal).fill(0);
-                }
-                
-                for (let sIdx = 0; sIdx < targetSoal; sIdx++) {
-                    let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
-                    // Langsung set proporsional tanpa pembulatan desimal item yang merusak persentase akhir
-                    studentData.penScores[j][sIdx] = (targetNilai / 100) * mVal;
-                }
-            });
-        }
-
-        // 2. Isi Keterampilan secara presisi (jika tidak dilewati)
-        if (!infoMapel.skipKet && infoMapel.ketList) {
-            infoMapel.ketList.forEach(j => {
-                let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
-                let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
-                
-                if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
-                    studentData.ketScores[j] = new Array(targetAspek).fill(0);
-                }
-                
-                for (let sIdx = 0; sIdx < targetAspek; sIdx++) {
-                    let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
-                    studentData.ketScores[j][sIdx] = (targetNilai / 100) * mVal;
-                }
-            });
-        }
-
-        // Kalkulasi ulang nilai akhir agar persentasenya akurat 100%
-        const hasil = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
-        studentData.final = hasil.final;
-    });
-
-    // Render ulang tabel & simpan
-    renderTabelPenilaianSiswaMapel();
-    simpanKeLocalStorage();
-    
-    alert(`⚡ Berhasil! Seluruh siswa pada mapel ${activeMapelAndri} telah terisi nilai presisi tepat ${targetNilai} (Berapapun jumlah soal/aspek dijamin akurat).`);
-}
-        
-        function updatePenilaianMapelManual(idx, jenis, sIdx, val) {
-            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
-            let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
-            if (!studentData.penScores[jenis]) studentData.penScores[jenis] = [];
-            studentData.penScores[jenis][sIdx] = parseFloat(val) || 0;
-            
-            const res = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
-            studentData.final = res.final;
-            document.getElementById(`mapel_final_${idx}`).innerText = studentData.final.toFixed(1);
-        }
-
-        function updateKeterampilanMapelManual(idx, jenis, sIdx, val) {
-            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
-            let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
-            if (!studentData.ketScores[jenis]) studentData.ketScores[jenis] = [];
-            studentData.ketScores[jenis][sIdx] = parseFloat(val) || 0;
-            
-            const res = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
-            studentData.final = res.final;
-            document.getElementById(`mapel_final_${idx}`).innerText = studentData.final.toFixed(1);
-        }
-
-        function simpanNilaiMapelGuru() {
-            const mapel = activeMapelAndri;
-            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
-            const targetHistory = getHistoryObj(activeKategoriAsesmen);
-            
-            if (!nilaiDataAndri[mapel] || !nilaiDataAndri[mapel][chosenDate]) return;
-
-            nilaiDataAndri[mapel][chosenDate].forEach((d, idx) => {
-                const res = hitungKalkulasiNilaiSiswaFleksibel(d, mapel);
-                d.final = res.final;
-                if (d.final > 0) {
-                    if (!targetHistory[daftarSiswa[idx]]) targetHistory[daftarSiswa[idx]] = {};
-                    if (!targetHistory[daftarSiswa[idx]][mapel]) targetHistory[daftarSiswa[idx]][mapel] = [];
-                    let existing = targetHistory[daftarSiswa[idx]][mapel].find(h => h.date === chosenDate);
-                    let detailText = `[${activeKategoriAsesmen}] Pengetahuan: ${res.penPersen}% | Ket: ${res.ketPersen}%`;
-                    if (existing) {
-                        existing.score = d.final;
-                        existing.detail = detailText;
-                    } else {
-                        targetHistory[daftarSiswa[idx]][mapel].push({ date: chosenDate, score: d.final, detail: detailText });
-                    }
-                }
-            });
-
-            simpanKeLocalStorage();
-            alert(`Data penilaian ${activeKategoriAsesmen} berhasil disimpan!`);
-            initAnalisis();
-        }
-
-        function gantiTanggalMapelAktif(dateVal) {
-            if (!dateVal) return;
-            if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
-            if (!nilaiDataAndri[activeMapelAndri][dateVal]) {
-                nilaiDataAndri[activeMapelAndri][dateVal] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
-            }
-            renderTabelPenilaianSiswaMapel();
-        }
-
-        function bukaRekapKhususMapel() {
-            renderRekapKhususMapel();
-            switchView('view-rekap-khusus-mapel');
-        }
-
-        function renderRekapKhususMapel() {
-            const tbody = document.getElementById('tabel-rekap-khusus-mapel-body');
-            if (!tbody || !activeGuruMapel) return;
-            tbody.innerHTML = '';
-            const mapel = activeGuruMapel.mapel;
-            const chosenArsipTgl = document.getElementById('input-rekap-mapel-arsip-tgl').value || getTodayKey();
-
-            document.getElementById('label-rekap-khusus-mapel-title').innerText = `Rekap Nilai: ${mapel}`;
-
-            daftarSiswa.forEach((nama, idx) => {
-                let records = dapatkanRekamanMapelSiswa(nama, mapel, activeKategoriAsesmen);
-                let filteredRecs = records.filter(r => r.date === chosenArsipTgl);
-                let targetScore = 0;
-                let targetDate = chosenArsipTgl;
-
-                if (filteredRecs.length > 0) {
-                    let sum = 0;
-                    filteredRecs.forEach(r => sum += r.score);
-                    targetScore = Math.round((sum / filteredRecs.length) * 10) / 10;
-                } else if (records.length > 0) {
-                    let sum = 0;
-                    records.forEach(r => sum += r.score);
-                    targetScore = Math.round((sum / records.length) * 10) / 10;
-                    targetDate = records[records.length - 1].date;
-                }
-
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-4 font-semibold text-slate-500">${idx + 1}</td>
-                    <td class="p-4 font-medium text-slate-900">${nama}</td>
-                    <td class="p-4 text-center font-bold text-indigo-600">${targetScore > 0 ? targetScore.toFixed(1) : '-'}</td>
-                    <td class="p-4 text-center text-xs text-slate-500">${targetDate}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function bukaModalRekapUlangMapel() {
-            document.getElementById('modal-rekap-ulang-mapel').classList.remove('hidden');
-        }
-
-        function prosesRekapUlangMapelMulai() {
-            const tgl = document.getElementById('modal-tanggal-rekap-ulang').value;
-            if (!tgl) {
-                alert("Pilih tanggal rekap ulang terlebih dahulu.");
-                return;
-            }
-            document.getElementById('input-tanggal-mapel-aktif').value = tgl;
-            document.getElementById('modal-rekap-ulang-mapel').classList.add('hidden');
-            gantiTanggalMapelAktif(tgl);
-            renderTabelPenilaianSiswaMapel();
-            switchView('view-form-penilaian-mapel');
-        }
-
-        function pindahKeHariIniMapel() {
-            const today = getTodayKey();
-            document.getElementById('input-tanggal-mapel-aktif').value = today;
-            gantiTanggalMapelAktif(today);
-            renderTabelPenilaianSiswaMapel();
-            alert("Berpindah ke rekap penilaian hari ini.");
         }
 
         function initMapelPenilaian() {
@@ -3265,14 +2868,13 @@ async function muatDariSupabase() {
                     
                     for (let sIdx = 0; sIdx < targetSoal; sIdx++) {
                         let mVal = maxArr[sIdx] || (j === 'Pilihan Ganda' ? 1 : 10);
-                        // Mengisi proporsi pas agar persentase akhirnya tepat sesuai targetNilai
                         studentData.penScores[j][sIdx] = (targetNilai / 100) * mVal;
                     }
                 });
             });
 
             renderTabelFormPenilaianPengetahuan();
-            alert(`Berhasil mengisi cepat seluruh siswa dengan nilai pas ${targetNilai}!`);
+            alert(`Berhasil mengisi cepat seluruh siswa dengan nilai ${targetNilai}!`);
         }
 
         function isiCepatKeterampilanAndri(targetPersen) {
@@ -3298,7 +2900,7 @@ async function muatDariSupabase() {
             });
 
             renderTabelFormPenilaianKeterampilan();
-            alert(`Berhasil mengisi cepat seluruh aspek keterampilan siswa dengan nilai pas ${targetPersen}%!`);
+            alert(`Berhasil mengisi cepat aspek keterampilan siswa dengan nilai ${targetPersen}%!`);
         }
 
         function lanjutKeSetupKeterampilan() {
@@ -3344,7 +2946,7 @@ async function muatDariSupabase() {
                 const tpKet = document.getElementById('tujuan-pembelajaran-keterampilan').value.trim();
                 if (!tpKet || checkedKet.length === 0) {
                     alertBox.classList.remove('hidden');
-                    alertBox.innerText = "Peringatan: Pilih jenis keterampilan dan isi Tujuan Pembelajaran Keterampilan, atau centang Lewati Keterampilan!";
+                    alertBox.innerText = "Peringatan: Pilih jenis keterampilan dan isi TP Keterampilan, atau centang Lewati!";
                     return;
                 }
                 alertBox.classList.add('hidden');
@@ -3544,6 +3146,517 @@ async function muatDariSupabase() {
             }
         }
 
+        // ================= GURU MAPEL PENILAIAN =================
+        function bukaSetupPenilaianMapelKhusus() {
+            if (!activeGuruMapel) return;
+            activeMapelAndri = activeGuruMapel.mapel; 
+            activeKategoriAsesmen = "Formatif";
+            document.getElementById('label-setup-mapel-title').innerText = `Setup Penilaian (${activeMapelAndri})`;
+            document.querySelectorAll('input[name="jenis-pen-mapel"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[name="jenis-ket-mapel"]').forEach(cb => cb.checked = false);
+            document.getElementById('skip-ket-mapel').checked = false;
+            document.getElementById('wrapper-section-ket-mapel').style.display = 'block';
+
+            document.getElementById('container-mapel-soal-pen').innerHTML = '';
+            document.getElementById('container-mapel-soal-ket').innerHTML = '';
+            switchView('view-setup-pengetahuan-mapel');
+        }
+
+        function toggleSkipKeterampilanMapel() {
+            const isSkipped = document.getElementById('skip-ket-mapel').checked;
+            document.getElementById('wrapper-section-ket-mapel').style.display = isSkipped ? 'none' : 'block';
+        }
+
+        function toggleMapelSetupSoal() {
+            const container = document.getElementById('container-mapel-soal-pen');
+            container.innerHTML = '';
+            const checked = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
+            
+            checked.forEach(cb => {
+                let div = document.createElement('div');
+                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500">Jumlah Soal:</span>
+                            <input type="number" min="1" max="50" value="5" oninput="rebuildDetailSoalMapelPen('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-pen" data-jenis="${cb.value}">
+                        </div>
+                    </div>
+                    <div id="detail_soal_pen_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
+                `;
+                container.appendChild(div);
+                rebuildDetailSoalMapelPen(cb.value);
+            });
+        }
+
+        function rebuildDetailSoalMapelPen(jenis) {
+            const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${jenis}"]`);
+            const detailContainer = document.getElementById(`detail_soal_pen_mapel_${jenis}`);
+            if (!jmlInp || !detailContainer) return;
+            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
+            detailContainer.innerHTML = '';
+            
+            for(let i=0; i<jml; i++) {
+                let defaultMax = jenis === 'Pilihan Ganda' ? 1 : 10;
+                let box = document.createElement('div');
+                box.className = "bg-white p-1.5 rounded border text-center";
+                box.innerHTML = `
+                    <span class="block text-[9px] font-bold text-blue-600">S${i+1} Maks:</span>
+                    <input type="number" min="1" max="100" value="${defaultMax}" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-pen-mapel-${jenis}" data-idx="${i}">
+                `;
+                detailContainer.appendChild(box);
+            }
+        }
+
+        function toggleMapelSetupSoalKet() {
+            const container = document.getElementById('container-mapel-soal-ket');
+            container.innerHTML = '';
+            const checked = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
+            
+            checked.forEach(cb => {
+                let div = document.createElement('div');
+                div.className = "bg-slate-50 p-3 rounded-xl border space-y-2";
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700">Jenis: ${cb.value}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-500">Jumlah Aspek:</span>
+                            <input type="number" min="1" max="50" value="3" oninput="rebuildDetailSoalMapelKet('${cb.value}')" class="w-16 bg-white border rounded p-1 text-center text-sm font-bold jml-soal-mapel-ket" data-jenis="${cb.value}">
+                        </div>
+                    </div>
+                    <div id="detail_soal_ket_mapel_${cb.value}" class="flex flex-wrap gap-2 pt-2 border-t"></div>
+                `;
+                container.appendChild(div);
+                rebuildDetailSoalMapelKet(cb.value);
+            });
+        }
+
+        function rebuildDetailSoalMapelKet(jenis) {
+            const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${jenis}"]`);
+            const detailContainer = document.getElementById(`detail_soal_ket_mapel_${jenis}`);
+            if (!jmlInp || !detailContainer) return;
+            const jml = Math.max(1, parseInt(jmlInp.value) || 1);
+            detailContainer.innerHTML = '';
+            
+            for(let i=0; i<jml; i++) {
+                let box = document.createElement('div');
+                box.className = "bg-white p-1.5 rounded border text-center";
+                box.innerHTML = `
+                    <span class="block text-[9px] font-bold text-indigo-600">A${i+1} Maks:</span>
+                    <input type="number" min="1" max="100" value="10" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold max-skor-ket-mapel-${jenis}" data-idx="${i}">
+                `;
+                detailContainer.appendChild(box);
+            }
+        }
+
+        function lanjutKeLembarPenilaianMapel() {
+            const tpPen = document.getElementById('tp-pen-mapel').value.trim();
+            const checkedPen = document.querySelectorAll('input[name="jenis-pen-mapel"]:checked');
+            const skipKet = document.getElementById('skip-ket-mapel').checked;
+            const tpKet = document.getElementById('tp-ket-mapel').value.trim();
+            const checkedKet = document.querySelectorAll('input[name="jenis-ket-mapel"]:checked');
+            const alertBox = document.getElementById('alert-setup-mapel');
+
+            if (!tpPen || checkedPen.length === 0 || (!skipKet && (!tpKet || checkedKet.length === 0))) {
+                alertBox.classList.remove('hidden');
+                alertBox.innerText = "Peringatan: Lengkapi jenis penilaian dan tujuan pembelajaran pengetahuan & keterampilan!";
+                return;
+            }
+            alertBox.classList.add('hidden');
+
+            let penArr = Array.from(checkedPen).map(cb => cb.value);
+            let ketArr = skipKet ? [] : Array.from(checkedKet).map(cb => cb.value);
+
+            if (!jenisInfoMapel[activeMapelAndri]) jenisInfoMapel[activeMapelAndri] = {};
+            jenisInfoMapel[activeMapelAndri].penList = penArr;
+            jenisInfoMapel[activeMapelAndri].ketList = ketArr;
+            jenisInfoMapel[activeMapelAndri].skipKet = skipKet;
+
+            let maxScoresPen = {};
+            penArr.forEach(j => {
+                maxScoresPen[j] = [];
+                const inputs = document.querySelectorAll(`.max-skor-pen-mapel-${j}`);
+                if (inputs.length > 0) {
+                    inputs.forEach(inp => maxScoresPen[j].push(parseFloat(inp.value) || (j === 'Pilihan Ganda' ? 1 : 10)));
+                } else {
+                    const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${j}"]`);
+                    const jml = jmlInp ? parseInt(jmlInp.value) || 12 : 12;
+                    maxScoresPen[j] = new Array(jml).fill(j === 'Pilihan Ganda' ? 1 : 10);
+                }
+            });
+            jenisInfoMapel[activeMapelAndri].maxScoresPen = maxScoresPen;
+
+            let maxScoresKet = {};
+            if (!skipKet) {
+                ketArr.forEach(j => {
+                    maxScoresKet[j] = [];
+                    const inputs = document.querySelectorAll(`.max-skor-ket-mapel-${j}`);
+                    if (inputs.length > 0) {
+                        inputs.forEach(inp => maxScoresKet[j].push(parseFloat(inp.value) || 10));
+                    } else {
+                        const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${j}"]`);
+                        const jml = jmlInp ? parseInt(jmlInp.value) || 3 : 3;
+                        maxScoresKet[j] = new Array(jml).fill(10);
+                    }
+                });
+            }
+            jenisInfoMapel[activeMapelAndri].maxScoresKet = maxScoresKet;
+
+            const today = getTodayKey();
+            document.getElementById('input-tanggal-mapel-aktif').value = today;
+            document.getElementById('label-mapel-aktif-mapel').innerText = `Mata Pelajaran: ${activeMapelAndri} (${activeKategoriAsesmen})`;
+            document.getElementById('th-ket-header-mapel').style.display = skipKet ? 'none' : 'table-cell';
+
+            if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
+            if (!nilaiDataAndri[activeMapelAndri][today]) {
+                nilaiDataAndri[activeMapelAndri][today] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+            }
+
+            renderTabelPenilaianSiswaMapel();
+            switchView('view-form-penilaian-mapel');
+        }
+
+        function renderTabelPenilaianSiswaMapel() {
+            const tbody = document.getElementById('tabel-penilaian-mapel-body');
+            tbody.innerHTML = '';
+            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+            const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
+
+            if (!nilaiDataAndri[activeMapelAndri][chosenDate]) {
+                nilaiDataAndri[activeMapelAndri][chosenDate] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+            }
+
+            daftarSiswa.forEach((nama, idx) => {
+                let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
+
+                let htmlPen = infoMapel.penList.map(j => {
+                    let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
+                    let targetSoal = maxArr.length > 0 ? maxArr.length : 12;
+                    
+                    const jmlInp = document.querySelector(`.jml-soal-mapel-pen[data-jenis="${j}"]`);
+                    if (jmlInp && parseInt(jmlInp.value)) {
+                        targetSoal = parseInt(jmlInp.value);
+                        if (maxArr.length !== targetSoal) {
+                            maxArr = new Array(targetSoal).fill(j === 'Pilihan Ganda' ? 1 : 10);
+                            infoMapel.maxScoresPen[j] = maxArr;
+                        }
+                    }
+
+                    if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
+                        studentData.penScores[j] = new Array(targetSoal).fill(0);
+                    }
+                    
+                    let inputs = studentData.penScores[j].map((skor, sIdx) => {
+                        let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
+                        return `
+                            <div class="m-1 inline-block bg-white p-1 rounded border text-center">
+                                <span class="block text-[9px] font-bold text-blue-600">S${sIdx+1}(Maks:${mVal})</span>
+                                <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updatePenilaianMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
+                            </div>
+                        `;
+                    }).join('');
+                    return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-blue-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
+                }).join('');
+
+                let htmlKet = '';
+                if (!infoMapel.skipKet) {
+                    htmlKet = infoMapel.ketList.map(j => {
+                        let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
+                        let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                        
+                        const jmlInp = document.querySelector(`.jml-soal-mapel-ket[data-jenis="${j}"]`);
+                        if (jmlInp && parseInt(jmlInp.value)) {
+                            targetAspek = parseInt(jmlInp.value);
+                            if (maxArr.length !== targetAspek) {
+                                maxArr = new Array(targetAspek).fill(10);
+                                infoMapel.maxScoresKet[j] = maxArr;
+                            }
+                        }
+
+                        if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
+                            studentData.ketScores[j] = new Array(targetAspek).fill(0);
+                        }
+
+                        let inputs = studentData.ketScores[j].map((skor, sIdx) => {
+                            let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
+                            return `
+                                <div class="m-1 inline-block bg-white p-1 rounded border text-center">
+                                    <span class="block text-[9px] font-bold text-indigo-600">A${sIdx+1}(Maks:${mVal})</span>
+                                    <input type="number" min="0" max="${mVal}" value="${skor || ''}" oninput="updateKeterampilanMapelManual(${idx}, '${j}', ${sIdx}, this.value)" class="w-14 bg-slate-50 border rounded p-1 text-center text-xs font-bold text-slate-800" placeholder="0-${mVal}">
+                                </div>
+                            `;
+                        }).join('');
+                        return `<div class="bg-slate-50 p-2 border rounded-xl mb-1"><span class="text-[10px] font-bold text-indigo-600">${j}</span><div class="flex flex-wrap">${inputs}</div></div>`;
+                    }).join('');
+                }
+
+                const hasilKalkulasi = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
+                studentData.final = hasilKalkulasi.final;
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-slate-500 border-r">${idx + 1}</td>
+                    <td class="p-4 font-medium text-slate-900 border-r">${nama}</td>
+                    <td class="p-4">${htmlPen}</td>
+                    <td class="p-4" style="display: ${infoMapel.skipKet ? 'none' : 'table-cell'}">${htmlKet}</td>
+                    <td class="p-4 text-center font-extrabold text-blue-600" id="mapel_final_${idx}">
+                        ${studentData.final.toFixed(1)}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function isiCepatNilaiMapel(targetNilai) {
+            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+            if (!activeMapelAndri) return;
+
+            if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
+            if (!nilaiDataAndri[activeMapelAndri][chosenDate]) {
+                nilaiDataAndri[activeMapelAndri][chosenDate] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+            }
+            
+            const infoMapel = jenisInfoMapel[activeMapelAndri] || { penList: ['Pilihan Ganda'], maxScoresPen: {}, ketList: [], maxScoresKet: {}, skipKet: false };
+
+            nilaiDataAndri[activeMapelAndri][chosenDate].forEach((studentData) => {
+                if (infoMapel.penList) {
+                    infoMapel.penList.forEach(j => {
+                        let maxArr = (infoMapel.maxScoresPen && infoMapel.maxScoresPen[j]) ? infoMapel.maxScoresPen[j] : [];
+                        let targetSoal = maxArr.length > 0 ? maxArr.length : 12;
+                        
+                        if (!studentData.penScores[j] || studentData.penScores[j].length !== targetSoal) {
+                            studentData.penScores[j] = new Array(targetSoal).fill(0);
+                        }
+                        for (let sIdx = 0; sIdx < targetSoal; sIdx++) {
+                            let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : (j === 'Pilihan Ganda' ? 1 : 10);
+                            studentData.penScores[j][sIdx] = (targetNilai / 100) * mVal;
+                        }
+                    });
+                }
+
+                if (!infoMapel.skipKet && infoMapel.ketList) {
+                    infoMapel.ketList.forEach(j => {
+                        let maxArr = (infoMapel.maxScoresKet && infoMapel.maxScoresKet[j]) ? infoMapel.maxScoresKet[j] : [];
+                        let targetAspek = maxArr.length > 0 ? maxArr.length : 3;
+                        
+                        if (!studentData.ketScores[j] || studentData.ketScores[j].length !== targetAspek) {
+                            studentData.ketScores[j] = new Array(targetAspek).fill(0);
+                        }
+                        for (let sIdx = 0; sIdx < targetAspek; sIdx++) {
+                            let mVal = maxArr[sIdx] !== undefined ? maxArr[sIdx] : 10;
+                            studentData.ketScores[j][sIdx] = (targetNilai / 100) * mVal;
+                        }
+                    });
+                }
+
+                const hasil = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
+                studentData.final = hasil.final;
+            });
+
+            renderTabelPenilaianSiswaMapel();
+            simpanKeLocalStorage();
+            alert(`⚡ Seluruh siswa pada mapel ${activeMapelAndri} berhasil diisi dengan nilai ${targetNilai}!`);
+        }
+
+        function updatePenilaianMapelManual(idx, jenis, sIdx, val) {
+            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+            let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
+            if (!studentData.penScores[jenis]) studentData.penScores[jenis] = [];
+            studentData.penScores[jenis][sIdx] = parseFloat(val) || 0;
+            
+            const res = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
+            studentData.final = res.final;
+            document.getElementById(`mapel_final_${idx}`).innerText = studentData.final.toFixed(1);
+        }
+
+        function updateKeterampilanMapelManual(idx, jenis, sIdx, val) {
+            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+            let studentData = nilaiDataAndri[activeMapelAndri][chosenDate][idx];
+            if (!studentData.ketScores[jenis]) studentData.ketScores[jenis] = [];
+            studentData.ketScores[jenis][sIdx] = parseFloat(val) || 0;
+            
+            const res = hitungKalkulasiNilaiSiswaFleksibel(studentData, activeMapelAndri);
+            studentData.final = res.final;
+            document.getElementById(`mapel_final_${idx}`).innerText = studentData.final.toFixed(1);
+        }
+
+        function simpanNilaiMapelGuru() {
+            const mapel = activeMapelAndri;
+            const chosenDate = document.getElementById('input-tanggal-mapel-aktif').value || getTodayKey();
+            const targetHistory = getHistoryObj(activeKategoriAsesmen);
+            
+            if (!nilaiDataAndri[mapel] || !nilaiDataAndri[mapel][chosenDate]) return;
+
+            nilaiDataAndri[mapel][chosenDate].forEach((d, idx) => {
+                const res = hitungKalkulasiNilaiSiswaFleksibel(d, mapel);
+                d.final = res.final;
+                if (d.final > 0) {
+                    if (!targetHistory[daftarSiswa[idx]]) targetHistory[daftarSiswa[idx]] = {};
+                    if (!targetHistory[daftarSiswa[idx]][mapel]) targetHistory[daftarSiswa[idx]][mapel] = [];
+                    let existing = targetHistory[daftarSiswa[idx]][mapel].find(h => h.date === chosenDate);
+                    let detailText = `[${activeKategoriAsesmen}] Pengetahuan: ${res.penPersen}% | Ket: ${res.ketPersen}%`;
+                    if (existing) {
+                        existing.score = d.final;
+                        existing.detail = detailText;
+                    } else {
+                        targetHistory[daftarSiswa[idx]][mapel].push({ date: chosenDate, score: d.final, detail: detailText });
+                    }
+                }
+            });
+
+            simpanKeLocalStorage();
+            alert(`Data penilaian ${activeKategoriAsesmen} berhasil disimpan!`);
+            initAnalisis();
+        }
+
+        function gantiTanggalMapelAktif(dateVal) {
+            if (!dateVal) return;
+            if (!nilaiDataAndri[activeMapelAndri]) nilaiDataAndri[activeMapelAndri] = {};
+            if (!nilaiDataAndri[activeMapelAndri][dateVal]) {
+                nilaiDataAndri[activeMapelAndri][dateVal] = daftarSiswa.map(() => ({ penScores: {}, ketScores: {}, final: 0 }));
+            }
+            renderTabelPenilaianSiswaMapel();
+        }
+
+        function bukaRekapKhususMapel() {
+            renderRekapKhususMapel();
+            switchView('view-rekap-khusus-mapel');
+        }
+
+        function renderRekapKhususMapel() {
+            const tbody = document.getElementById('tabel-rekap-khusus-mapel-body');
+            if (!tbody || !activeGuruMapel) return;
+            tbody.innerHTML = '';
+            const mapel = activeGuruMapel.mapel;
+            const chosenArsipTgl = document.getElementById('input-rekap-mapel-arsip-tgl').value || getTodayKey();
+
+            document.getElementById('label-rekap-khusus-mapel-title').innerText = `Rekap Nilai: ${mapel}`;
+
+            daftarSiswa.forEach((nama, idx) => {
+                let records = dapatkanRekamanMapelSiswa(nama, mapel, activeKategoriAsesmen);
+                let filteredRecs = records.filter(r => r.date === chosenArsipTgl);
+                let targetScore = 0;
+                let targetDate = chosenArsipTgl;
+
+                if (filteredRecs.length > 0) {
+                    let sum = 0;
+                    filteredRecs.forEach(r => sum += r.score);
+                    targetScore = Math.round((sum / filteredRecs.length) * 10) / 10;
+                } else if (records.length > 0) {
+                    let sum = 0;
+                    records.forEach(r => sum += r.score);
+                    targetScore = Math.round((sum / records.length) * 10) / 10;
+                    targetDate = records[records.length - 1].date;
+                }
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-slate-500">${idx + 1}</td>
+                    <td class="p-4 font-medium text-slate-900">${nama}</td>
+                    <td class="p-4 text-center font-bold text-indigo-600">${targetScore > 0 ? targetScore.toFixed(1) : '-'}</td>
+                    <td class="p-4 text-center text-xs text-slate-500">${targetDate}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function bukaModalRekapUlangMapel() {
+            document.getElementById('modal-rekap-ulang-mapel').classList.remove('hidden');
+        }
+
+        function prosesRekapUlangMapelMulai() {
+            const tgl = document.getElementById('modal-tanggal-rekap-ulang').value;
+            if (!tgl) {
+                alert("Pilih tanggal rekap ulang terlebih dahulu.");
+                return;
+            }
+            document.getElementById('input-tanggal-mapel-aktif').value = tgl;
+            document.getElementById('modal-rekap-ulang-mapel').classList.add('hidden');
+            gantiTanggalMapelAktif(tgl);
+            renderTabelPenilaianSiswaMapel();
+            switchView('view-form-penilaian-mapel');
+        }
+
+        function pindahKeHariIniMapel() {
+            const today = getTodayKey();
+            document.getElementById('input-tanggal-mapel-aktif').value = today;
+            gantiTanggalMapelAktif(today);
+            renderTabelPenilaianSiswaMapel();
+        }
+
+        // ================= REKAP & INPUT MASSAL MASA LAMPAU =================
+        function getHistoryObj(kategori) {
+            return kategori === 'Sumatif' ? historyNilaiSumatif : historyNilaiFormatif;
+        }
+
+        function dapatkanRekamanMapelSiswa(namaSiswa, mapel, kategori = 'Formatif') {
+            const hist = getHistoryObj(kategori);
+            if (hist && hist[namaSiswa] && Array.isArray(hist[namaSiswa][mapel])) {
+                return hist[namaSiswa][mapel];
+            }
+            return [];
+        }
+
+        function hitungRataRataMapel(namaSiswa, mapel, kategori = 'Formatif') {
+            const arr = dapatkanRekamanMapelSiswa(namaSiswa, mapel, kategori);
+            if (arr.length === 0) return 0;
+            const total = arr.reduce((acc, curr) => acc + (parseFloat(curr.score) || 0), 0);
+            return Math.round((total / arr.length) * 10) / 10;
+        }
+
+        function hitungKalkulasiNilaiSiswaFleksibel(studentData, mapelTarget) {
+            const info = jenisInfoMapel[mapelTarget] || { penList: ['Pilihan Ganda'], ketList: ['Praktik Langsung'], maxScoresPen: {}, maxScoresKet: {}, skipKet: false };
+            let totalPoinPen = 0, totalMaksPen = 0;
+            const penList = info.penList || [];
+
+            penList.forEach(jenis => {
+                const scores = (studentData.penScores && studentData.penScores[jenis]) ? studentData.penScores[jenis] : [];
+                const maxArr = (info.maxScoresPen && info.maxScoresPen[jenis]) ? info.maxScoresPen[jenis] : [];
+                for(let i=0; i<scores.length; i++) {
+                    let val = parseFloat(scores[i]) || 0;
+                    let maxVal = parseFloat(maxArr[i]) || (jenis === 'Pilihan Ganda' ? 1 : 10);
+                    totalMaksPen += maxVal;
+                    totalPoinPen += Math.min(Math.max(val, 0), maxVal);
+                }
+            });
+            const persentasePengetahuan = totalMaksPen > 0 ? (totalPoinPen / totalMaksPen) * 100 : 0;
+
+            let persentaseKeterampilan = 0;
+            let totalMaksKet = 0;
+            if (!info.skipKet) {
+                let totalPoinKet = 0;
+                const ketList = info.ketList || [];
+                ketList.forEach(jenis => {
+                    const scores = (studentData.ketScores && studentData.ketScores[jenis]) ? studentData.ketScores[jenis] : [];
+                    const maxArr = (info.maxScoresKet && info.maxScoresKet[jenis]) ? info.maxScoresKet[jenis] : [];
+                    for(let i=0; i<scores.length; i++) {
+                        let val = parseFloat(scores[i]) || 0;
+                        let maxVal = parseFloat(maxArr[i]) || 10;
+                        totalMaksKet += maxVal;
+                        totalPoinKet += Math.min(Math.max(val, 0), maxVal);
+                    }
+                });
+                persentaseKeterampilan = totalMaksKet > 0 ? (totalPoinKet / totalMaksKet) * 100 : 0;
+            }
+
+            let finalScore = 0;
+            if (!info.skipKet && totalMaksKet > 0 && totalMaksPen > 0) {
+                finalScore = (0.7 * persentasePengetahuan) + (0.3 * persentaseKeterampilan);
+            } else if (info.skipKet || totalMaksKet === 0) {
+                finalScore = persentasePengetahuan;
+            } else {
+                finalScore = persentaseKeterampilan;
+            }
+
+            const finalRounded = Math.round(finalScore * 10) / 10;
+            return {
+                penPersen: Math.round(persentasePengetahuan * 10) / 10,
+                ketPersen: Math.round(persentaseKeterampilan * 10) / 10,
+                final: isNaN(finalRounded) ? 0 : finalRounded
+            };
+        }
+
         function setRekapHariIni() {
             const today = getTodayKey();
             const elInp = document.getElementById('input-rekap-nilai-tanggal');
@@ -3611,7 +3724,6 @@ async function muatDariSupabase() {
         function unduhRekapCSV() {
             const chosenDate = document.getElementById('input-rekap-nilai-tanggal').value || getTodayKey();
             const targetHistory = getHistoryObj(activeKategoriAsesmen);
-            
             let csvContent = "data:text/csv;charset=utf-8,No;Nama Siswa;" + allMapelGlobal.join(";") + "\n";
             
             daftarSiswa.forEach((nama, idx) => {
@@ -3637,145 +3749,133 @@ async function muatDariSupabase() {
         }
 
         function bukaRekapMapelSingle() {
-    const inputTgl = document.getElementById('input-rekap-nilai-tanggal');
-    if (!inputTgl || !inputTgl.value) {
-        alert("Silakan pilih tanggal masa lampau terlebih dahulu.");
-        return;
-    }
+            const inputTgl = document.getElementById('input-rekap-nilai-tanggal');
+            if (!inputTgl || !inputTgl.value) {
+                alert("Silakan pilih tanggal masa lampau terlebih dahulu.");
+                return;
+            }
 
-    selectedLampauDate = inputTgl.value;
-    const today = getTodayKey();
+            selectedLampauDate = inputTgl.value;
+            const today = getTodayKey();
 
-    if (selectedLampauDate === today) {
-        alert("Tanggal yang dipilih adalah hari ini. Silakan gunakan menu penilaian reguler di bawah.");
-        initRekapNilai();
-        return;
-    }
+            if (selectedLampauDate === today) {
+                alert("Tanggal yang dipilih adalah hari ini. Silakan gunakan menu penilaian reguler.");
+                initRekapNilai();
+                return;
+            }
 
-    // Pastikan parsing tanggal aman dari pergeseran zona waktu
-    const parts = selectedLampauDate.split('-');
-    const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-    const dayOfWeek = dateObj.getDay();
+            const parts = selectedLampauDate.split('-');
+            const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            const dayOfWeek = dateObj.getDay();
 
-    if (dayOfWeek === 0) {
-        if (!confirm("⚠️ Peringatan: Tanggal yang Anda pilih adalah hari Minggu (hari libur). Apakah Anda tetap ingin merekap nilai pada tanggal ini?")) {
-            return;
+            const jadwalHari = jadwalPelajaran[dayOfWeek] || daftarMapelAndri;
+            selectedMultiMapelList = jadwalHari.filter(m => daftarMapelAndri.includes(m));
+
+            if (selectedMultiMapelList.length === 0) {
+                selectedMultiMapelList = [...daftarMapelAndri];
+            }
+
+            const labelDate = document.getElementById('label-multimapel-date');
+            if (labelDate) {
+                labelDate.innerText = `Input Massal Masa Lampau [${activeKategoriAsesmen}] — Tanggal: ${selectedLampauDate}`;
+            }
+            
+            renderTabelFormMultiMapel();
+            switchView('view-form-rekap-multimapel');
         }
-    }
 
-    const jadwalHari = jadwalPelajaran[dayOfWeek] || daftarMapelAndri;
-    selectedMultiMapelList = jadwalHari.filter(m => daftarMapelAndri.includes(m));
-
-    if (selectedMultiMapelList.length === 0) {
-        selectedMultiMapelList = [...daftarMapelAndri]; // Fallback aman agar form tetap terbuka
-    }
-
-    const labelDate = document.getElementById('label-multimapel-date');
-    if (labelDate) {
-        labelDate.innerText = `Input Massal Masa Lampau [${activeKategoriAsesmen}] — Tanggal: ${selectedLampauDate}`;
-    }
-    
-    // Pastikan fungsi render form tersedia sebelum berpindah view
-    if (typeof renderTabelFormMultiMapel === 'function') {
-        renderTabelFormMultiMapel();
-    }
-    
-    switchView('view-form-rekap-multimapel');
-}
         function renderTabelFormMultiMapel() {
-    const headerTr = document.getElementById('header-multimapel-table');
-    const tbody = document.getElementById('tabel-multimapel-body');
-    if (!headerTr || !tbody) return;
+            const headerTr = document.getElementById('header-multimapel-table');
+            const tbody = document.getElementById('tabel-multimapel-body');
+            if (!headerTr || !tbody) return;
 
-    // 1. Render Header Kolom Mata Pelajaran Berdasarkan Jadwal Hari Tersebut
-    let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
-    selectedMultiMapelList.forEach((mapel, mIdx) => {
-        hHtml += `
-            <th class="p-4 text-center border-r">
-                <div class="font-bold text-slate-800 mb-1">${mapel}</div>
-                <div class="flex items-center justify-center gap-1">
-                    <input type="number" min="0" max="100" placeholder="Nilai" id="input_massal_val_${mIdx}" class="w-16 bg-white border border-slate-300 rounded px-1.5 py-1 text-center text-xs font-bold text-slate-800">
-                    <button onclick="terapkanNilaiMassalMapel(${mIdx}, '${mapel}')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-2.5 py-1 rounded text-[10px] shadow-sm">Terapkan</button>
-                </div>
-            </th>
-        `;
-    });
-    headerTr.innerHTML = hHtml;
+            let hHtml = `<th class="p-4 border-r">No</th><th class="p-4 border-r">Nama Siswa</th>`;
+            selectedMultiMapelList.forEach((mapel, mIdx) => {
+                hHtml += `
+                    <th class="p-4 text-center border-r">
+                        <div class="font-bold text-slate-800 mb-1">${mapel}</div>
+                        <div class="flex items-center justify-center gap-1">
+                            <input type="number" min="0" max="100" placeholder="Nilai" id="input_massal_val_${mIdx}" class="w-16 bg-white border border-slate-300 rounded px-1.5 py-1 text-center text-xs font-bold text-slate-800">
+                            <button onclick="terapkanNilaiMassalMapel(${mIdx}, '${mapel}')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-2.5 py-1 rounded text-[10px] shadow-sm">Terapkan</button>
+                        </div>
+                    </th>
+                `;
+            });
+            headerTr.innerHTML = hHtml;
 
-    // 2. Render Baris Nama Siswa dan Kolom Input Nilainya
-    tbody.innerHTML = '';
-    daftarSiswa.forEach((nama, sIdx) => {
-        let tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50 transition";
-        let tds = `<td class="p-4 font-semibold text-slate-500 border-r">${sIdx + 1}</td><td class="p-4 font-medium text-slate-900 border-r">${nama}</td>`;
+            tbody.innerHTML = '';
+            daftarSiswa.forEach((nama, sIdx) => {
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                let tds = `<td class="p-4 font-semibold text-slate-500 border-r">${sIdx + 1}</td><td class="p-4 font-medium text-slate-900 border-r">${nama}</td>`;
 
-        selectedMultiMapelList.forEach((mapel, mIdx) => {
-            let targetHistory = getHistoryObj(activeKategoriAsesmen);
-            let existingScore = '';
-            if (targetHistory[nama] && targetHistory[nama][mapel]) {
-                let found = targetHistory[nama][mapel].find(h => h.date === selectedLampauDate);
-                if (found) existingScore = found.score;
+                selectedMultiMapelList.forEach((mapel, mIdx) => {
+                    let targetHistory = getHistoryObj(activeKategoriAsesmen);
+                    let existingScore = '';
+                    if (targetHistory[nama] && targetHistory[nama][mapel]) {
+                        let found = targetHistory[nama][mapel].find(h => h.date === selectedLampauDate);
+                        if (found) existingScore = found.score;
+                    }
+
+                    tds += `
+                        <td class="p-4 text-center border-r">
+                            <input type="number" min="0" max="100" value="${existingScore !== '' ? existingScore : ''}" 
+                                   id="cell_massal_${sIdx}_${mIdx}" data-siswa="${nama}" data-mapel="${mapel}" 
+                                   class="w-20 bg-slate-50 border border-slate-300 rounded-lg p-2 text-center text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500" placeholder="0-100">
+                        </td>
+                    `;
+                });
+
+                tr.innerHTML = tds;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function terapkanNilaiMassalMapel(mIdx, mapel) {
+            const inputVal = document.getElementById(`input_massal_val_${mIdx}`);
+            if (!inputVal || inputVal.value === '') {
+                alert(`Masukkan angka nilai terlebih dahulu pada kolom ${mapel}.`);
+                return;
             }
+            const val = parseFloat(inputVal.value);
+            
+            daftarSiswa.forEach((_, sIdx) => {
+                const cell = document.getElementById(`cell_massal_${sIdx}_${mIdx}`);
+                if (cell) cell.value = val;
+            });
+        }
 
-            tds += `
-                <td class="p-4 text-center border-r">
-                    <input type="number" min="0" max="100" value="${existingScore !== '' ? existingScore : ''}" 
-                           id="cell_massal_${sIdx}_${mIdx}" data-siswa="${nama}" data-mapel="${mapel}" 
-                           class="w-20 bg-slate-50 border border-slate-300 rounded-lg p-2 text-center text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500" placeholder="0-100">
-                </td>
-            `;
-        });
+        function simpanMultiMapelLampau() {
+            const targetHistory = getHistoryObj(activeKategoriAsesmen);
+            
+            daftarSiswa.forEach((nama, sIdx) => {
+                selectedMultiMapelList.forEach((mapel, mIdx) => {
+                    const cell = document.getElementById(`cell_massal_${sIdx}_${mIdx}`);
+                    if (cell && cell.value !== '') {
+                        let scoreVal = parseFloat(cell.value) || 0;
+                        if (!targetHistory[nama]) targetHistory[nama] = {};
+                        if (!targetHistory[nama][mapel]) targetHistory[nama][mapel] = [];
+                        
+                        let existing = targetHistory[nama][mapel].find(h => h.date === selectedLampauDate);
+                        let detailText = `[Input Massal ${activeKategoriAsesmen}] Rekap Masa Lampau`;
+                        
+                        if (existing) {
+                            existing.score = scoreVal;
+                            existing.detail = detailText;
+                        } else {
+                            targetHistory[nama][mapel].push({ date: selectedLampauDate, score: scoreVal, detail: detailText });
+                        }
+                    }
+                });
+            });
 
-        tr.innerHTML = tds;
-        tbody.appendChild(tr);
-    });
-}
+            simpanKeLocalStorage();
+            alert(`Rekapitulasi massal tanggal ${selectedLampauDate} berhasil disimpan permanen!`);
+            initRekapNilai();
+            switchView('view-rekap-nilai');
+        }
 
-function terapkanNilaiMassalMapel(mIdx, mapel) {
-    const inputVal = document.getElementById(`input_massal_val_${mIdx}`);
-    if (!inputVal || inputVal.value === '') {
-        alert(`Masukkan angka nilai terlebih dahulu pada kolom ${mapel}.`);
-        return;
-    }
-    const val = parseFloat(inputVal.value);
-    
-    daftarSiswa.forEach((_, sIdx) => {
-        const cell = document.getElementById(`cell_massal_${sIdx}_${mIdx}`);
-        if (cell) cell.value = val;
-    });
-}
-
-function simpanMultiMapelLampau() {
-    const targetHistory = getHistoryObj(activeKategoriAsesmen);
-    
-    daftarSiswa.forEach((nama, sIdx) => {
-        selectedMultiMapelList.forEach((mapel, mIdx) => {
-            const cell = document.getElementById(`cell_massal_${sIdx}_${mIdx}`);
-            if (cell && cell.value !== '') {
-                let scoreVal = parseFloat(cell.value) || 0;
-                
-                if (!targetHistory[nama]) targetHistory[nama] = {};
-                if (!targetHistory[nama][mapel]) targetHistory[nama][mapel] = [];
-                
-                let existing = targetHistory[nama][mapel].find(h => h.date === selectedLampauDate);
-                let detailText = `[Input Massal ${activeKategoriAsesmen}] Rekap Masa Lampau`;
-                
-                if (existing) {
-                    existing.score = scoreVal;
-                    existing.detail = detailText;
-                } else {
-                    targetHistory[nama][mapel].push({ date: selectedLampauDate, score: scoreVal, detail: detailText });
-                }
-            }
-        });
-    });
-
-    simpanKeLocalStorage();
-    alert(`Rekapitulasi massal tanggal ${selectedLampauDate} berhasil disimpan secara permanen!`);
-    initRekapNilai();
-    switchView('view-rekap-nilai');
-}
-
+        // ================= ANALISIS NILAI & RAPOR (60% SUMATIF + 40% FORMATIF) =================
         function hitungNilaiRaporMapel(namaSiswa, mapel) {
             let avgF = hitungRataRataMapel(namaSiswa, mapel, 'Formatif');
             let avgS = hitungRataRataMapel(namaSiswa, mapel, 'Sumatif');
@@ -3803,15 +3903,12 @@ function simpanMultiMapelLampau() {
                 }
 
                 let tds = `<td class="p-4 font-semibold text-slate-500">${daftarSiswa.indexOf(nama) + 1}</td><td class="p-4 font-medium text-slate-900">${nama} ${rankSign}</td>`;
-                
                 let totalScore = 0;
                 const totalMapelWajib = allMapelGlobal.length;
 
                 allMapelGlobal.forEach(mapel => {
                     let nilaiRapor = hitungNilaiRaporMapel(nama, mapel);
-                    if (nilaiRapor > 0) {
-                        totalScore += nilaiRapor;
-                    }
+                    if (nilaiRapor > 0) totalScore += nilaiRapor;
                     let displayVal = nilaiRapor > 0 ? nilaiRapor.toFixed(1) : '0.0';
                     let smartBadge = nilaiRapor >= 75 ? 'text-emerald-700 bg-emerald-50 px-2 py-1 rounded font-bold' : (nilaiRapor > 0 ? 'text-amber-700 bg-amber-50 px-2 py-1 rounded font-bold' : 'text-slate-400 font-bold');
                     tds += `<td class="p-4 text-center cursor-pointer underline hover:text-indigo-800" onclick="bukaModalHistoryMapel('${nama}', '${mapel}')"><span class="${smartBadge}">${displayVal}</span></td>`;
@@ -3870,7 +3967,6 @@ function simpanMultiMapelLampau() {
         function bukaModalRemedialOtomatis() {
             const container = document.getElementById('container-remedial-list');
             container.innerHTML = '';
-            
             let adaRemedial = false;
 
             daftarSiswa.forEach(nama => {
@@ -3901,17 +3997,15 @@ function simpanMultiMapelLampau() {
                 container.innerHTML = `<div class="p-6 text-center text-slate-500 font-medium">🎉 Luar biasa! Seluruh siswa telah tuntas mencapai Kriteria Ketercapaian (≥ 75) di semua mata pelajaran. Tidak ada siswa yang memerlukan remedial saat ini.</div>`;
             }
 
-            document.getElementById('modal-remedial-otomatis').classList.add('hidden');
+            document.getElementById('modal-remedial-otomatis').classList.remove('hidden');
         }
 
         function bukaModalHistoryMapel(nama, mapel) {
             document.getElementById('modal-detail-title').innerText = `Riwayat Penilaian: ${mapel} (${nama})`;
-            
             let recsF = dapatkanRekamanMapelSiswa(nama, mapel, 'Formatif');
             let recsS = dapatkanRekamanMapelSiswa(nama, mapel, 'Sumatif');
 
             let historyHtml = `<div class="space-y-4 mb-2">`;
-            
             historyHtml += `<div><strong class="text-xs text-blue-600 uppercase tracking-wider block mb-1">📘 Riwayat Formatif (40%):</strong>`;
             if(recsF.length > 0) {
                 recsF.forEach(r => {
@@ -3951,12 +4045,9 @@ function simpanMultiMapelLampau() {
             let calculated = daftarSiswa.map(name => {
                 let sum = 0;
                 const totalMapelWajib = allMapelGlobal.length;
-
                 allMapelGlobal.forEach(m => {
                     let raporM = hitungNilaiRaporMapel(name, m);
-                    if (raporM > 0) {
-                        sum += raporM;
-                    }
+                    if (raporM > 0) sum += raporM;
                 });
                 const finalAvg = totalMapelWajib > 0 ? Math.round((sum / totalMapelWajib) * 10) / 10 : 0;
                 return { name: name, avg: finalAvg };
@@ -3997,9 +4088,9 @@ function simpanMultiMapelLampau() {
             alert("Analisis ranking berhasil dihapus!");
         }
 
+        // ================= PORTAL SISWA =================
         function loadPortalSiswa(namaSiswa) {
             document.getElementById('nama-siswa-login').innerText = `Halo, ${namaSiswa}! 👋`;
-            
             const dayOfWeek = new Date().getDay(); 
             const hariNamaArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             document.getElementById('label-hari-ini').innerText = `Hari Ini: ${hariNamaArr[dayOfWeek]}`;
@@ -4014,7 +4105,6 @@ function simpanMultiMapelLampau() {
 
             const tbody = document.getElementById('tabel-nilai-siswa-body');
             tbody.innerHTML = '';
-
             let totalNilaiRaporSemuaMapel = 0;
             const totalMapelWajib = allMapelGlobal.length;
 
@@ -4026,9 +4116,7 @@ function simpanMultiMapelLampau() {
                 const recordsF = dapatkanRekamanMapelSiswa(namaSiswa, mapel, 'Formatif');
                 const recordsS = dapatkanRekamanMapelSiswa(namaSiswa, mapel, 'Sumatif');
 
-                if (raporM > 0) {
-                    totalNilaiRaporSemuaMapel += raporM;
-                }
+                if (raporM > 0) totalNilaiRaporSemuaMapel += raporM;
 
                 let badgeRapor = '';
                 if (raporM === 0) {
@@ -4089,7 +4177,6 @@ function simpanMultiMapelLampau() {
 
         function bukaHistorySiswa(namaSiswa, mapel) {
             document.getElementById('history-mapel-title').innerText = `Riwayat Penilaian: ${mapel} (${namaSiswa})`;
-            
             const containerSummary = document.getElementById('container-history-summary');
             const container = document.getElementById('container-history-card');
             containerSummary.innerHTML = '';
@@ -4152,232 +4239,5 @@ function simpanMultiMapelLampau() {
             switchView('view-history-siswa');
         }
     </script>
-        <!-- VIEW 1: PILIH MENU RPM -->
-<section id="view-rpm-pilih-menu" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
-    <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-8">
-        <div>
-            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Modul Ajar Otomatis</span>
-            <h2 class="text-2xl font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM) Kelas IV</h2>
-        </div>
-        <button onclick="switchView('view-ruang-kelas')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div onclick="switchView('view-rpm-form-buat')" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-indigo-600 hover:shadow-md cursor-pointer transition group">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">✨</div>
-            <h3 class="text-xl font-extrabold text-slate-900">Buat Modul Ajar (RPM)</h3>
-            <p class="text-slate-500 text-sm mt-2">Buat modul ajar otomatis berdasarkan CP Fase B, 8 Dimensi, & Taksonomi SOLO.</p>
-            <span class="inline-block mt-4 text-xs font-bold text-indigo-600">Mulai Buat RPM →</span>
-        </div>
-
-        <div onclick="renderRekapRpmList()" class="bg-white p-8 rounded-2xl shadow-sm border-2 border-slate-200 hover:border-blue-600 hover:shadow-md cursor-pointer transition group">
-            <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📂</div>
-            <h3 class="text-xl font-extrabold text-slate-900">Rekap Modul Ajar</h3>
-            <p class="text-slate-500 text-sm mt-2">Kelola, tinjau kembali, atau unduh arsip RPM yang telah disimpan.</p>
-            <span class="inline-block mt-4 text-xs font-bold text-blue-600">Buka Arsip RPM →</span>
-        </div>
-    </div>
-</section>
-
-<!-- VIEW 2: FORM SETUP RPM -->
-<section id="view-rpm-form-buat" class="view-section p-6 md:p-10 max-w-4xl mx-auto w-full">
-    <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
-        <div>
-            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Form Pembuatan</span>
-            <h2 class="text-xl font-bold text-slate-900">Setup Rencana Pembelajaran Mendalam (RPM)</h2>
-        </div>
-        <button onclick="switchView('view-rpm-pilih-menu')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
-    </div>
-
-    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-5">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Pilih Mata Pelajaran</label>
-                <select id="rpm-mapel" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-                    <option>Pendidikan Pancasila</option>
-                    <option>Matematika</option>
-                    <option>IPAS</option>
-                    <option>Bahasa Indonesia</option>
-                    <option>Seni Rupa</option>
-                    <option>Mulok</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Topik Pembelajaran</label>
-                <input type="text" id="rpm-topik" placeholder="Contoh: Wujud Zat dan Perubahannya" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Guru / Penyusun</label>
-                <input type="text" id="rpm-penyusun" value="Andri Julian Perdana, S.Pd" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">NIP Guru Penyusun</label>
-                <input type="text" id="rpm-nip-penyusun" value="19990101 202201 1 001" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Kepala Sekolah</label>
-                <input type="text" id="rpm-kepsek" value="Kepala SDN 2 Sabedo, S.Pd" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">NIP Kepala Sekolah</label>
-                <input type="text" id="rpm-nip-kepsek" value="19750101 199803 1 005" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Media Ajar Utama</label>
-                <input type="text" id="rpm-media" placeholder="Contoh: Benda konkret di sekitar & Video Pembelajaran" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Taksonomi SOLO & Kko</label>
-                <select id="rpm-solo-kko" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-bold text-slate-800">
-                    <option>Relasional (Menganalisis, Membedakan, Menghubungkan)</option>
-                    <option>Multistruktural (Menjelaskan, Mengidentifikasi, Menghitung)</option>
-                    <option>Unistruktural (Menyebutkan, Menuliskan, Menggambar)</option>
-                    <option>Abstrak Diperluas (Mendesain, Menyimpulkan, Menciptakan)</option>
-                </select>
-            </div>
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">8 Dimensi Profil Lulusan (Pilih Salah Satu atau Lebih)</label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Keimanan dan Ketakwaan" class="w-4 h-4 text-indigo-600" checked> Keimanan & Ketakwaan</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kewargaan" class="w-4 h-4 text-indigo-600"> Kewargaan</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Penalaran Kritis" class="w-4 h-4 text-indigo-600" checked> Penalaran Kritis</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kreativitas" class="w-4 h-4 text-indigo-600"> Kreativitas</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kolaborasi" class="w-4 h-4 text-indigo-600" checked> Kolaborasi</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kemandirian" class="w-4 h-4 text-indigo-600"> Kemandirian</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Kesehatan" class="w-4 h-4 text-indigo-600"> Kesehatan</label>
-                <label class="flex items-center gap-2 p-2.5 bg-slate-50 border rounded-xl cursor-pointer text-xs font-medium"><input type="checkbox" name="rpm-dimensi" value="Komunikasi" class="w-4 h-4 text-indigo-600" checked> Komunikasi</label>
-            </div>
-        </div>
-
-        <div class="flex justify-end pt-4">
-            <button onclick="generateRpmOtomatis()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition text-sm">✨ Buat Rencana Pembelajaran Mendalam (RPM)</button>
-        </div>
-    </div>
-</section>
-
-<!-- VIEW 3: HASIL RPM & EDITOR AKTIVITAS -->
-<section id="view-rpm-hasil" class="view-section p-6 md:p-10 max-w-5xl mx-auto w-full">
-        
-        <!-- BARIS TOMBOL PINTAS NAVIGASI (Penilaian Akademik & DPL) -->
-        <div class="no-print bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 p-3.5 rounded-2xl mb-4 flex items-center justify-between flex-wrap gap-3 shadow-2xs">
-            <div class="flex items-center gap-2">
-                <span class="text-sm">⚡</span>
-                <span class="text-xs font-bold text-indigo-900 uppercase tracking-wider">Tombol Pintas Navigasi Cepat:</span>
-            </div>
-            <div class="flex gap-2 flex-wrap">
-                <button onclick="switchView('view-pilih-kategori-penilaian')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5">
-                    <span>📝</span> Buka Penilaian Akademik
-                </button>
-                <button onclick="switchView('view-dpl-pilih-siswa')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-sm transition flex items-center gap-1.5">
-                    <span>🌱</span> Buka Penilaian Karakter (DPL)
-                </button>
-            </div>
-        </div>
-
-        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6 no-print">
-            <div>
-                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Hasil Modul Ajar</span>
-                <h2 class="text-xl font-bold text-slate-900">Rencana Pembelajaran Mendalam (RPM)</h2>
-            </div>
-            <div class="flex gap-2 flex-wrap">
-                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">🖨️ Cetak / Download PDF</button>
-                <button onclick="simpanRpmPermanen()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition">💾 Simpan RPM</button>
-                <button onclick="switchView('view-rpm-form-buat')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Edit Setup</button>
-            </div>
-        </div>
-
-        <!-- KERTAS DOKUMEN RPM PROFESIONAL -->
-        <div id="print-area-rpm" class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 space-y-6 text-slate-800 text-sm leading-relaxed">
-            <div class="text-center border-b-2 border-slate-800 pb-4 space-y-1">
-                <h1 class="text-xl font-extrabold uppercase tracking-wide">RENCANA PEMBELAJARAN MENDALAM (RPM)</h1>
-                <p id="rpm-res-mapel-topik" class="text-sm font-bold text-slate-700">Mata Pelajaran: - | Topik: -</p>
-                <p class="text-xs text-slate-500">Satuan Pendidikan: SDN 2 Sabedo | Kelas IV (Fase B) | Tahun Ajaran 2026/2027</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl text-xs border">
-                <div><strong>Penyusun:</strong> <span id="rpm-res-penyusun">-</span> (<span id="rpm-res-nip">-</span>)</div>
-                <div><strong>Media Ajar:</strong> <span id="rpm-res-media">-</span></div>
-                <div><strong>Taksonomi SOLO:</strong> <span id="rpm-res-solo">-</span></div>
-                <div><strong>Dimensi Terpilih:</strong> <span id="rpm-res-dimensi">-</span></div>
-            </div>
-
-            <div class="space-y-2">
-                <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">I. Tujuan Pembelajaran & KKTP</h3>
-                <div id="rpm-res-tp" class="p-3 bg-indigo-50/50 border rounded-xl text-xs space-y-1"></div>
-            </div>
-
-            <div class="space-y-2">
-                <div class="flex justify-between items-center border-b pb-1">
-                    <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider">II. Pengalaman Belajar Mendalam (Mindful, Meaningful, Joyful)</h3>
-                    <button onclick="tambahAktivitasDiBawah(-1)" class="no-print bg-indigo-50 text-indigo-700 hover:bg-indigo-100 font-bold px-2.5 py-1 rounded-lg text-xs transition border border-indigo-200">+ Tambah Aktivitas Paling Bawah</button>
-                </div>
-                <div id="container-pengalaman-belajar-editable" class="space-y-3"></div>
-            </div>
-
-            <div class="space-y-2">
-                <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">III. Asesmen Pembelajaran (Formatif & Sumatif)</h3>
-                <div id="rpm-res-asesmen" class="p-3 bg-slate-50 border rounded-xl text-xs space-y-2"></div>
-            </div>
-
-            <div class="space-y-2">
-                <h3 class="font-extrabold text-slate-900 uppercase text-xs tracking-wider border-b pb-1">IV. Program Pengayaan & Remedial</h3>
-                <div id="rpm-res-remedial" class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl text-xs space-y-2"></div>
-            </div>
-
-            <div class="pt-8 flex justify-between items-center text-xs">
-                <div class="text-center space-y-12">
-                    <p>Mengetahui,<br>Kepala SDN 2 Sabedo</p>
-                    <div>
-                        <strong id="rpm-res-kepsek" class="underline">JESMIN, S.Pd.I</strong>
-                        <p>NIP. <span id="rpm-res-nip-kepsek">-</span></p>
-                    </div>
-                </div>
-                <div class="text-center space-y-12">
-                    <p>Sabedo, <span id="rpm-res-tanggal-sekarang">-</span><br>Guru Kelas IV</p>
-                    <div>
-                        <strong id="rpm-res-tanda-penyusun" class="underline">Andri Julian Perdana, S.Pd</strong>
-                        <p>NIP. <span id="rpm-res-nip- tdp">-</span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-<!-- VIEW 4: REKAP ARSIP RPM -->
-<section id="view-rpm-rekap" class="view-section p-6 md:p-10 max-w-6xl mx-auto w-full">
-    <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-6">
-        <div>
-            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Arsip Dokumen</span>
-            <h2 class="text-xl font-bold text-slate-900">Rekap Rencana Pembelajaran Mendalam (RPM)</h2>
-        </div>
-        <button onclick="switchView('view-rpm-pilih-menu')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">← Kembali</button>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto">
-        <table class="w-full text-left border-collapse min-w-[700px]">
-            <thead>
-                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase">
-                    <th class="p-4 border-r">No</th>
-                    <th class="p-4 border-r">Mata Pelajaran</th>
-                    <th class="p-4 border-r">Topik Pembelajaran</th>
-                    <th class="p-4 border-r">Penyusun</th>
-                    <th class="p-4 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="tabel-rekap-rpm-body" class="divide-y divide-slate-100 text-sm"></tbody>
-        </table>
-    </div>
-</section>
 </body>
 </html>
