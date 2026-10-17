@@ -4074,136 +4074,155 @@
         }
 
         // --- 2. LOGIKA LOGIN GURU TERPADU ---
-        async function handleLoginGuru() {
-            const usernameInput = $val('username-guru');
-            const passwordInput = $val('password-guru');
-            const alertBox = $id('alert-guru');
+                // --- LOGIKA LOGIN GURU INSTAN (BEBAS HANG) ---
+        function handleLoginGuru() {
+            try {
+                const usernameInput = $val('username-guru');
+                const passwordInput = $val('password-guru');
+                const alertBox = $id('alert-guru');
 
-            if (!usernameInput || !passwordInput) {
-                if (alertBox) {
-                    alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
-                    alertBox.innerText = 'Username dan password wajib diisi!';
-                    alertBox.classList.remove('hidden');
+                if (!usernameInput || !passwordInput) {
+                    if (alertBox) {
+                        alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                        alertBox.innerText = 'Username dan password wajib diisi!';
+                        alertBox.classList.remove('hidden');
+                    } else {
+                        alert('Username dan password wajib diisi!');
+                    }
+                    return;
                 }
-                return;
-            }
 
-            // Validasi akun dari database guru aktif
-            const guruDitemukan = daftarGuruTerdaftar.find(g => 
-                g.username.toLowerCase() === usernameInput.toLowerCase() && g.password === passwordInput
-            );
+                // Cari akun guru
+                const guruDitemukan = daftarGuruTerdaftar.find(g => 
+                    g.username.toLowerCase() === usernameInput.toLowerCase() && g.password === passwordInput
+                );
 
-            if (!guruDitemukan) {
-                if (alertBox) {
-                    alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
-                    alertBox.innerText = 'Username atau password salah / akun belum disetujui Admin!';
-                    alertBox.classList.remove('hidden');
+                if (!guruDitemukan) {
+                    if (alertBox) {
+                        alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                        alertBox.innerText = 'Username atau password salah!';
+                        alertBox.classList.remove('hidden');
+                    } else {
+                        alert('Username atau password salah!');
+                    }
+                    return;
                 }
-                return;
-            }
 
-            if (alertBox) alertBox.classList.add('hidden');
+                if (alertBox) alertBox.classList.add('hidden');
 
-            // Set state sesi aktif
-            penggunaAktif = guruDitemukan;
-            tipePenggunaAktif = 'guru';
-            peranGuruAktif = guruDitemukan.role; // 'guru' (kelas) atau 'mapel'
-            sekolahAktif = guruDitemukan.sekolah;
+                // Set status sesi
+                penggunaAktif = guruDitemukan;
+                tipePenggunaAktif = 'guru';
+                peranGuruAktif = guruDitemukan.role;
+                sekolahAktif = guruDitemukan.sekolah;
 
-            // Tampilkan identitas di header
-            $setTxt('nama-guru-header', `Ruang Kelas ${guruDitemukan.nama}`);
+                $setTxt('nama-guru-header', `Ruang Kelas ${guruDitemukan.nama}`);
 
-            // Cek otorisasi tombol super admin
-            const btnAdmin = $id('btn-akses-super-admin');
-            if (btnAdmin) {
-                if (guruDitemukan.isSuperAdmin || guruDitemukan.username === DEFAULT_SUPER_ADMIN_USERNAME) {
-                    btnAdmin.classList.remove('hidden');
-                } else {
-                    btnAdmin.classList.add('hidden');
-                }
-            }
-
-            // Jalankan penarikan data cloud
-            await sinkronisasiDataMasukDeviceB();
-
-            // Routing sesuai peran pengajar
-            if (peranGuruAktif === 'mapel') {
-                mapelAktif = guruDitemukan.mapel;
-                $setTxt('mapel-header-nama-guru', `Ruang Guru • ${guruDitemukan.nama}`);
-                $setTxt('mapel-header-nama-mapel', guruDitemukan.mapel);$setTxt('mapel-header-sekolah', guruDitemukan.sekolah);
-                updateBadgeJadwalDiKartuMapel();
-                showToast(`Selamat datang, ${guruDitemukan.nama}! Silakan pilih tingkatan kelas.`, 'info');
-                switchView('view-dashboard-mapel-kelas');
-            } else {
-                kelasAktif = guruDitemukan.kelas || 'Kelas IV (Fase B)';
-                mapelAktif = '';
-                sinkronkanDaftarSiswaKelasAktif();
-                showToast(`Berhasil masuk! Selamat bertugas, ${guruDitemukan.nama}.`, 'success');
-                switchView('view-ruang-kelas');
-            }
-
-            // Bersihkan input login
-            $id('username-guru').value = '';$id('password-guru').value = '';
-        }
-
-        // --- 3. LOGIKA LOGIN SISWA UNIVERSAL & LOGOUT ---
-        function handleLoginSiswa() {
-            const usernameInput = $val('username-siswa');
-            const passwordInput = $val('password-siswa');
-            const alertBox = $id('alert-siswa');
-
-            if (!usernameInput || !passwordInput) {
-                if (alertBox) {
-                    alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
-                    alertBox.innerText = 'Username dan password wajib diisi!';
-                    alertBox.classList.remove('hidden');
-                }
-                return;
-            }
-
-            // Cari kredensial siswa di database seluruh rombel
-            let siswaDitemukan = null;
-            let kelasSiswa = '';
-            let sekolahSiswa = '';
-
-            for (const [namaSekolah, daftarKelas] of Object.entries(databaseSiswaPerSekolah)) {
-                for (const [tingkatKelas, listMurid] of Object.entries(daftarKelas)) {
-                    const match = listMurid.find(m => 
-                        m.username.toLowerCase() === usernameInput.toLowerCase() && m.password === passwordInput
-                    );
-                    if (match) {
-                        siswaDitemukan = match;
-                        kelasSiswa = tingkatKelas;
-                        sekolahSiswa = namaSekolah;
-                        break;
+                const btnAdmin = $id('btn-akses-super-admin');
+                if (btnAdmin) {
+                    if (guruDitemukan.isSuperAdmin || guruDitemukan.username === DEFAULT_SUPER_ADMIN_USERNAME) {
+                        btnAdmin.classList.remove('hidden');
+                    } else {
+                        btnAdmin.classList.add('hidden');
                     }
                 }
-                if (siswaDitemukan) break;
-            }
 
-            if (!siswaDitemukan) {
-                if (alertBox) {
-                    alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
-                    alertBox.innerText = 'Username atau password karcis tidak cocok! Tanyakan pada wali kelasmu.';
-                    alertBox.classList.remove('hidden');
+                // Langsung alihkan tampilan tanpa menunggu internet
+                if (peranGuruAktif === 'mapel') {
+                    mapelAktif = guruDitemukan.mapel;
+                    $setTxt('mapel-header-nama-guru', `Ruang Guru • ${guruDitemukan.nama}`);
+                    $setTxt('mapel-header-nama-mapel', guruDitemukan.mapel);$setTxt('mapel-header-sekolah', guruDitemukan.sekolah);
+                    if (typeof updateBadgeJadwalDiKartuMapel === 'function') updateBadgeJadwalDiKartuMapel();
+                    switchView('view-dashboard-mapel-kelas');
+                } else {
+                    kelasAktif = guruDitemukan.kelas || 'Kelas IV (Fase B)';
+                    mapelAktif = '';
+                    sinkronkanDaftarSiswaKelasAktif();
+                    switchView('view-ruang-kelas');
                 }
-                return;
+
+                showToast(`Selamat datang, ${guruDitemukan.nama}!`, 'success');
+
+                // Sinkronkan ke cloud di latar belakang tanpa memblokir layar
+                setTimeout(() => {
+                    if (typeof sinkronisasiDataMasukDeviceB === 'function') {
+                        sinkronisasiDataMasukDeviceB().catch(() => {});
+                    }
+                }, 300);
+
+            } catch (err) {
+                alert('Terjadi kesalahan script login guru: ' + err.message);
             }
-
-            if (alertBox) alertBox.classList.add('hidden');
-
-            penggunaAktif = siswaDitemukan;
-            tipePenggunaAktif = 'siswa';
-            sekolahAktif = sekolahSiswa;
-            kelasAktif = kelasSiswa;
-            sinkronkanDaftarSiswaKelasAktif();
-
-            renderPortalSiswa(siswaDitemukan);
-            showToast(`Halo ${siswaDitemukan.nama}, selamat datang di Portal Belajarmu!`, 'success');
-            switchView('view-portal-siswa');
-
-            $id('username-siswa').value = '';$id('password-siswa').value = '';
         }
+
+        // --- LOGIKA LOGIN SISWA INSTAN ---
+        function handleLoginSiswa() {
+            try {
+                const usernameInput = $val('username-siswa');
+                const passwordInput = $val('password-siswa');
+                const alertBox = $id('alert-siswa');
+
+                if (!usernameInput || !passwordInput) {
+                    if (alertBox) {
+                        alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                        alertBox.innerText = 'Username dan password wajib diisi!';
+                        alertBox.classList.remove('hidden');
+                    } else {
+                        alert('Username dan password wajib diisi!');
+                    }
+                    return;
+                }
+
+                let siswaDitemukan = null;
+                let kelasSiswa = '';
+                let sekolahSiswa = '';
+
+                for (const [namaSekolah, daftarKelas] of Object.entries(databaseSiswaPerSekolah)) {
+                    for (const [tingkatKelas, listMurid] of Object.entries(daftarKelas)) {
+                        const match = listMurid.find(m => 
+                            m.username.toLowerCase() === usernameInput.toLowerCase() && m.password === passwordInput
+                        );
+                        if (match) {
+                            siswaDitemukan = match;
+                            kelasSiswa = tingkatKelas;
+                            sekolahSiswa = namaSekolah;
+                            break;
+                        }
+                    }
+                    if (siswaDitemukan) break;
+                }
+
+                if (!siswaDitemukan) {
+                    if (alertBox) {
+                        alertBox.className = 'mb-4 p-3 rounded-xl text-xs font-bold text-center bg-rose-500/20 text-rose-300 border border-rose-500/30';
+                        alertBox.innerText = 'Username atau password siswa salah!';
+                        alertBox.classList.remove('hidden');
+                    } else {
+                        alert('Username atau password siswa salah!');
+                    }
+                    return;
+                }
+
+                if (alertBox) alertBox.classList.add('hidden');
+
+                penggunaAktif = siswaDitemukan;
+                tipePenggunaAktif = 'siswa';
+                sekolahAktif = sekolahSiswa;
+                kelasAktif = kelasSiswa;
+
+                sinkronkanDaftarSiswaKelasAktif();
+                if (typeof renderPortalSiswa === 'function') {
+                    renderPortalSiswa(siswaDitemukan);
+                }
+
+                showToast(`Halo ${siswaDitemukan.nama}, selamat datang!`, 'success');
+                switchView('view-portal-siswa');
+
+            } catch (err) {
+                alert('Terjadi kesalahan script login siswa: ' + err.message);
+            }
+        }
+
 
         function logoutSesi() {
             penggunaAktif = null;
