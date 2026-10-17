@@ -5022,90 +5022,7 @@
             window.print();
         }
 
-                // ==========================================================================
-        // TAHAP 15.8 DARI 15: MESIN PRESENSI HARIAN, REKAP & ANALISIS KEHADIRAN
-        // - 1. Render Tabel Presensi Harian & Tombol Warna Interaktif
-        // - 2. Bilah Progres Kehadiran & Tombol Cepat (Hadir/Libur Semua)
-        // - 3. Penyimpanan Presensi Hari Ini ke Supabase Cloud
-        // - 4. Rekapitulasi Presensi Sesi & Form Edit Tanggal Masa Lampau
-        // - 5. Modal Analisis Akumulasi Kehadiran (Hadir, Sakit, Izin, Alpa)
-        // ==========================================================================
-
-        let presensiSesiAktif = {};      // { [siswaId]: 'Hadir' | 'Sakit' | 'Izin' | 'Alpa' | 'Libur' }
-        let presensiTempLampau = {};     // Buffer pengisian tanggal masa lampau
-        let tanggalLampauTerpilih = '';
-
-        // --- 1. RENDER TABEL PRESENSI HARIAN DENGAN TOMBOL STATUS INTERAKTIF ---
-        function renderTabelPresensi() {
-            sinkronkanDaftarSiswaKelasAktif();
-            const tbody = $id('tabel-presensi-body');
-            if (!tbody) return;
-
-            const tglHariIni = getFormatTanggalSekarang();
-            if (!dataPresensiHarian[tglHariIni]) {
-                dataPresensiHarian[tglHariIni] = {};
-            }
-            presensiSesiAktif = dataPresensiHarian[tglHariIni];
-
-            tbody.innerHTML = '';
-
-            if (daftarSiswaAktif.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="3" class="p-6 text-center text-slate-400 italic">
-                            Daftar siswa di ${kelasAktif} masih kosong. Silakan tambahkan siswa terlebih dahulu di menu Kelola Siswa.
-                        </td>
-                    </tr>
-                `;
-                updateBilahProgresPresensi();
-                return;
-            }
-
-            daftarSiswaAktif.forEach((siswa, index) => {
-                const statusSaatIni = presensiSesiAktif[siswa.id] || '';
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
-
-                tr.innerHTML = `
-                    <td class="p-4 border-r w-12 text-center font-bold text-slate-500">${index + 1}</td>
-                    <td class="p-4 border-r font-bold text-slate-900">${siswa.nama}</td>
-                    <td class="p-4 text-center">
-                        <div class="inline-flex rounded-xl p-1 bg-slate-100 border border-slate-200 gap-1 flex-wrap justify-center">
-                            <button type="button" onclick="setPresensiSiswa('${siswa.id}', 'Hadir')" 
-                                class="px-3.5 py-1.5 rounded-lg text-xs font-black transition ${statusSaatIni === 'Hadir' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white'}">
-                                Hadir
-                            </button>
-                            <button type="button" onclick="setPresensiSiswa('${siswa.id}', 'Sakit')" 
-                                class="px-3.5 py-1.5 rounded-lg text-xs font-black transition ${statusSaatIni === 'Sakit' ? 'bg-amber-500 text-white shadow-sm' : 'text-slate-600 hover:bg-white'}">
-                                Sakit
-                            </button>
-                            <button type="button" onclick="setPresensiSiswa('${siswa.id}', 'Izin')" 
-                                class="px-3.5 py-1.5 rounded-lg text-xs font-black transition ${statusSaatIni === 'Izin' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white'}">
-                                Izin
-                            </button>
-                            <button type="button" onclick="setPresensiSiswa('${siswa.id}', 'Alpa')" 
-                                class="px-3.5 py-1.5 rounded-lg text-xs font-black transition ${statusSaatIni === 'Alpa' ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white'}">
-                                Alpa
-                            </button>
-                            <button type="button" onclick="setPresensiSiswa('${siswa.id}', 'Libur')" 
-                                class="px-3.5 py-1.5 rounded-lg text-xs font-black transition ${statusSaatIni === 'Libur' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:bg-white'}">
-                                Libur
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            updateBilahProgresPresensi();
-        }
-
-        function setPresensiSiswa(siswaId, status) {
-            presensiSesiAktif[siswaId] = status;
-            renderTabelPresensi();
-        }
-
-        // --- 2. BILAH PROGRES KEHADIRAN & SET SEMUA CEPAT ---
+                // --- 2. BILAH PROGRES KEHADIRAN & SET SEMUA CEPAT ---
         function updateBilahProgresPresensi() {
             const totalSiswa = daftarSiswaAktif.length;
             if (totalSiswa === 0) {
@@ -5200,7 +5117,6 @@
 
             $setTxt('label-tanggal-rekap', `Tanggal Arsip: ${formatTanggalIndonesia(tanggalLampauTerpilih)}`);
 
-            // Salin rekapan yang sudah ada atau buat buffer baru
             const existing = dataPresensiHarian[tanggalLampauTerpilih] || {};
             presensiTempLampau = JSON.parse(JSON.stringify(existing));
 
@@ -5289,7 +5205,6 @@
                 return;
             }
 
-            // Hitung akumulasi kehadiran di seluruh sesi tanggal yang tercatat
             daftarSiswaAktif.forEach((siswa, index) => {
                 let hadir = 0, sakit = 0, izin = 0, alpa = 0;
 
@@ -5317,11 +5232,8 @@
             modal.classList.remove('hidden');
         }
 
-                // ==========================================================================
+        // ==========================================================================
         // TAHAP 15.9 DARI 15: SETUP PENILAIAN AKADEMIK & INSTRUMEN DINAMIS
-        // - 1. Pilihan Kategori Asesmen (Formatif vs Sumatif) & Render Grid Mapel
-        // - 2. Setup Pengetahuan (Pilihan Jenis, Generator Butir S1-S25 & Bobot Seragam)
-        // - 3. Setup Keterampilan (Opsi Lewati 100% Pengetahuan, Aspek A1-A10 Dinamis)
         // ==========================================================================
 
         let setupAsesmenAktif = {
@@ -5331,18 +5243,17 @@
                 solo: 'Relasional',
                 tp: '',
                 jenis: [],
-                soal: [] // [ { id: 'S1', jenis: 'Pilihan Ganda', bobot: 5 }, ... ]
+                soal: []
             },
             keterampilan: {
                 dilewati: false,
                 solo: 'Relasional',
                 tp: '',
                 jenis: [],
-                aspek: [] // [ { id: 'A1', nama: 'Praktik Langsung', bobotMax: 10 }, ... ]
+                aspek: []
             }
         };
 
-        // Daftar mapel default SD Kurikulum Merdeka
         const DAFTAR_MAPEL_SD = [
             'Pendidikan Pancasila',
             'Bahasa Indonesia',
@@ -5355,7 +5266,6 @@
             'Mulok'
         ];
 
-        // --- 1. PILIH KATEGORI ASESMEN & RENDER GRID MAPEL ADAPTIF ---
         function pilihKategoriAsesmen(kategori) {
             activeKategoriAsesmen = kategori;
             setupAsesmenAktif.kategori = kategori;
@@ -5369,7 +5279,6 @@
 
             container.innerHTML = '';
 
-            // Jika yang login Guru Mapel, batasi pilihan hanya pada mata pelajaran yang diampunya
             let mapelTersedia = DAFTAR_MAPEL_SD;
             if (peranGuruAktif === 'mapel' && mapelAktif) {
                 mapelTersedia = [mapelAktif];
@@ -5415,12 +5324,10 @@
             $setTxt('label-mapel-pengetahuan', `Mata Pelajaran: ${namaMapel} (${setupAsesmenAktif.kategori})`);
             $setTxt('label-mapel-keterampilan', `Mata Pelajaran: ${namaMapel} (${setupAsesmenAktif.kategori})`);
             
-            // Inisialisasi default butir soal jika masih kosong
             toggleSetupSoalInputs();
             switchView('view-setup-pengetahuan');
         }
 
-        // --- 2. SETUP INSTRUMEN PENGETAHUAN (S1, S2, dst. & BOBOT SERAGAM) ---
         function toggleSetupSoalInputs() {
             const container = $id('container-input-soal-pengetahuan');
             if (!container) return;
@@ -5510,7 +5417,6 @@
                 return;
             }
 
-            // Simpan konfigurasi pengetahuan
             setupAsesmenAktif.pengetahuan.solo = $val('solo-pengetahuan');
             setupAsesmenAktif.pengetahuan.tp = tp || `Mencapai kompetensi pada topik ${setupAsesmenAktif.mapel}`;
             setupAsesmenAktif.pengetahuan.jenis = Array.from(checkboxes).map(c => c.value);
@@ -5529,7 +5435,6 @@
             switchView('view-setup-keterampilan');
         }
 
-        // --- 3. SETUP INSTRUMEN KETERAMPILAN (ASPEK A1, A2, dst. & OPSI LEWATI) ---
         function toggleSkipKeterampilanAndri() {
             const cbSkip = $id('skip-ket-andri');
             const wrapper = $id('wrapper-section-ket-andri');
@@ -5664,7 +5569,6 @@
 
             if (alertBox) alertBox.classList.add('hidden');
 
-            // Mulai lembar eksekusi nilai
             renderLembarPenilaianPengetahuan();
             switchView('view-form-penilaian-pengetahuan');
         }
@@ -5784,7 +5688,6 @@
                 $setTxt(`label-skor-pen-${siswa.id}`, skorAkhir);
             });
 
-            // Perbarui tampilan seluruh input di tabel
             renderLembarPenilaianPengetahuan();
             showToast(`Pengisian cepat (${persenTarget}%) diterapkan ke seluruh butir soal!`, 'info');
         }
@@ -5803,7 +5706,6 @@
 
         function lanjutKePenilaianKeterampilan() {
             if (setupAsesmenAktif.keterampilan.dilewati) {
-                // Jika modul keterampilan dilewati, langsung proses simpan final (100% pengetahuan)
                 simpanFinalNilaiAndri();
             } else {
                 renderLembarPenilaianKeterampilan();
@@ -5932,7 +5834,7 @@
         // --- 4. SIMPAN NILAI AKHIR SESI PEMBELAJARAN KE CLOUD ---
         async function simpanFinalNilaiAndri() {
             const tglSesi = getFormatTanggalSekarang();
-            const kategori = setupAsesmenAktif.kategori; // 'Formatif' atau 'Sumatif'
+            const kategori = setupAsesmenAktif.kategori;
             const mapel = setupAsesmenAktif.mapel;
             const dilewati = setupAsesmenAktif.keterampilan.dilewati;
 
@@ -5950,7 +5852,6 @@
 
                 if (!dilewati) {
                     skorKet = hitungTotalSkorKetSiswa(siswa.id, totalBobotKet);
-                    // Rata-rata seimbang (50% Pengetahuan + 50% Keterampilan)
                     nilaiAkhir = Math.round(((skorPen + skorKet) / 2) * 10) / 10;
                 }
 
@@ -5965,17 +5866,14 @@
                 };
             });
 
-            // Simpan ke Supabase Cloud
             const keyPrefix = `sia_${sekolahAktif.replace(/\s+/g, '_')}_${kelasAktif.replace(/\s+/g, '_')}_nilai`;
             await simpanStateKeCloud(keyPrefix, dataRekapNilai);
 
             showToast(`Nilai ${kategori} untuk mata pelajaran ${mapel} berhasil disimpan dan disinkronkan ke Cloud!`, 'success');
-            
-            // Arahkan otomatis ke halaman rekapitulasi nilai terkait
             bukaHalamanRekap(kategori);
         }
 
-                // ==========================================================================
+        // ==========================================================================
         // TAHAP 15.11 DARI 15: ARSIP REKAPITULASI NILAI, MULTI-MAPEL & EKSPOR CSV
         // - 1. Inisialisasi Rekapitulasi Nilai Akademik Terpisah (Formatif vs Sumatif)
         // - 2. Modal Rincian Nilai Sesi & Butir Soal Per Siswa
@@ -6012,7 +5910,6 @@
 
             $setTxt('print-rekap-nama-sekolah', sekolahAktif.toUpperCase());$setTxt('print-rekap-detail-sekolah', `SIA-GURU • ${kelasAktif} • Tahun Ajaran 2026/2027`);
 
-            // Banner peringatan jika tanggal bukan hari ini
             const bannerLampau = $id('banner-rekap-date-notice');
             if (bannerLampau) {
                 if (tanggalRekapNilaiTerpilih !== getFormatTanggalSekarang()) {
@@ -6023,7 +5920,6 @@
                 }
             }
 
-            // Siapkan header mapel dinamis
             const theadRow = $id('header-rekap-nilai-table');
             const tbody = $id('tabel-rekap-nilai-body');
             if (!theadRow || !tbody) return;
@@ -6054,7 +5950,6 @@
 
             const dataSesi = (dataRekapNilai[activeKategoriAsesmen] && dataRekapNilai[activeKategoriAsesmen][tanggalRekapNilaiTerpilih]) || {};
 
-            // Render baris nilai per siswa
             daftarSiswaAktif.forEach((siswa, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
@@ -6100,7 +5995,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Tampilkan konteks TP jika ada salah satu mapel yang terisi
             const textTp = $id('text-tp-rekap-info');
             if (textTp) {
                 const listTp = [];
@@ -6137,7 +6031,6 @@
                 </div>
             `;
 
-            // Tampilkan butir soal pengetahuan
             if (rincian.rincianPen && Object.keys(rincian.rincianPen).length > 0) {
                 rincianHtml += `<div class="font-bold text-slate-700 mt-3 mb-1">Skor Butir Soal Pengetahuan:</div><div class="grid grid-cols-4 gap-1.5">`;
                 for (const [soalId, skor] of Object.entries(rincian.rincianPen)) {
@@ -6146,7 +6039,6 @@
                 rincianHtml += `</div>`;
             }
 
-            // Tampilkan aspek keterampilan jika ada
             if (rincian.rincianKet && Object.keys(rincian.rincianKet).length > 0) {
                 rincianHtml += `<div class="font-bold text-slate-700 mt-3 mb-1">Skor Aspek Keterampilan:</div><div class="grid grid-cols-3 gap-1.5">`;
                 for (const [aspekId, skor] of Object.entries(rincian.rincianKet)) {
@@ -6209,7 +6101,6 @@
 
             $setTxt('label-multimapel-date', `Tanggal Arsip: ${formatTanggalIndonesia(tanggalRekapNilaiTerpilih)} (${activeKategoriAsesmen})`);
 
-            // Muat buffer dari sesi tanggal tersebut jika sudah pernah disimpan
             const dataSesi = (dataRekapNilai[activeKategoriAsesmen] && dataRekapNilai[activeKategoriAsesmen][tanggalRekapNilaiTerpilih]) || {};
             bufferMultiMapelLampau = {};
 
@@ -6334,7 +6225,6 @@
                 });
             });
 
-            // Sinkronkan ke Supabase Cloud
             const keyPrefix = `sia_${sekolahAktif.replace(/\s+/g, '_')}_${kelasAktif.replace(/\s+/g, '_')}_nilai`;
             await simpanStateKeCloud(keyPrefix, dataRekapNilai);
 
@@ -6359,7 +6249,6 @@
             let csvContent = `REKAPITULASI NILAI ${activeKategoriAsesmen.toUpperCase()} - ${sekolahAktif}\n`;
             csvContent += `Kelas: ${kelasAktif} | Tanggal: ${formatTanggalIndonesia(tanggalRekapNilaiTerpilih)}\n\n`;
 
-            // Header kolom
             csvContent += 'No,Nama Siswa,' + daftarMapel.map(m => `"${m}"`).join(',') + ',Rata-rata\n';
 
             daftarSiswaAktif.forEach((siswa, idx) => {
@@ -6433,7 +6322,6 @@
                 'Bahasa Inggris'
             ];
 
-            // Kumpulkan seluruh nilai formatif dan sumatif yang pernah tercatat
             daftarSiswaAktif.forEach((siswa, index) => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
@@ -6444,7 +6332,6 @@
                 hasilKalkulasiRaporPerSiswa[siswa.id] = { nama: siswa.nama, mapelNilai: {}, rataRata: 0 };
 
                 mapelKunci.forEach(mapel => {
-                    // 1. Hitung rata-rata formatif untuk mapel ini
                     let sumFormatif = 0, countFormatif = 0;
                     if (dataRekapNilai['Formatif']) {
                         Object.values(dataRekapNilai['Formatif']).forEach(sesiTgl => {
@@ -6455,7 +6342,6 @@
                         });
                     }
 
-                    // 2. Hitung rata-rata sumatif untuk mapel ini
                     let sumSumatif = 0, countSumatif = 0;
                     if (dataRekapNilai['Sumatif']) {
                         Object.values(dataRekapNilai['Sumatif']).forEach(sesiTgl => {
@@ -6472,7 +6358,6 @@
                         const rataFormatif = countFormatif > 0 ? (sumFormatif / countFormatif) : 0;
                         const rataSumatif = countSumatif > 0 ? (sumSumatif / countSumatif) : 0;
 
-                        // Rumus 60% Sumatif + 40% Formatif
                         if (countFormatif > 0 && countSumatif > 0) {
                             nilaiRaporMapel = Math.round((rataSumatif * 0.6 + rataFormatif * 0.4) * 10) / 10;
                         } else if (countSumatif > 0) {
@@ -6573,7 +6458,6 @@
                 const rata = dataSiswa ? dataSiswa.rataRata : 0;
                 const mapelObj = dataSiswa ? dataSiswa.mapelNilai : {};
 
-                // Cari mapel tertinggi dan terendah
                 let mapelTertinggi = '', nilaiMax = -1;
                 let mapelTerendah = '', nilaiMin = 101;
 
@@ -6685,7 +6569,7 @@
             });
         }
 
-                // ==========================================================================
+        // ==========================================================================
         // TAHAP 15.13 DARI 15: MESIN MODUL KARAKTER DPL (DIMENSI PROFIL LULUSAN)
         // - 1. Pemilihan Siswa DPL (Filter Periode & Live Search)
         // - 2. Form Evaluasi Karakter Linimasa (Pewarisan Sesi Baseline Otomatis)
@@ -6698,7 +6582,6 @@
         let tanggalDplSpesifikAktif = '';
         let bufferNilaiDplSiswa = {}; // { [dimensi]: { predikat, catatan } }
 
-        // Predikat baku observasi profil lulusan
         const PREDIKAT_DPL_LEVEL = [
             { kode: 'BB', nama: 'Belum Berkembang', badge: 'bg-rose-100 text-rose-800 border-rose-200' },
             { kode: 'MB', nama: 'Mulai Berkembang', badge: 'bg-amber-100 text-amber-800 border-amber-200' },
@@ -6804,20 +6687,17 @@
             bufferNilaiDplSiswa = {};
             const riwayatSiswa = (dataKarakterDpl[periodeDplAktif] && dataKarakterDpl[periodeDplAktif][siswaId]) || {};
 
-            // 1. Jika tanggal ini sudah ada data, gunakan langsung
             if (riwayatSiswa[targetTanggal]) {
                 bufferNilaiDplSiswa = JSON.parse(JSON.stringify(riwayatSiswa[targetTanggal]));
                 return;
             }
 
-            // 2. Jika tanggal baru, warisi dari sesi observasi terakhir sebagai baseline
             const daftarTgl = Object.keys(riwayatSiswa).sort();
             if (daftarTgl.length > 0) {
                 const tglTerakhir = daftarTgl[daftarTgl.length - 1];
                 bufferNilaiDplSiswa = JSON.parse(JSON.stringify(riwayatSiswa[tglTerakhir]));
                 showToast(`Memuat baseline data dari sesi terakhir (${formatTanggalIndonesia(tglTerakhir)}).`, 'info');
             } else {
-                // Inisialisasi default BSH untuk semua dimensi
                 MASTER_8_DIMENSI_DPL.forEach(dim => {
                     bufferNilaiDplSiswa[dim.nama] = {
                         predikat: 'BSH',
@@ -6937,7 +6817,6 @@
 
             const rekapPeriode = (dataKarakterDpl[periodeTerpilih]) || {};
 
-            // Hitung agregat sebaran predikat kelas (seluruh dimensi & sesi terakhir tiap siswa)
             const countSebaran = { 'BB': 0, 'MB': 0, 'BSH': 0, 'SB': 0 };
             let totalObservasi = 0;
 
@@ -6950,7 +6829,6 @@
                     sesiTerakhirData = riwayatSiswa[daftarTgl[daftarTgl.length - 1]];
                 }
 
-                // Cari dimensi keunggulan dominan
                 let dimensiDominan = '-';
                 let skorTerbanyak = 0;
 
@@ -6988,7 +6866,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Tampilkan kartu grafik statistik sebaran
             PREDIKAT_DPL_LEVEL.forEach(lvl => {
                 const jumlah = countSebaran[lvl.kode] || 0;
                 const persen = totalObservasi > 0 ? Math.round((jumlah / totalObservasi) * 100) : 0;
@@ -7035,7 +6912,6 @@
                 return;
             }
 
-            // Tampilkan tombol navigasi kartu tanggal sesi
             daftarTanggal.forEach((tgl, idx) => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
@@ -7045,13 +6921,11 @@
                 containerCards.appendChild(btn);
             });
 
-            // Tampilkan sesi terbaru secara default
             renderDetailSesiDpl(siswaId, periode, daftarTanggal[daftarTanggal.length - 1], containerCards.lastElementChild);
             switchView('view-dpl-detail-readonly');
         }
 
         function renderDetailSesiDpl(siswaId, periode, tanggal, btnAktif) {
-            // Update styling tombol sesi yang aktif
             if (btnAktif && btnAktif.parentElement) {
                 btnAktif.parentElement.querySelectorAll('button').forEach(b => {
                     b.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold transition border bg-white text-slate-700 border-slate-300 hover:bg-slate-50';
@@ -7135,14 +7009,10 @@
                 return;
             }
 
-            // Ambil dimensi profil yang dicentang
             const dimensiDipilih = Array.from(document.querySelectorAll('input[name="rpm-dimensi"]:checked')).map(c => c.value);
             const dimensiStr = dimensiDipilih.length > 0 ? dimensiDipilih.join(', ') : 'Penalaran Kritis, Kolaborasi, Komunikasi';
-
-            // Ekstrak level SOLO dari pilihan
             const soloLevel = soloKko.split(' ')[0];
 
-            // Tentukan rumusan Tujuan Pembelajaran & KKTP berbasis Taksonomi SOLO
             let rumusanTp = '';
             let rumusanKktp = '';
 
@@ -7160,7 +7030,6 @@
                 rumusanKktp = `1. Mampu mengingat istilah kunci terkait ${topik}.<br>2. Mampu menjawab pertanyaan faktual sederhana dengan mandiri.`;
             }
 
-            // Alur Aktivitas Belajar Mendalam (Mindful, Meaningful, Joyful)
             daftarAktivitasRpmEditable = [
                 {
                     fase: 'Apersepsi & Mindful Orientation (10 Menit)',
@@ -7180,14 +7049,13 @@
                 }
             ];
 
-            // Rancang Bank Soal Evaluasi Fleksibel
-            const aktifkanSoal = $id('rpm-toggle-buat-soal') ?$id('rpm-toggle-buat-soal').checked : false;
+            const aktifkanSoal = $id('rpm-toggle-buat-soal') ? $id('rpm-toggle-buat-soal').checked : false;
             let bankSoalGenerated = { pg: [], isian: [], uraian: [] };
 
             if (aktifkanSoal) {
-                const cbPg = $id('rpm-cb-pg') ?$id('rpm-cb-pg').checked : false;
-                const cbIsian = $id('rpm-cb-isian') ?$id('rpm-cb-isian').checked : false;
-                const cbUraian = $id('rpm-cb-uraian') ?$id('rpm-cb-uraian').checked : false;
+                const cbPg = $id('rpm-cb-pg') ? $id('rpm-cb-pg').checked : false;
+                const cbIsian = $id('rpm-cb-isian') ? $id('rpm-cb-isian').checked : false;
+                const cbUraian = $id('rpm-cb-uraian') ? $id('rpm-cb-uraian').checked : false;
 
                 const jmlPg = cbPg ? (parseInt($val('rpm-jml-pg', 5), 10) || 5) : 0;
                 const jmlIsian = cbIsian ? (parseInt($val('rpm-jml-isian', 3), 10) || 3) : 0;
@@ -7196,7 +7064,6 @@
                 bankSoalGenerated = buatBankSoalOtomatis(topik, mapel, jmlPg, jmlIsian, jmlUraian);
             }
 
-            // Simpan objek RPM ke memori aktif
             dataRpmAktif = {
                 id: 'rpm_' + Date.now().toString(36),
                 tanggal: getFormatTanggalSekarang(),
@@ -7291,7 +7158,6 @@
             const soalIsian = [];
             const soalUraian = [];
 
-            // Generator Soal PG
             for (let i = 1; i <= jmlPg; i++) {
                 soalPg.push({
                     nomor: i,
@@ -7307,7 +7173,6 @@
                 });
             }
 
-            // Generator Soal Isian Singkat
             for (let j = 1; j <= jmlIsian; j++) {
                 soalIsian.push({
                     nomor: j,
@@ -7316,7 +7181,6 @@
                 });
             }
 
-            // Generator Soal Uraian / Penalaran
             for (let k = 1; k <= jmlUraian; k++) {
                 soalUraian.push({
                     nomor: k,
@@ -7334,10 +7198,11 @@
             $setTxt('rpm-res-mapel-topik', `Mata Pelajaran: ${dataRpmAktif.mapel} | Topik: ${dataRpmAktif.topik}`);
             $setTxt('rpm-res-sekolah-kelas', `Satuan Pendidikan: ${sekolahAktif} • ${kelasAktif} • Semester I`);
             $setTxt('rpm-res-penyusun', dataRpmAktif.penyusun);
-            $setTxt('rpm-res-nip', dataRpmAktif.nipPenyusun);$setTxt('rpm-res-media', dataRpmAktif.media);
-            $setTxt('rpm-res-solo', dataRpmAktif.soloKko);$setTxt('rpm-res-dimensi', dataRpmAktif.dimensi);
+            $setTxt('rpm-res-nip', dataRpmAktif.nipPenyusun);
+            $setTxt('rpm-res-media', dataRpmAktif.media);
+            $setTxt('rpm-res-solo', dataRpmAktif.soloKko);
+            $setTxt('rpm-res-dimensi', dataRpmAktif.dimensi);
 
-            // 1. Tujuan & KKTP
             const tpEl = $id('rpm-res-tp');
             if (tpEl) {
                 tpEl.innerHTML = `
@@ -7346,10 +7211,8 @@
                 `;
             }
 
-            // 2. Aktivitas Pengalaman Belajar
             renderAktivitasBelajarEditable();
 
-            // 3. Asesmen Pembelajaran
             const asesmenEl = $id('rpm-res-asesmen');
             if (asesmenEl) {
                 asesmenEl.innerHTML = `
@@ -7358,7 +7221,6 @@
                 `;
             }
 
-            // 4. Pengayaan & Remedial
             const remEl = $id('rpm-res-remedial');
             if (remEl) {
                 remEl.innerHTML = `
@@ -7367,12 +7229,13 @@
                 `;
             }
 
-            // Tanda Tangan
-            $setTxt('rpm-res-kepsek', dataRpmAktif.kepsek);$setTxt('rpm-res-nip-kepsek', dataRpmAktif.nipKepsek);
-            $setTxt('rpm-res-tanda-penyusun', dataRpmAktif.penyusun);$setTxt('rpm-res-nip-tdp', dataRpmAktif.nipPenyusun);
-            $setTxt('rpm-res-kota-sekarang', sekolahAktif.includes('Sabedo') ? 'Sabedo' : 'Pusat');$setTxt('rpm-res-tanggal-sekarang', formatTanggalIndonesia(dataRpmAktif.tanggal));
+            $setTxt('rpm-res-kepsek', dataRpmAktif.kepsek);
+            $setTxt('rpm-res-nip-kepsek', dataRpmAktif.nipKepsek);
+            $setTxt('rpm-res-tanda-penyusun', dataRpmAktif.penyusun);
+            $setTxt('rpm-res-nip-tdp', dataRpmAktif.nipPenyusun);
+            $setTxt('rpm-res-kota-sekarang', sekolahAktif.includes('Sabedo') ? 'Sabedo' : 'Pusat');
+            $setTxt('rpm-res-tanggal-sekarang', formatTanggalIndonesia(dataRpmAktif.tanggal));
 
-            // 5. Lampiran Lembar Soal Evaluasi Siswa (Page-Break)
             const wrapperLampiranSoal = $id('wrapper-lampiran-soal-rpm');
             const containerSoal = $id('container-soal-evaluasi-content');
             const containerKunci = $id('container-kunci-jawaban-rpm');
@@ -7390,7 +7253,6 @@
                 containerSoal.innerHTML = '';
                 const bs = dataRpmAktif.bankSoal;
 
-                // Bagian A: Pilihan Ganda
                 if (bs.pg && bs.pg.length > 0) {
                     const secPg = document.createElement('div');
                     secPg.className = 'space-y-3';
@@ -7410,7 +7272,6 @@
                     containerSoal.appendChild(secPg);
                 }
 
-                // Bagian B: Isian Singkat
                 if (bs.isian && bs.isian.length > 0) {
                     const secIsian = document.createElement('div');
                     secIsian.className = 'space-y-3 pt-3 border-t';
@@ -7428,7 +7289,6 @@
                     containerSoal.appendChild(secIsian);
                 }
 
-                // Bagian C: Uraian Penalaran
                 if (bs.uraian && bs.uraian.length > 0) {
                     const secUraian = document.createElement('div');
                     secUraian.className = 'space-y-3 pt-3 border-t';
@@ -7449,7 +7309,6 @@
                 }
             }
 
-            // Kunci Jawaban Khusus Guru
             if (containerKunci) {
                 const bs = dataRpmAktif.bankSoal;
                 let kunciPgHtml = bs.pg.map(p => `<strong>${p.nomor}:</strong> ${p.kunci}`).join(' • ');
@@ -7473,10 +7332,7 @@
         async function simpanRpmPermanen() {
             if (!dataRpmAktif) return;
 
-            // Perbarui aktivitas dengan editan terakhir
             dataRpmAktif.aktivitas = daftarAktivitasRpmEditable;
-
-            // Hapus duplikasi jika modul dengan ID yang sama sudah ada di arsip
             daftarArsipRpm = daftarArsipRpm.filter(r => r.id !== dataRpmAktif.id);
             daftarArsipRpm.unshift(dataRpmAktif);
 
@@ -7564,7 +7420,7 @@
             showToast('Arsip modul ajar berhasil dihapus.', 'info');
         }
 
-                // ==========================================================================
+        // ==========================================================================
         // TAHAP 15.15 DARI 15: KOKURIKULER, EKSKUL, PORTAL SISWA & BOOTING SISTEM
         // - 1. Mesin Kokurikuler (Preset, Sub-Elemen, Matriks Nilai & Rapor Semester)
         // - 2. Mesin Ekstrakurikuler (Cabang Adaptif, Presensi, Asesmen & Prestasi)
@@ -7572,10 +7428,10 @@
         // - 4. Inisialisasi Booting Sistem Global & Penutupan Tag Script
         // ==========================================================================
 
-        // --- 1. MESIN KOKURIKULER SEKOLAH TERPADU ---
         let subElemenTerpilihKoku = [];
         let tanggalPenilaianKokuAktif = '';
 
+        // --- 1. MESIN KOKURIKULER SEKOLAH TERPADU ---
         function renderCheckbox8DimensiKoku() {
             const container = $id('container-checkbox-8-dimensi');
             if (!container) return;
@@ -7854,7 +7710,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Update bilah progres
             const total = daftarSiswaAktif.length;
             const persen = total > 0 ? Math.round((terisiSiswa / total) * 100) : 0;
             $setTxt('tracker-koku-text', `${persen}% (${terisiSiswa}/${total} Siswa)`);
@@ -8703,7 +8558,6 @@
             $setTxt('portal-siswa-sekolah-badge', sekolahAktif.toUpperCase());
             $setTxt('portal-siswa-kelas-badge', kelasAktif);$setTxt('nama-siswa-login', siswa.nama);
 
-            // Tampilkan hari dan jadwal hari ini
             const sekarang = new Date();
             const hariList = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const namaHari = hariList[sekarang.getDay()];
@@ -8718,7 +8572,6 @@
                 `;
             }
 
-            // Render nilai mapel di tabel portal siswa
             const tbody = $id('tabel-nilai-siswa-body');
             if (tbody) {
                 tbody.innerHTML = '';
@@ -8772,14 +8625,12 @@
                     tbody.appendChild(tr);
                 });
 
-                // Perbarui kartu peringkat
                 const elRank = $id('badge-ranking');
                 if (elRank) {
                     elRank.innerText = count > 0 ? `🏆 Peringkat ${Math.floor(1 + Math.random() * 3)}` : '-';
                 }
             }
 
-            // Ringkasan Kokurikuler Siswa
             const kokuJudul = $id('portal-siswa-koku-judul');
             const kokuDesc = $id('portal-siswa-koku-desc');
             if (dataSetupKokurikuler && kokuJudul && kokuDesc) {
@@ -8788,7 +8639,6 @@
                 kokuDesc.innerText = `"${narasiSiswa}"`;
             }
 
-            // Minat & Prestasi Ekskul Siswa
             const badgesEkskul = $id('portal-siswa-ekskul-badges');
             if (badgesEkskul) {
                 badgesEkskul.innerHTML = '';
@@ -8832,7 +8682,6 @@
                 }
             }
 
-            // Summary
             let sumF = 0, countF = 0, sumS = 0, countS = 0;
             listSesiMapel.forEach(item => {
                 if (item.kategori === 'Formatif') { sumF += item.nilai; countF++; }
@@ -8894,7 +8743,6 @@
         window.addEventListener('DOMContentLoaded', async () => {
             mulaiJamDigitalWita();
 
-            // Pemuatan data master awal dari Cloud Supabase
             const cloudGuru = await muatStateDariCloud('sia_daftar_guru_global');
             if (cloudGuru && Array.isArray(cloudGuru)) daftarGuruTerdaftar = cloudGuru;
 
